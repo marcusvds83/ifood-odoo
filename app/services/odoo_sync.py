@@ -294,7 +294,7 @@ class OdooSyncService:
             if results:
                 self._odoo.write("product.product", results[0]["id"], {
                     "x_studio_ifood_product_id": ifood_item_id,
-                    "x_studio_ifood_synced_at": datetime.utcnow().isoformat(),
+                    "x_studio_ifood_synced_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
                 })
                 return results[0]["id"]
 
@@ -310,7 +310,7 @@ class OdooSyncService:
             if results:
                 self._odoo.write("product.product", results[0]["id"], {
                     "x_studio_ifood_product_id": ifood_item_id,
-                    "x_studio_ifood_synced_at": datetime.utcnow().isoformat(),
+                    "x_studio_ifood_synced_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
                 })
                 return results[0]["id"]
 
@@ -340,7 +340,7 @@ class OdooSyncService:
             # Campos CUSTOM iFood
             "x_studio_ifood_product_id": item_data.get("ifood_item_id", ""),
             "x_studio_ifood_category": item_data.get("category", ""),
-            "x_studio_ifood_synced_at": datetime.utcnow().isoformat(),
+            "x_studio_ifood_synced_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
         }
 
         product_id = self._odoo.create("product.product", product_values)
@@ -362,6 +362,20 @@ class OdooSyncService:
             if vals: return str(vals[0]).strip()
             return ''
         return str(value).strip()
+
+    @staticmethod
+    def _safe_float(value, default=0.0):
+        if value is None: return default
+        if isinstance(value, (int, float)): return float(value)
+        if isinstance(value, str):
+            try: return float(value.replace(',','.').replace('R$','').strip())
+            except: return default
+        if isinstance(value, dict):
+            for k in ('value','amount','total','price','number'):
+                v=value.get(k)
+                if v is not None: return OdooSyncService._safe_float(v, default)
+            return default
+        return default
 
     def _find_country_id(self, code: str) -> Optional[int]:
         """Busca ID do pais pelo codigo (ex: 'BR')."""
@@ -482,9 +496,9 @@ class OdooSyncService:
             "x_studio_ifood_customer_id": str(customer.get("id", "")),
             "x_studio_ifood_delivery_address": address_text,
             "x_studio_ifood_payment_method": payment.get("method", ""),
-            "x_studio_ifood_payment_value": float(payment.get("value", 0) or 0),
-            "x_studio_ifood_delivery_fee": float(ifood_order.get("deliveryFee", 0) or 0),
-            "x_studio_ifood_subtotal": float(ifood_order.get("subtotal", 0) or 0),
+            "x_studio_ifood_payment_value": self._safe_float(payment.get("value", 0)),
+            "x_studio_ifood_delivery_fee": self._safe_float(ifood_order.get("deliveryFee", 0)),
+            "x_studio_ifood_subtotal": self._safe_float(ifood_order.get("subtotal", 0)),
             "x_studio_ifood_created_at": created_at,
             "x_studio_ifood_status": ifood_order.get("status", ""),
         }
@@ -503,8 +517,8 @@ class OdooSyncService:
         lines = []
 
         for item in items:
-            quantity = float(item.get("quantity", 1) or 1)
-            total_price = float(item.get("totalPrice", 0) or 0)
+            quantity = self._safe_float(item.get("quantity", 1), 1)
+            total_price = self._safe_float(item.get("totalPrice", 0), 0)
             unit_price = total_price / quantity if quantity > 0 else total_price
 
             # Montar observacao (obs + extras + options)

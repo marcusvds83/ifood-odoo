@@ -117,7 +117,7 @@ async def handle_order_webhook(request: Request, response: Response):
                     sync_service.update_order_status(order_id, status)
                     logger.info("Pedido %s status atualizado: %s", order_id, status)
 
-            elif event_type in ("CAN", "CANCELLATION_REQUESTED", "orderCancelled", "cancelled"):
+            elif event_type in ("CAN", "CANCELLATION_REQUESTED", "CAR", "orderCancelled", "cancelled"):
                 sync_service.update_order_status(order_id, "cancelled")
                 logger.info("Pedido %s marcado como cancelado", order_id)
 
