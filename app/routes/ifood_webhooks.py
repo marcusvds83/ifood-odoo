@@ -74,7 +74,7 @@ async def handle_order_webhook(request: Request, response: Response):
         logger.info("=== Webhook iFood recebido ===")
         logger.info("Method: %s | Content-Type: %s", method, request.headers.get("content-type", "N/A"))
         logger.debug("Headers: %s", dict(request.headers))
-        logger.debug("Body: %s", body.decode("utf-8", errors="replace")[:2000])
+        logger.debug("Body RAW: %s", body.decode("utf-8", errors="replace")[:2000])
 
         # Verificar assinatura (log only, nunca rejeita)
         _verify_webhook_signature(request, body)
@@ -86,7 +86,14 @@ async def handle_order_webhook(request: Request, response: Response):
 
         # Se for POST, processar o evento
         payload = await request.json()
-        event_type = payload.get("eventType", "unknown")
+        # iFood codes: PLC, CAN, DSP
+        event_type = (
+            payload.get("code")
+            or payload.get("eventType")
+            or payload.get("event")
+            or payload.get("type")
+            or "unknown"
+        )
         order_id = payload.get("orderId", "")
         merchant_id = payload.get("merchantId", "")
 
@@ -98,7 +105,7 @@ async def handle_order_webhook(request: Request, response: Response):
         sync_service = OdooSyncService(odoo_client, ifood_client)
 
         try:
-            if event_type == "orderCreated":
+            if event_type in ("PLC", "NEW", "orderCreated", "placed"):
                 async with ifood_client:
                     order_data = await ifood_client.get_order(order_id)
                 sale_order_id = sync_service.sync_order(order_data)
@@ -110,7 +117,7 @@ async def handle_order_webhook(request: Request, response: Response):
                     sync_service.update_order_status(order_id, status)
                     logger.info("Pedido %s status atualizado: %s", order_id, status)
 
-            elif event_type == "orderCancelled":
+            elif event_type in ("CAN", "CANCELLATION_REQUESTED", "orderCancelled", "cancelled"):
                 sync_service.update_order_status(order_id, "cancelled")
                 logger.info("Pedido %s marcado como cancelado", order_id)
 
@@ -135,7 +142,7 @@ async def handle_catalog_webhook(request: Request):
     try:
         body = await request.body()
         logger.info("Webhook catalogo iFood recebido (method: %s)", request.method)
-        logger.debug("Body: %s", body.decode("utf-8", errors="replace")[:1000])
+        logger.debug("Body RAW: %s", body.decode("utf-8", errors="replace")[:3000])
         return {"status": "ok", "message": "received"}
 
     except Exception as e:
