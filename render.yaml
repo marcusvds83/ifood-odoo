@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: ifood-odoo-middleware
+    runtime: docker
+    plan: free
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_PORT
+        value: 10000
+      - key: IFOOD_CLIENT_ID
+        sync: false
+      - key: IFOOD_CLIENT_SECRET
+        sync: false
+      - key: ODOO_URL
+        sync: false
+      - key: ODOO_DB
+        sync: false
+      - key: ODOO_USER
+        sync: false
+      - key: ODOO_PASSWORD
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEBHOOK_SECRET
+        generateValue: true
