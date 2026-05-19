@@ -349,6 +349,20 @@ class OdooSyncService:
 
     # ── Helpers ──────────────────────────────────────────────
 
+    @staticmethod
+    def _safe_str(value):
+        if value is None: return ''
+        if isinstance(value, str): return value.strip()
+        if isinstance(value, dict):
+            for k in ('number','value','id','name','description','formattedNumber'):
+                v=value.get(k)
+                if v and isinstance(v,str): return v.strip()
+                if v and isinstance(v,(int,float)): return str(v)
+            vals=[v for v in value.values() if v is not None]
+            if vals: return str(vals[0]).strip()
+            return ''
+        return str(value).strip()
+
     def _find_country_id(self, code: str) -> Optional[int]:
         """Busca ID do pais pelo codigo (ex: 'BR')."""
         results = self._odoo.search_read(
@@ -385,26 +399,26 @@ class OdooSyncService:
         delivery_address = ifood_order.get("deliveryAddress", {}) or {}
 
         # Nome: tentar customer.name ou deliveryAddress.recipientName
-        name = (customer.get("name") or delivery_address.get("recipientName") or "").strip()
+        name = self._safe_str(customer.get("name") or delivery_address.get("recipientName"))
 
         # Telefones
-        phone = (customer.get("phone") or delivery_address.get("phone") or "").strip()
-        mobile = (customer.get("mobile") or "").strip()
+        phone = self._safe_str(customer.get("phone") or delivery_address.get("phone"))
+        mobile = self._safe_str(customer.get("mobile"))
 
         # Email
-        email = (customer.get("email") or "").strip()
+        email = self._safe_str(customer.get("email"))
 
         # Documento (CPF/CNPJ)
-        vat = (customer.get("document") or customer.get("cpfCnpj") or "").strip()
+        vat = self._safe_str(customer.get("document") or customer.get("cpfCnpj"))
 
         # Endereco de entrega
-        street = (delivery_address.get("street") or "").strip()
-        number = (delivery_address.get("number") or "").strip()
-        district = (delivery_address.get("neighborhood") or delivery_address.get("district") or "").strip()
-        city = (delivery_address.get("city") or "").strip()
-        state_code = (delivery_address.get("state") or "").strip()
-        zip_code = (delivery_address.get("zipCode") or "").strip()
-        complement = (delivery_address.get("complement") or delivery_address.get("reference") or "").strip()
+        street = self._safe_str(delivery_address.get("street"))
+        number = self._safe_str(delivery_address.get("number"))
+        district = self._safe_str(delivery_address.get("neighborhood") or delivery_address.get("district"))
+        city = self._safe_str(delivery_address.get("city"))
+        state_code = self._safe_str(delivery_address.get("state"))
+        zip_code = self._safe_str(delivery_address.get("zipCode"))
+        complement = self._safe_str(delivery_address.get("complement") or delivery_address.get("reference"))
 
         # Montar street completa (rua + numero)
         full_street = f"{street}, {number}".strip(", ")
