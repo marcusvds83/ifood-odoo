@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/homologacao",
+    "name": "Homologation criteria - iFood Developer",
+    "snippet": "Failures in this integration result in inconsistent orders. Validate delivery data before confirming Order cancellation. Orders cancelled by customer. Log all ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/order/errors-and-troubleshooting",
+    "name": "Errors and troubleshooting - iFood Developer",
+    "snippet": "Check system logs for orderId. Contact support with logs if persists. Log failures without blocking others.Logging: If errors persist: Gather logs from past 24 ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/picking/errors-and-troubleshooting",
+    "name": "Errors and troubleshooting - iFood Developer",
+    "snippet": "Causes: Incorrect or incorrectly formatted order ID Order was cancelled or removed. Check if order id is in valid UUID format. Check logs to confirm the ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/logistics/homologation",
+    "name": "Homologation criteria - iFood Developer",
+    "snippet": "Errors and troubleshooting. Homologation validates that your integration is complete, functional, and follows iFood standards. Service running with logs ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Validate reason CANCELLATION_REQUEST_FAILED Cancellation rejected. Tracking events (iFood) These events occur when iFood is delivering the order:",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "Cancellation is only possible before driver acceptance; After driver accepts, follow Order cancellation rules; No fee for cancellations before acceptance; The ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://documents.buywithprime.amazon.com/bwp-api/docs/troubleshoot-order-errors",
+    "name": "Troubleshoot Order Errors - About the Buy with Prime API",
+    "snippet": "If you are retrying a failed order creation request, this error indicates that the order was created successfully, but failed to communicate the success to you.",
+    "host_name": "documents.buywithprime.amazon.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.adobe.com/commerce/extensibility/app-development/best-practices/logging-troubleshooting",
+    "name": "Logging and troubleshooting - Adobe Developer",
+    "snippet": "For event listener and web actions, success and failure logs are displayed when forwarding is enabled. If forwarding is not enabled, failure logs are displayed ...",
+    "host_name": "developer.adobe.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/order/homologation",
+    "name": "Order module homologation - iFood Developer",
+    "snippet": "All applications that use the order module must pass homologation. This process validates that your integration meets the minimum requirements to receive and ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.tradovate.com/t/api-order-failures/4098",
+    "name": "API Order Failures - Community Support - Tradovate Forum",
+    "snippet": "At least the first 401 error you sent me ended up being an attempt to cancel an order that had been completed an archived the previous day.",
+    "host_name": "community.tradovate.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

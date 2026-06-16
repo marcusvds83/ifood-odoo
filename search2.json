@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Order events. Understand all events that iFood sends during the order lifecycle. This reference shows structure, meaning, and required actions for each event.\nQuick reference — All events ; CANCELLATION_REQUESTED, Cancellation requested, Customer/you requested ; CANCELLATION_REQUEST_FAILED, Cancellation rejected, System ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://knowledge.cds-global.com/hc/en-us/articles/43501929034267-Cancel-Webhook-Event",
+    "name": "Cancel Webhook Event - Knowledge Center - CDS Global",
+    "snippet": "These product differences require three separate webhooks to provide feedback on customer cancellations. The scripted payload examples below ...",
+    "host_name": "knowledge.cds-global.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-overview",
+    "name": "Webhook overview - iFood Developer",
+    "snippet": "Most requests should return empty, as the webhook will have already delivered the events. Homologation criteria. Receive events via webhook from iFood events ...\nReceive events via webhook from iFood events successfully. Respond with failure to events with invalid signature. See also. Webhook concepts · Request signature.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Overview. Polling is a simple method to receive updates from an API. Your system sends regular requests, every 30 seconds, to the GET /events:polling ...\nUnfiltered events receive automatic acknowledgment (auto-acknowlegment). If you change the filter, already confirmed events will not be returned. Consume all ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://unit.co/docs/api/events",
+    "name": "Webhook Events | Unit",
+    "snippet": "Unit uses Events to record important changes happening under your org. Once an event is created, it will be delivered to your application via a webhook call.",
+    "host_name": "unit.co",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.icemortgagetechnology.com/developer-connect/docs/webhook-best-practices-event-reconciliation-and-more",
+    "name": "Webhook Best Practices: Event Reconciliation and More",
+    "snippet": "A purpose-built API that provides a synopsis of your webhook activity, including event generation, subscription matching, and notification delivery.",
+    "host_name": "developer.icemortgagetechnology.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.gusto.com/app-integrations/v2024-03-01/docs/webhooks",
+    "name": "Webhooks - Gusto Docs",
+    "snippet": "A webhook is an HTTP request that delivers information about an event as it happens. We recommend that you integrate with Gusto's webhooks infrastructure so ...",
+    "host_name": "docs.gusto.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.moov.io/guides/webhooks/webhook-events",
+    "name": "Webhook events - Documentation for Moov",
+    "snippet": "This page details the variety of event types and schemas Moov has for supported webhooks. Events. Let's use creating a customer as an example.",
+    "host_name": "docs.moov.io",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.xsolla.com/webhooks/overview",
+    "name": "Webhooks - Xsolla Documentation",
+    "snippet": "You can connect webhooks if you want to receive information about events, such as payment or order cancellation. If you connect webhooks, it is important to ...",
+    "host_name": "developers.xsolla.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.authorize.net/api/reference/features/webhooks.html",
+    "name": "Authorize.net API Documentation - Webhooks",
+    "snippet": "The Webhooks REST API enables you to create webhooks to receive notifications for events that are not the result of an API request and are not returned in an ...",
+    "host_name": "developer.authorize.net",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

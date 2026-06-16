@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.harness.io/docs/feature-management-experimentation/api/webhooks/audit-logs",
+    "name": "Webhook for Audit Logs - Harness Developer Hub",
+    "snippet": "You can use Split webhooks to enhance your monitoring, tracking, and analytics tools by updating external issue trackers and support tickets or ...",
+    "host_name": "developer.harness.io",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.firefly.ai/detailed-guides/audit-log",
+    "name": "Audit Log | Firefly Docs",
+    "snippet": "The Audit Log provides a centralized, immutable audit trail of all actions performed within a Firefly tenant. It captures user and API ...",
+    "host_name": "docs.firefly.ai",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-overview",
+    "name": "Webhook overview - iFood Developer",
+    "snippet": "Webhooks avoid the use of continuous polling. The example below shows how the requests/create event uses webhooks to notify instead of querying. The application ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/order/errors-and-troubleshooting",
+    "name": "Errors and troubleshooting - iFood Developer",
+    "snippet": "Order failed to reach POS system. Causes. POS system offline or unavailable; Network timeout or connection failure; Queue stuck or webhook endpoint unreachable ...\nSolution. Check system logs for orderId and requestId; Restore connectivity and verify webhook health; Review Partner Portal performance metrics; Contact ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.slack.dev/reference/audit-logs-api/methods-actions-reference",
+    "name": "Audit Logs API methods & actions | Slack Developer Docs",
+    "snippet": "Retrieves audit events from your organization. It will return a list of actions that have occurred on the installed workspace or Enterprise organization.",
+    "host_name": "docs.slack.dev",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.runreveal.com/sources/source-types/teleport",
+    "name": "Teleport Cloud Audit Logs - RunReveal Docs",
+    "snippet": "For the best experience with Teleport audit logs in RunReveal, we recommend using the webhook integration method. This approach provides real-time event ...",
+    "host_name": "docs.runreveal.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.github.com/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise",
+    "name": "Streaming the audit log for your enterprise - GitHub Docs",
+    "snippet": "Webhooks might be a good alternative to the audit log or API polling for certain use cases. Webhooks are a way for GitHub to notify your server when specific ...",
+    "host_name": "docs.github.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.customer.io/journeys/webhooks-action",
+    "name": "Send and receive data with webhook actions - Customer.io Docs",
+    "snippet": "The Send and receive data action represents a webhook. Webhooks let you pass data to, and return data from, just about any public API on the internet.",
+    "host_name": "docs.customer.io",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://help.fulfillengine.com/en/api-guide/order-canceled-webhook",
+    "name": "Order Canceled Webhook - Fulfill Engine Help Center",
+    "snippet": "The Order Canceled webhook is used to notify your system when an order has been canceled in Fulfill Engine. When this occurs, a POST request will be made to ...",
+    "host_name": "help.fulfillengine.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.taxbandits.com/docs/Webhooks/WebhookDeliveryFailure",
+    "name": "Webhook Delivery Failure - TaxBandits API",
+    "snippet": "To reactivate the Webhook URL, you must follow the below steps:​ · Log in to the console site and navigate to Settings >> Webhook. · Click the “Send Test ...",
+    "host_name": "developer.taxbandits.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

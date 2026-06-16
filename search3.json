@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/logistics/homologation",
+    "name": "Critérios de homologação - iFood Developer",
+    "snippet": "Critérios de homologação. A homologação valida que sua integração está completa, funcional e segue os padrões iFood. Todos os aplicativos de Logistics devem ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/catalog/homologation",
+    "name": "Critérios de homologação - iFood Developer",
+    "snippet": "Antes de solicitar a homologação, confirme que você atende a todos os pontos abaixo. Pedidos que não cumpram esses requisitos são rejeitados no agendamento ou ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/shipping/homologacao",
+    "name": "Critérios de homologação - iFood Developer",
+    "snippet": "Enviar motivo selecionado na requisição de cancelamento. Não faça hardcoding de motivos de cancelamento. Consuma dinamicamente os códigos retornados pela API ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=XciankN5LSc",
+    "name": "Você conhece os mitos e verdades sobre cancelamento no iFood?",
+    "snippet": "... ifood #cancelamento #melhoriacontínua #delivery #cancelamentoifood #pedidos #restaurantes #restaurantedelivery #ifoodpararestaurantes.",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.instagram.com/reel/DLN6aBPyWNn",
+    "name": "Cancelamento? Aqui não! O Edu te conta quais dicas usar para",
+    "snippet": "... Cancelamento no iFood Decola. #Educação #iFoodParaParceiros #Restaurantes #Cancelamento ... O pedido toca no iFood, alguém anota o pedido, alguém ...",
+    "host_name": "www.instagram.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/ConselhosLegais/comments/1u62lt2/ifood_ignora_pedido_de_cancelamento_via_chat_e",
+    "name": "Ifood ignora pedido de cancelamento via chat e loja se aproveita",
+    "snippet": "No chat a atendente disse que houve um erro no app e não registraram o pedido de cancelamento (comprovei via prints da conversa com a loja), mas ...",
+    "host_name": "www.reddit.com",
+    "rank": 5,
+    "date": "Jun 14, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/events/homologation",
+    "name": "Critérios de homologação - iFood Developer",
+    "snippet": "Isso é necessário para evitar que a loja seja aberta, causando cancelamento de pedidos e posteriormente evitando que o merchant seja penalizado na plataforma, ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=aWgwtfJfb9c",
+    "name": "iFood Developer - API de Pedidos - Primeiros Passos com o Postman",
+    "snippet": "Importando collections no Postman e testando a API de Pedidos do iFood. Neste vídeo você irá aprender como começar a utilizar a API de ...",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/promotion/homologation",
+    "name": "Critérios de homologação - iFood Developer",
+    "snippet": "Pré-requisitos. Sua aplicação deve atender a todos os requisitos listados abaixo. Valide localmente antes de submeter para homologação.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.instagram.com/reel/DYJJ5jos72W",
+    "name": "Como esta o cancelamento no seu Ifood? - Instagram",
+    "snippet": "Nota dó para o atendimento de vocês Boa noite meu amigo, tudo bem? Entao, seu pedido foi cancelado pelo próprio ifood, por não encontrar motoboy ...",
+    "host_name": "www.instagram.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
