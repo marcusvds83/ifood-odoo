@@ -154,11 +154,15 @@ async def handle_order_webhook(request: Request, response: Response):
         # ── KEEPALIVE: heartbeat do iFood ─────────────────────
         if event_type == "KEEPALIVE":
             logger.debug("[KEEPALIVE] Heartbeat recebido")
-            # Aproveitar o heartbeat para verificar cancelamentos pendentes no Odoo
+            # Aproveitar o heartbeat para verificar acoes pendentes no Odoo
             try:
                 await _check_odoo_pending_cancellations()
             except Exception as poll_err:
                 logger.warning("[KEEPALIVE] Falha ao verificar cancelamentos Odoo: %s", poll_err)
+            try:
+                await _check_odoo_pending_dispatches()
+            except Exception as poll_err:
+                logger.warning("[KEEPALIVE] Falha ao verificar despachos Odoo: %s", poll_err)
             return {"status": "ok", "eventType": "KEEPALIVE"}
 
         # ── PLC: Novo Pedido ──────────────────────────────────
@@ -507,6 +511,83 @@ async def _check_odoo_pending_cancellations() -> dict:
 
     logger.info("[ODOO_POLL] Resultado: verificados=%d, solicitados=%d",
                  results["checked"], results["requested"])
+    return results
+
+
+# ── Polling: Despachos Odoo → iFood ──────────────────────────
+
+async def _check_odoo_pending_dispatches() -> dict:
+    """Verifica pedidos confirmados no Odoo que ainda nao foram despachados no iFood.
+
+    Busca sale.order onde:
+      - state = 'sale' (confirmado via action_confirm no Odoo)
+      - x_studio_ifood_order_id esta preenchido
+      - x_studio_ifood_status != 'dispatched' e != 'cancelled'
+
+    Para cada pedido encontrado, chama dispatch no iFood.
+    """
+    logger.info("[ODOO_DISPATCH] Verificando despachos pendentes no Odoo...")
+
+    odoo_client = OdooClient(settings)
+    results = {"checked": 0, "dispatched": 0, "errors": []}
+
+    try:
+        orders = odoo_client.search_read(
+            "sale.order",
+            domain=[
+                ("state", "=", "sale"),
+                ("x_studio_ifood_order_id", "!=", False),
+            ],
+            fields=[
+                "id", "x_studio_ifood_order_id",
+                "x_studio_ifood_status",
+            ],
+        )
+    except Exception as e:
+        logger.error("[ODOO_DISPATCH] Falha ao buscar pedidos no Odoo: %s", e, exc_info=True)
+        return results
+
+    results["checked"] = len(orders)
+    if not orders:
+        logger.info("[ODOO_DISPATCH] Nenhum despacho pendente encontrado")
+        return results
+
+    async with IFoodAPIClient(settings) as ifood_client:
+        for order in orders:
+            ifood_id = str(order.get("x_studio_ifood_order_id", ""))
+            ifood_status = str(order.get("x_studio_ifood_status", ""))
+
+            if not ifood_id:
+                continue
+
+            # Ja foi despachado ou cancelado?
+            if ifood_status in ("dispatched", "cancelled", "cancellation_requested", "delivered"):
+                continue
+
+            logger.info("[ODOO_DISPATCH] Despachando pedido %s no iFood (status atual: %s)...",
+                         ifood_id, ifood_status)
+
+            try:
+                await ifood_client.dispatch_order(ifood_id)
+                results["dispatched"] += 1
+
+                # Atualizar status no Odoo
+                try:
+                    sync_service = OdooSyncService(odoo_client, ifood_client)
+                    sync_service.update_order_status(ifood_id, "dispatched")
+                except Exception:
+                    pass
+
+                logger.info("[ODOO_DISPATCH] Pedido %s DESPACHADO no iFood com sucesso!", ifood_id)
+
+            except Exception as e:
+                logger.error("[ODOO_DISPATCH] Falha ao despachar pedido %s: %s",
+                             ifood_id, e, exc_info=True)
+                results["errors"].append(f"{ifood_id}: {str(e)}")
+
+    if results["dispatched"] > 0:
+        logger.info("[ODOO_DISPATCH] Resultado: verificados=%d, despachados=%d",
+                     results["checked"], results["dispatched"])
     return results
 
 
