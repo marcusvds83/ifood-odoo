@@ -5,7 +5,7 @@ import time
 from collections import deque
 from typing import Any
 
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, BackgroundTasks, Request, Response
 
 from app.config import settings
 from app.services.ifood_api import IFoodAPIClient
@@ -81,21 +81,23 @@ def _verify_webhook_signature(request: Request, body: bytes) -> bool:
 
 @router.post("/webhooks/ifood/orders")
 @router.get("/webhooks/ifood/orders")
-async def handle_order_webhook(request: Request, response: Response):
+async def handle_order_webhook(request: Request, response: Response, background_tasks: BackgroundTasks):
     """Recebe eventos de pedidos do iFood.
 
-    Regra #1: SEMPRE retorna 200 para o iFood (nao retry).
-    Regra #2: Cada passo (auth, confirm, sync) e independente.
-    Regra #3: Tudo e logado para debug.
+    Regra #1: SEMPRE retorna 200/202 para o iFood (nao retry).
+    Regra #2: CANCELLATION_REQUESTED retorna 202 imediato e processa em background (iFood exige resp < 5s).
+    Regra #3: Cada passo (auth, confirm, sync) e independente.
+    Regra #4: Tudo e logado para debug.
 
     Fluxo PLC (novo pedido):
       1. Buscar dados completos do pedido no iFood
       2. Confirmar pedido no iFood (POST /confirm)
       3. Sincronizar com Odoo
 
-    Fluxo CAN (cliente solicita cancelamento):
-      1. Aceitar cancelamento no iFood (POST /cancellation/accept)
-      2. Aguardar evento CANCELLED para atualizar Odoo
+    Fluxo CANCELLATION_REQUESTED (cliente solicita cancelamento):
+      1. Responder 202 imediatamente
+      2. Em background: aceitar cancelamento no iFood (POST /cancellation/accept)
+      3. Aguardar evento CANCELLED para atualizar Odoo
 
     Fluxo CANCELLED (cancelamento concluido):
       1. Atualizar status no Odoo para 'cancelled'
@@ -169,22 +171,42 @@ async def handle_order_webhook(request: Request, response: Response):
         if event_type in ("PLC", "NEW", "orderCreated", "placed"):
             return await _handle_plc(order_id, merchant_id, payload, body)
 
-        # ── CAN: Cancelamento Solicitado pelo Cliente ─────────
-        if event_type in ("CAN", "CANCELLATION_REQUESTED", "cancellationRequested"):
-            return await _handle_can(order_id, merchant_id, payload, body)
+        # ── CAN / CANCELLATION_REQUESTED: Cancelamento Solicitado ──
+        # iFood exige resposta 202 em ate 5s. Processar em background.
+        if event_type in ("CAN", "CANCELLATION_REQUESTED", "cancellationRequested",
+                         "CancellationRequested", "cancellation_requested"):
+            logger.info("[CANCELLATION_REQUESTED] Pedido %s | Merchant %s | Adicionando ao background", order_id, merchant_id)
+            background_tasks.add_task(_handle_can_background, order_id, merchant_id, payload, body)
+            return Response(status_code=202, content=b'')
 
         # ── CANCELLED: Cancelamento Concluido (por merchant ou cliente) ──
-        if event_type in ("CANCELLED", "cancelled", "CANCELLATION_ACCEPTED", "CAR"):
+        if event_type in ("CANCELLED", "cancelled", "CANCELLATION_ACCEPTED", "CAR",
+                          "CancellationAccepted", "cancellation_accepted"):
             logger.info("[CANCELLED] Pedido %s CANCELADO no iFood - atualizando Odoo", order_id)
+            _log_event({
+                "level": "info",
+                "event_type": "CANCELLED",
+                "order_id": order_id,
+                "message": "Evento CANCELLED recebido, atualizando Odoo",
+            })
             try:
                 _update_odoo_status(order_id, "cancelled")
+                _update_odoo_state(order_id, "cancel")
+                logger.info("[CANCELLED] Pedido %s - Odoo atualizado para cancelled + state=cancel", order_id)
             except Exception as odoo_err:
                 logger.error("[CANCELLED] Falha ao atualizar Odoo: %s", odoo_err, exc_info=True)
             return {"status": "ok", "eventType": event_type, "orderId": order_id}
 
         # ── CANCELLATION_REQUEST_FAILED: Falha no cancelamento ──
-        if event_type in ("CANCELLATION_REQUEST_FAILED", "cancellationRequestFailed"):
+        if event_type in ("CANCELLATION_REQUEST_FAILED", "cancellationRequestFailed",
+                          "CancellationRequestFailed", "cancellation_request_failed"):
             logger.warning("[CANCEL_FAILED] Falha no cancelamento do pedido %s no iFood", order_id)
+            _log_event({
+                "level": "warning",
+                "event_type": "CANCELLATION_REQUEST_FAILED",
+                "order_id": order_id,
+                "message": "Cancelamento falhou no iFood",
+            })
             try:
                 _update_odoo_status(order_id, "cancellation_failed")
             except Exception as odoo_err:
@@ -354,70 +376,77 @@ async def _handle_plc(order_id: str, merchant_id: str, payload: dict, body: byte
 
 # ── CAN Handler: Cancelamento Solicitado ─────────────────────
 
-async def _handle_can(order_id: str, merchant_id: str, payload: dict, body: bytes) -> dict:
-    """Processa evento CAN (solicitacao de cancelamento do iFood).
+async def _handle_can_background(order_id: str, merchant_id: str, payload: dict, body: bytes) -> None:
+    """Processa evento CANCELLATION_REQUESTED em background (nao bloqueia o webhook response).
 
-    Passos independentes:
-    1. Aceitar cancelamento no iFood
-    2. Atualizar Odoo
+    Fluxo iFood para cancelamento:
+    1. Receber CANCELLATION_REQUESTED via webhook
+    2. Chamar POST /cancellation/accept (ou /reject) no iFood
+    3. Aguardar evento CANCELLED (ou CANCELLATION_REQUEST_FAILED)
+    4. Atualizar Odoo com o status final
+
+    IMPORTANTE: Nao atualizar Odoo para 'cancelled' aqui!
+    O status final vem no evento CANCELLED.
     """
-    logger.info("[CANCELLATION] === INICIO FLUXO DE CANCELAMENTO ===")
-    logger.info("[CANCELLATION] Pedido: %s | Merchant: %s", order_id, merchant_id)
-    logger.info("[CANCELLATION] Payload: %s", body.decode("utf-8", errors="replace")[:3000])
+    logger.info("[CANCELLATION_REQUESTED] === INICIO FLUXO (background) ===")
+    logger.info("[CANCELLATION_REQUESTED] Pedido: %s | Merchant: %s", order_id, merchant_id)
+    logger.info("[CANCELLATION_REQUESTED] Payload: %s", body.decode("utf-8", errors="replace")[:3000])
 
     cancellation_reason = payload.get("reason", payload.get("cancellationReason", "nao informado"))
-    logger.info("[CANCELLATION] Motivo: %s", cancellation_reason)
+    logger.info("[CANCELLATION_REQUESTED] Motivo informado: %s", cancellation_reason)
+
+    _log_event({
+        "level": "info",
+        "event_type": "CANCELLATION_REQUESTED",
+        "order_id": order_id,
+        "merchant_id": merchant_id,
+        "message": "Iniciando processamento de cancelamento em background",
+    })
 
     ifood_client = IFoodAPIClient(settings)
     accepted = False
-    odoo_updated = False
 
     try:
         # ── PASSO 1: Aceitar cancelamento no iFood ───────────
         try:
-            logger.info("[CANCELLATION] Chamando POST /order/v1.0/orders/%s/cancellation/accept", order_id)
+            logger.info("[CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/%s/cancellation/accept", order_id)
             async with ifood_client:
                 accept_result = await ifood_client.accept_cancellation(order_id)
             accepted = True
-            logger.info("[CANCELLATION] Cancelamento ACEITO no iFood: %s",
+            logger.info("[CANCELLATION_REQUESTED] Cancelamento ACEITO no iFood: %s",
                          str(accept_result)[:500])
+            _log_event({
+                "level": "info",
+                "event_type": "CANCELLATION_REQUESTED",
+                "order_id": order_id,
+                "step": "accept_ifood",
+                "message": "Cancelamento aceito com sucesso no iFood",
+                "accepted": True,
+            })
         except Exception as ifood_err:
-            logger.error("[CANCELLATION] FALHA ao aceitar cancelamento no iFood: %s",
+            logger.error("[CANCELLATION_REQUESTED] FALHA ao aceitar cancelamento no iFood: %s",
                          ifood_err, exc_info=True)
             _log_event({
                 "level": "error",
-                "event_type": "CAN",
+                "event_type": "CANCELLATION_REQUESTED",
                 "order_id": order_id,
-                "step": "ifood_api",
-                "message": "Falha ao aceitar cancelamento",
+                "step": "accept_ifood",
+                "message": "Falha ao aceitar cancelamento no iFood",
                 "error": str(ifood_err),
+                "accepted": False,
             })
 
-        # ── PASSO 2: Atualizar Odoo ──────────────────────────
+        # ── PASSO 2: Atualizar Odoo para 'cancellation_requested' ──
+        # NAO colocar 'cancelled' ainda! Aguardar o evento CANCELLED.
         try:
-            odoo_updated = _update_odoo_status(order_id, "cancelled")
+            sync_status = "cancellation_accepted" if accepted else "cancellation_requested"
+            _update_odoo_status(order_id, sync_status)
+            logger.info("[CANCELLATION_REQUESTED] Odoo atualizado para '%s' (aguardando evento CANCELLED)", sync_status)
         except Exception as odoo_err:
-            logger.error("[CANCELLATION] FALHA ao atualizar Odoo: %s", odoo_err, exc_info=True)
+            logger.error("[CANCELLATION_REQUESTED] Falha ao atualizar Odoo: %s", odoo_err, exc_info=True)
 
-        result = {
-            "status": "ok",
-            "eventType": "CAN",
-            "orderId": order_id,
-            "accepted_on_ifood": accepted,
-            "odoo_updated": odoo_updated,
-        }
-        logger.info("[CANCELLATION] === RESUMO: aceito=%s | odoo=%s ===", accepted, odoo_updated)
-        logger.info("[CANCELLATION] === FIM FLUXO DE CANCELAMENTO ===")
-
-        _log_event({
-            "level": "info",
-            "event_type": "CAN",
-            "order_id": order_id,
-            "accepted": accepted,
-            "odoo_updated": odoo_updated,
-        })
-
-        return result
+        logger.info("[CANCELLATION_REQUESTED] === RESUMO: aceito=%s ===", accepted)
+        logger.info("[CANCELLATION_REQUESTED] === FIM PROCESSAMENTO (aguardando CANCELLED) ===")
 
     finally:
         try:
