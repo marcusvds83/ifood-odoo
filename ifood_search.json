@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/references",
+    "name": "Referências - iFood Developer",
+    "snippet": "v1.0. The Merchant API provides means to interact with merchants on the platform. It is separated into four core parts.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Quick reference — All events ; CANCELLATION_REQUESTED, Cancellation requested, Customer/you requested ; CANCELLATION_REQUEST_FAILED, Cancellation rejected, System ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.doku.com/accept-payments/doku-checkout/additional-feature/cancel-order-api",
+    "name": "Cancel Order API | API Reference",
+    "snippet": "The Cancel Order API allows merchants to cancel an unpaid checkout order before the checkout URL expires. Once cancelled, the checkout ...",
+    "host_name": "developers.doku.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.mercadopago.com.br/developers/en/reference/in-person-payments/point/orders/cancel-order/post",
+    "name": "Cancel order by ID - API Reference - Mercado Pago Developers",
+    "snippet": "Cancel order by ID - Cancel an order created for Mercado Pago Point and its transactions using the reference ID obtained in the response to its creation.",
+    "host_name": "www.mercadopago.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.doordash.com/docs/marketplace/retail/orders/features/order_cancel",
+    "name": "Merchant Order Cancellations | DoorDash Developer Services",
+    "snippet": "DoorDash has the OpenAPI functionality to allow merchants to cancel orders that have previously been accepted. The endpoint URL requires the DoorDash order ID ...",
+    "host_name": "developer.doordash.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://support.kraken.com/articles/360034936531-websocket-api-v1-trading-addorder-and-cancelorder",
+    "name": "WebSocket API v1 Trading - addOrder and cancelOrder | Kraken",
+    "snippet": "The addOrder endpoint is used to place new orders, and the cancelOrder endpoint is used to cancel existing (open) orders.",
+    "host_name": "support.kraken.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Order cancellation. Get valid cancellation reasons. Retrieve accepted cancellation reasons for a specific order. GET https://merchant-api.ifood.com.br/order ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.scribd.com/document/948997104/REST-API-Cancel-Orders",
+    "name": "How to Cancel Orders via REST API | PDF - Scribd",
+    "snippet": "The document outlines two methods for cancelling orders in the RIT User Guide: using order IDs and using descriptors/parameters. To cancel via order ID, ...",
+    "host_name": "www.scribd.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api-docs.deliveroo.com/reference/cancel-order-event-webhook-1",
+    "name": "POS Webhook - Cancel Order - Deliveroo",
+    "snippet": "This webhook is deprecated, please see Order Events webhook. Here you'll find the keys and values you can expect in payloads for cancelled orders.",
+    "host_name": "api-docs.deliveroo.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.cdon.com",
+    "name": "CDON API Documentation",
+    "snippet": "CDON enables merchants to upload products and manage orders on the CDON marketplace platform. · This documentation guides merchants through developing their ...",
+    "host_name": "docs.cdon.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
