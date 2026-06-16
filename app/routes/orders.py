@@ -392,20 +392,19 @@ async def accept_cancellation(ifood_order_id: str):
 # Este endpoint e chamado pela Automacao do Odoo quando o usuario
 # clica no botao "Cancelar" (action_cancel) em uma cotacao/pedido.
 
-from pydantic import BaseModel
-
-class OdooCancelRequest(BaseModel):
-    reason: str = ""
-
 @router.post("/cancel-from-odoo/{ifood_order_id}")
-async def cancel_from_odoo(ifood_order_id: str, req: OdooCancelRequest = None):
+async def cancel_from_odoo(ifood_order_id: str, body: dict = None):
     """Cancela pedido no iFood originado do Odoo (botao Cancelar).
 
     Chamado pela Automacao do Odoo quando action_cancel e acionado.
     O motivo de cancelamento (codigo 501-509) vem do campo
     x_studio_ifood_cancel_reason da sale.order no Odoo.
+
+    Body esperado: {"reason": "503"}
     """
-    reason = req.reason if req else ""
+    reason = ""
+    if body and isinstance(body, dict):
+        reason = str(body.get("reason", ""))
 
     IFOOD_REASONS = {
         "501": "Erro no sistema",
