@@ -21,12 +21,16 @@ class IFoodAPIClient:
     def _build_url(self, path: str) -> str:
         return f"{self._config.ifood_api_base_url}{path}"
 
-    async def _request(self, method: str, path: str, params: Optional[dict] = None, json_body: Optional[dict] = None) -> dict:
+    async def _request(self, method: str, path: str, params: Optional[dict] = None, json_body: Optional[dict] = None, allow_empty_body: bool = False) -> dict:
         headers = await self._auth_service.get_authenticated_headers()
         url = self._build_url(path)
         try:
             response = await self.http_client.request(method=method, url=url, headers=headers, params=params, json=json_body)
             response.raise_for_status()
+            # Alguns endpoints (confirm, requestCancellation) retornam 202 com body vazio
+            if not response.content or response.content.strip() == b'':
+                logger.info("iFood API: %s %s -> HTTP %s (body vazio)", method, path, response.status_code)
+                return {}
             return response.json()
         except httpx.HTTPStatusError as e:
             logger.error("iFood API error: %s %s -> HTTP %s - %s", method, path, e.response.status_code, e.response.text)
@@ -65,47 +69,58 @@ class IFoodAPIClient:
         return await self._request("POST", f"/order/v1.0/orders/{order_id}/dispatch")
 
     async def request_cancellation(self, order_id: str, reason: str) -> dict:
-        logger.info("Requesting cancellation for order %s, reason: %s", order_id, reason)
+        """Solicita cancelamento de pedido no iFood (fluxo merchant).
+
+        Endpoint: POST /order/v1.0/orders/{orderId}/requestCancellation
+        Body: {"reason": "503"}
+        Resposta: 202 Accepted (nao significa cancelado, apenas solicitado).
+        O cancelamento real vem via evento CANCELLED no webhook.
+        """
+        logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
         return await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason})
 
-    async def merchant_cancel_order(self, order_id: str, reason_code: str = "") -> dict:
-        """Cancela pedido no iFood iniciado pelo MERCHANT (Odoo -> middleware).
+    async def get_cancellation_reasons(self, order_id: str) -> list:
+        """Busca motivos de cancelamento validos para um pedido.
 
-        Endpoint: POST /order/v1.0/orders/{orderId}/cancellation
-        Diferente de accept_cancellation que aceita um cancelamento do cliente.
+        Endpoint: GET /order/v1.0/orders/{orderId}/cancellationReasons
+        """
+        logger.info("[CANCELLATION] Buscando motivos de cancelamento para pedido %s", order_id)
+        result = await self._request("GET", f"/order/v1.0/orders/{order_id}/cancellationReasons")
+        return result.get("reasons", [])
+
+    async def merchant_request_cancellation(self, order_id: str, reason_code: str = "") -> dict:
+        """Solicita cancelamento de pedido iniciado pelo MERCHANT (Odoo -> middleware).
+
+        Usa o endpoint oficial: POST /order/v1.0/orders/{orderId}/requestCancellation
+        Body: {"reason": "503"}
+        Resposta: 202 Accepted.
+
+        IMPORTANTE: Nao cancela na hora! O iFood processa e envia evento CANCELLED.
+        O middleware deve aguardar o evento CANCELLED via webhook para
+        atualizar o status final no Odoo.
 
         Args:
             order_id: ID do pedido no iFood.
-            reason_code: Codigo do motivo (501-509), opcional.
+            reason_code: Codigo do motivo (501-509).
         """
-        logger.info("[CANCELLATION] Merchant cancelando pedido %s - motivo: %s", order_id, reason_code)
-        body = None
-        if reason_code:
-            body = {"cancellationCode": reason_code}
+        logger.info("[CANCELLATION] Merchant solicitando cancelamento pedido %s - motivo: %s", order_id, reason_code)
+        body = {"reason": reason_code} if reason_code else {"reason": "501"}
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancellation", json_body=body)
-            logger.info("[CANCELLATION] Pedido %s cancelado pelo merchant - Resposta: %s", order_id, result)
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body=body)
+            logger.info("[CANCELLATION] Solicitacao de cancelamento ENVIADA pedido %s (202 Accepted) - aguardando evento CANCELLED", order_id)
             return result
         except Exception as e:
-            logger.error("[CANCELLATION] FALHA ao cancelar pedido %s pelo merchant: %s", order_id, e, exc_info=True)
+            logger.error("[CANCELLATION] FALHA ao solicitar cancelamento pedido %s: %s", order_id, e, exc_info=True)
             raise
 
-    async def accept_cancellation(self, order_id: str, reason_code: str = "") -> dict:
+    async def accept_cancellation(self, order_id: str) -> dict:
         """Aceita cancelamento SOLICITADO PELO CLIENTE (evento CAN do iFood).
 
         Endpoint: POST /order/v1.0/orders/{orderId}/cancellation/accept
-        Use merchant_cancel_order() para cancelamentos iniciados pelo merchant.
-
-        Args:
-            order_id: ID do pedido no iFood.
-            reason_code: Codigo do motivo (501-509), opcional.
         """
-        logger.info("[CANCELLATION] Aceitando cancelamento pedido %s (solicitado pelo cliente) - motivo: %s", order_id, reason_code)
-        body = None
-        if reason_code:
-            body = {"cancellationCode": reason_code}
+        logger.info("[CANCELLATION] Aceitando cancelamento pedido %s (solicitado pelo cliente)", order_id)
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancellation/accept", json_body=body)
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancellation/accept")
             logger.info("[CANCELLATION] Cancelamento ACEITO pedido %s - Resposta: %s", order_id, result)
             return result
         except Exception as e:

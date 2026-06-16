@@ -440,35 +440,36 @@ async def cancel_from_odoo(ifood_order_id: str, body: dict = None):
                 ifood_order_id, reason, reason_label)
 
     try:
-        # 1. Cancelar no iFood
+        # 1. Solicitar cancelamento no iFood (202 Accepted - nao cancela na hora!)
         async with IFoodAPIClient(settings) as ifood_client:
-            result = await ifood_client.merchant_cancel_order(ifood_order_id, reason_code=reason)
+            result = await ifood_client.merchant_request_cancellation(ifood_order_id, reason_code=reason)
 
-        logger.info("[ODOO_CANCEL] iFood confirmou cancelamento: %s", str(result)[:500])
+        logger.info("[ODOO_CANCEL] Solicitacao de cancelamento ENVIADA ao iFood: %s", str(result)[:500])
 
-        # 2. Atualizar status no Odoo
+        # 2. Marcar status como 'cancellation_requested' no Odoo
+        # O status final 'cancelled' sera atualizado quando chegar o evento CANCELLED do iFood
         try:
             odoo_client = OdooClient(settings)
             async with IFoodAPIClient(settings) as ifood_client2:
                 sync_service = OdooSyncService(odoo_client, ifood_client2)
-                sync_service.update_order_status(ifood_order_id, "cancelled")
+                sync_service.update_order_status(ifood_order_id, "cancellation_requested")
         except Exception as odoo_err:
             logger.warning("[ODOO_CANCEL] Falha ao atualizar Odoo (nao critico): %s", odoo_err)
 
         return {
             "status": "ok",
-            "message": f"Order {ifood_order_id} cancelled on iFood",
+            "message": f"Cancellation REQUESTED for order {ifood_order_id} on iFood (awaiting CANCELLED event)",
             "reason_code": reason,
             "reason_label": reason_label,
             "ifood_response": result,
         }
 
     except Exception as e:
-        logger.error("[ODOO_CANCEL] FALHA ao cancelar pedido %s no iFood: %s",
+        logger.error("[ODOO_CANCEL] FALHA ao solicitar cancelamento pedido %s no iFood: %s",
                      ifood_order_id, e, exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail=f"Failed to cancel order on iFood: {str(e)}",
+            detail=f"Failed to request cancellation on iFood: {str(e)}",
         )
 
 
