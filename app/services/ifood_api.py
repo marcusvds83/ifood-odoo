@@ -68,17 +68,39 @@ class IFoodAPIClient:
         logger.info("Requesting cancellation for order %s, reason: %s", order_id, reason)
         return await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason})
 
-    async def accept_cancellation(self, order_id: str, reason_code: str = "") -> dict:
-        """Aceita/solicita cancelamento de pedido no iFood.
+    async def merchant_cancel_order(self, order_id: str, reason_code: str = "") -> dict:
+        """Cancela pedido no iFood iniciado pelo MERCHANT (Odoo -> middleware).
 
-        Usado tanto para cancelamento solicitado pelo cliente (CAN webhook)
-        quanto para cancelamento iniciado pelo merchant (Odoo -> middleware).
+        Endpoint: POST /order/v1.0/orders/{orderId}/cancellation
+        Diferente de accept_cancellation que aceita um cancelamento do cliente.
 
         Args:
             order_id: ID do pedido no iFood.
             reason_code: Codigo do motivo (501-509), opcional.
         """
-        logger.info("[CANCELLATION] Aceitando cancelamento pedido %s - motivo: %s", order_id, reason_code)
+        logger.info("[CANCELLATION] Merchant cancelando pedido %s - motivo: %s", order_id, reason_code)
+        body = None
+        if reason_code:
+            body = {"cancellationCode": reason_code}
+        try:
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancellation", json_body=body)
+            logger.info("[CANCELLATION] Pedido %s cancelado pelo merchant - Resposta: %s", order_id, result)
+            return result
+        except Exception as e:
+            logger.error("[CANCELLATION] FALHA ao cancelar pedido %s pelo merchant: %s", order_id, e, exc_info=True)
+            raise
+
+    async def accept_cancellation(self, order_id: str, reason_code: str = "") -> dict:
+        """Aceita cancelamento SOLICITADO PELO CLIENTE (evento CAN do iFood).
+
+        Endpoint: POST /order/v1.0/orders/{orderId}/cancellation/accept
+        Use merchant_cancel_order() para cancelamentos iniciados pelo merchant.
+
+        Args:
+            order_id: ID do pedido no iFood.
+            reason_code: Codigo do motivo (501-509), opcional.
+        """
+        logger.info("[CANCELLATION] Aceitando cancelamento pedido %s (solicitado pelo cliente) - motivo: %s", order_id, reason_code)
         body = None
         if reason_code:
             body = {"cancellationCode": reason_code}

@@ -442,14 +442,16 @@ async def cancel_from_odoo(ifood_order_id: str, body: dict = None):
     try:
         # 1. Cancelar no iFood
         async with IFoodAPIClient(settings) as ifood_client:
-            result = await ifood_client.accept_cancellation(ifood_order_id, reason_code=reason)
+            result = await ifood_client.merchant_cancel_order(ifood_order_id, reason_code=reason)
+
         logger.info("[ODOO_CANCEL] iFood confirmou cancelamento: %s", str(result)[:500])
 
         # 2. Atualizar status no Odoo
         try:
             odoo_client = OdooClient(settings)
-            sync_service = OdooSyncService(odoo_client, ifood_client)
-            sync_service.update_order_status(ifood_order_id, "cancelled")
+            async with IFoodAPIClient(settings) as ifood_client2:
+                sync_service = OdooSyncService(odoo_client, ifood_client2)
+                sync_service.update_order_status(ifood_order_id, "cancelled")
         except Exception as odoo_err:
             logger.warning("[ODOO_CANCEL] Falha ao atualizar Odoo (nao critico): %s", odoo_err)
 

@@ -469,7 +469,7 @@ async def _check_odoo_pending_cancellations() -> dict:
                          ifood_id, reason_code)
 
             try:
-                await ifood_client.accept_cancellation(ifood_id, reason_code=reason_code)
+                await ifood_client.merchant_cancel_order(ifood_id, reason_code=reason_code)
                 results["cancelled"] += 1
 
                 # Atualizar status no Odoo
