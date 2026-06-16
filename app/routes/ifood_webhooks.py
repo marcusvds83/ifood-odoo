@@ -200,6 +200,17 @@ async def handle_order_webhook(request: Request, response: Response):
                 logger.error("[DSP] Falha ao atualizar Odoo: %s", odoo_err, exc_info=True)
             return {"status": "ok", "eventType": event_type, "orderId": order_id}
 
+        # ── CONCLUDED: Pedido concluido (entrega finalizada) ─────
+        if event_type in ("CONCLUDED", "concluded", "DELIVERED", "delivered"):
+            logger.info("[CONCLUDED] Pedido %s CONCLUIDO no iFood - atualizando Odoo", order_id)
+            try:
+                _update_odoo_status(order_id, "concluded")
+                # Tambem tentar mudar state para 'done' no Odoo
+                _update_odoo_state(order_id, "done")
+            except Exception as odoo_err:
+                logger.error("[CONCLUDED] Falha ao atualizar Odoo: %s", odoo_err, exc_info=True)
+            return {"status": "ok", "eventType": event_type, "orderId": order_id}
+
         # ── Status Change generico ────────────────────────────
         if event_type == "orderStatusChanged":
             status = payload.get("newStatus", payload.get("status", ""))
@@ -207,6 +218,9 @@ async def handle_order_webhook(request: Request, response: Response):
             if status:
                 try:
                     _update_odoo_status(order_id, status)
+                    # Se o status for concluded/delivered, tambem mudar state
+                    if status in ("CONCLUDED", "concluded", "DELIVERED", "delivered"):
+                        _update_odoo_state(order_id, "done")
                 except Exception as odoo_err:
                     logger.error("[STATUS_CHANGE] Falha ao atualizar Odoo: %s", odoo_err, exc_info=True)
             return {"status": "ok", "eventType": event_type, "orderId": order_id}
@@ -415,7 +429,7 @@ async def _handle_can(order_id: str, merchant_id: str, payload: dict, body: byte
 # ── Helper: Atualizar status no Odoo ─────────────────────────
 
 def _update_odoo_status(ifood_order_id: str, status: str) -> bool:
-    """Atualiza o status iFood no sale.order do Odoo."""
+    """Atualiza o campo x_studio_ifood_status no sale.order do Odoo."""
     try:
         odoo_client = OdooClient(settings)
         sync_service = OdooSyncService(odoo_client, IFoodAPIClient(settings))
@@ -424,6 +438,33 @@ def _update_odoo_status(ifood_order_id: str, status: str) -> bool:
         logger.error("[ODOO] Falha ao atualizar status %s para pedido %s: %s",
                      status, ifood_order_id, e, exc_info=True)
         raise
+
+
+def _update_odoo_state(ifood_order_id: str, state: str) -> None:
+    """Muda o state do sale.order no Odoo (ex: 'done', 'cancel')."""
+    try:
+        odoo_client = OdooClient(settings)
+        # Buscar o ID do sale.order pelo x_studio_ifood_order_id
+        orders = odoo_client.search_read(
+            "sale.order",
+            domain=[("x_studio_ifood_order_id", "=", ifood_order_id)],
+            fields=["id", "state"],
+        )
+        if not orders:
+            logger.warning("[ODOO] Pedido %s nao encontrado no Odoo para mudar state", ifood_order_id)
+            return
+        for order in orders:
+            if order.get("state") == state:
+                continue
+            odoo_client.execute_kw(
+                "sale.order",
+                "write",
+                [[order["id"]], {"state": state}],
+            )
+            logger.info("[ODOO] Pedido %s (Odoo %d) -> state='%s'", ifood_order_id, order["id"], state)
+    except Exception as e:
+        logger.error("[ODOO] Falha ao mudar state '%s' para pedido %s: %s",
+                     state, ifood_order_id, e, exc_info=True)
 
 
 # ── Polling: Cancelamentos Odoo → iFood ────────────────────
@@ -561,7 +602,7 @@ async def _check_odoo_pending_dispatches() -> dict:
                 continue
 
             # Ja foi despachado ou cancelado?
-            if ifood_status in ("dispatched", "cancelled", "cancellation_requested", "delivered"):
+            if ifood_status in ("dispatched", "cancelled", "cancellation_requested", "delivered", "concluded"):
                 continue
 
             logger.info("[ODOO_DISPATCH] Despachando pedido %s no iFood (status atual: %s)...",
