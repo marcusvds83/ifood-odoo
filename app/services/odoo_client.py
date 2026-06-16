@@ -33,13 +33,22 @@ class OdooClient:
 
         Raises:
             xmlrpc.client.Fault: If authentication fails.
+            RuntimeError: If Odoo returns uid=False (invalid credentials).
         """
         try:
             self._uid = self._common.authenticate(self._db, self._user, self._password, {})
+            if not self._uid:
+                raise RuntimeError(
+                    f"Odoo authentication returned uid=False — invalid credentials "
+                    f"(db={self._db}, user={self._user}, url={self._url}). "
+                    f"Check ODOO_DB, ODOO_USER, ODOO_PASSWORD, and ODOO_URL env vars."
+                )
             logger.info("Authenticated with Odoo (uid=%s, db=%s)", self._uid, self._db)
             return self._uid
         except xmlrpc.client.Fault as e:
             logger.error("Odoo authentication failed: %s", e)
+            raise
+        except RuntimeError:
             raise
         except Exception as e:
             logger.error("Failed to connect to Odoo at %s: %s", self._url, e)
