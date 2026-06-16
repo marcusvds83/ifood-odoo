@@ -72,12 +72,11 @@ class IFoodAPIClient:
         """Solicita cancelamento de pedido no iFood (fluxo merchant).
 
         Endpoint: POST /order/v1.0/orders/{orderId}/requestCancellation
-        Body: {"reason": "503"}
-        Resposta: 202 Accepted (nao significa cancelado, apenas solicitado).
-        O cancelamento real vem via evento CANCELLED no webhook.
+        Body: {"cancellationCode": "503"}
+        Resposta: 202 Accepted.
         """
         logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
-        return await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason})
+        return await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"cancellationCode": reason})
 
     async def get_cancellation_reasons(self, order_id: str) -> list:
         """Busca motivos de cancelamento validos para um pedido.
@@ -91,20 +90,14 @@ class IFoodAPIClient:
     async def merchant_request_cancellation(self, order_id: str, reason_code: str = "") -> dict:
         """Solicita cancelamento de pedido iniciado pelo MERCHANT (Odoo -> middleware).
 
-        Usa o endpoint oficial: POST /order/v1.0/orders/{orderId}/requestCancellation
-        Body: {"reason": "503"}
+        Endpoint: POST /order/v1.0/orders/{orderId}/requestCancellation
+        Body: {"cancellationCode": "503"}
         Resposta: 202 Accepted.
 
         IMPORTANTE: Nao cancela na hora! O iFood processa e envia evento CANCELLED.
-        O middleware deve aguardar o evento CANCELLED via webhook para
-        atualizar o status final no Odoo.
-
-        Args:
-            order_id: ID do pedido no iFood.
-            reason_code: Codigo do motivo (501-509).
         """
         logger.info("[CANCELLATION] Merchant solicitando cancelamento pedido %s - motivo: %s", order_id, reason_code)
-        body = {"reason": reason_code} if reason_code else {"reason": "501"}
+        body = {"cancellationCode": reason_code} if reason_code else {"cancellationCode": "501"}
         try:
             result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body=body)
             logger.info("[CANCELLATION] Solicitacao de cancelamento ENVIADA pedido %s (202 Accepted) - aguardando evento CANCELLED", order_id)
