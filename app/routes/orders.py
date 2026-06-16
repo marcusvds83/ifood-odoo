@@ -422,6 +422,11 @@ async def cancel_from_odoo(ifood_order_id: str, body: dict = None):
     reason = ""
     if body and isinstance(body, dict):
         reason = str(body.get("reason", ""))
+    # Extrair apenas o codigo numerico (ex: "506:Endereco..." -> "506")
+    if ":" in reason:
+        reason = reason.split(":")[0].strip()
+    if not reason or not reason.isdigit():
+        reason = "501"
 
     IFOOD_REASONS = {
         "501": "Erro no sistema",

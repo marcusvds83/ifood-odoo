@@ -478,7 +478,10 @@ async def _check_odoo_pending_cancellations() -> dict:
                 continue
 
             reason_code = str(order.get("x_studio_ifood_cancel_reason", ""))
-            if not reason_code:
+            # Extrair apenas o codigo numerico (ex: "506:Endereco..." -> "506")
+            if ":" in reason_code:
+                reason_code = reason_code.split(":")[0].strip()
+            if not reason_code or not reason_code.isdigit():
                 reason_code = "501"  # default: Erro no sistema
 
             logger.info("[ODOO_POLL] Solicitando cancelamento pedido %s no iFood (motivo: %s)...",
