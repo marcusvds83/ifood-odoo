@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "CONFIRMED Order confirmed New order arrives. If merchant delivery: track driver to destination. Order was finished (delivered or picked up successfully). This ...\nIf iFood: wait for delivery confirmation event. CONCLUDED. Code: CONCLUDED Order was finished (delivered or picked up successfully).\nIf merchant delivery: track driver to destination; If iFood: wait for delivery confirmation event. CONCLUDED. Code: CONCLUDED Order was finished (delivered or ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Confirm order. Confirm receipt within 8 minutes. See confirmation deadline. POST https://merchant-api.ifood.com.br/order/v1.0/orders/{id}/confirm Path ...\nNavigate all Order API endpoints organized by functionality. Retrieve complete information for a specific order.\nDispatch order. Notify that the order is out for merchant delivery. POST https://merchant-api.ifood.com.br/order/v1.0/orders/{id}/dispatch Path parameters ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "The flow consists of three stages: Check availability - Confirm delivery is available for the address; Request driver - Allocate an iFood driver to the order ...\nMonitor events to know the final result (success or failure). Endpoint. POST /shipping/v1.0/orders/{orderId}/requestDriver. Parameters. Parameter, Location ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "The API maintains orders and events for up to 8 hours after delivery. After this period, without ACK. You can filter the orders received in polling.\nThe API maintains orders and events for up to 8 hours after delivery. After this period, return the events. The API only returns events without ACK. filter the ...\nThe API maintains orders and events for up to 8 hours after delivery. After this period, the API does not return the events. The API only returns events without ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Confirmar pedido. Use POST /orders/{id}/confirm para confirmar o pedido.Requisição: curl -X POST \"https://merchant-api.ifood.com.br/order/v1.0/orders/{id}/ ...\nImplement the Order API step by step, from receiving orders through complete resolution.Prerequisites: Understand the Fundamentals (order types, categories, SLA) ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "The Order API provides means to interact with orders on the platform. Confirm/cancel orders, dispatch them, POST /orders /{id} /confirm Confirm an order The ...\nThe Merchant API provides means to interact with merchants on the platform. It is separated into four core parts. Merchant, Status, Interruption and Opening ...\nv1.0. The Merchant API provides means to interact with merchants on the platform. It is separated into four core parts.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/scheduled-orders",
+    "name": "Scheduled orders - iFood Developer",
+    "snippet": "What is a scheduled order. Scheduled order is when a customer chooses an exact time to receive or pick up their order, instead of immediate delivery/pickup.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.doordash.com/en-US/docs/marketplace/how_to/order_integration",
+    "name": "Receive orders from DoorDash",
+    "snippet": "Post Order Confirmation Updates​. DoorDash has added new functionality to OpenAPI to allow merchants to cancel orders that have previously been accepted.\nA new call that will be triggered to a configured merchant provided endpoint when a dasher is near the store. When a merchant confirms the order, they can ...",
+    "host_name": "developer.doordash.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/item/general",
+    "name": "Introduction - iFood Developer",
+    "snippet": "Overview. Use the Item API to send and manage products. iFood processes the data based on availability rules before displaying them in the app.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=0dgiGavzu8Y",
+    "name": "Meet the new Merchant API - YouTube",
+    "snippet": "O iFood está sempre evoluindo, e estamos prontos para um passo importante que vai aprimorar os nossos serviços de integração.",
+    "host_name": "www.youtube.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

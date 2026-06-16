@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://integration.foodpanda.com/documentation",
+    "name": "Documentation - Foodpanda POS Integration",
+    "snippet": "Delivery Hero's POS Middleware APIs enable partners to programmatically manage orders , menus, and stores on Delivery Hero's delivery platforms. Read more",
+    "host_name": "integration.foodpanda.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.doordash.com/docs/marketplace/retail/orders/features/self_delivery_enhancement",
+    "name": "Self-delivery order updates | DoorDash Developer Services",
+    "snippet": "Step 2: Understand the event types​ · Step 3: Understand the possible webhook fields​ · Step 4: Implement​. Read more",
+    "host_name": "developer.doordash.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api-docs.mykeeta.com/apis/standard/docs/orderintegrationguide",
+    "name": "Order API Integration Guide - Introduction",
+    "snippet": "Jan 4, 2026 — Order delivery completion . Order Completion. After the rider successfully delivers the meal to the customer: The order status is updated to ... Read more",
+    "host_name": "api-docs.mykeeta.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=aWgwtfJfb9c",
+    "name": "iFood Developer - API de Pedidos - Primeiros Passos com o",
+    "snippet": "Importando collections no Postman e testando a API de Pedidos do iFood . Neste vídeo você irá aprender como começar a utilizar a API de ...\n... entrega futura https://developer.ifood.com.br/docs/guides/order/scheduled-orders.",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "Orders on iFood platform. Use this documentation to request iFood delivery drivers for orders that already exist on the platform. Read more\nUse this documentation to request iFood delivery drivers for orders that already exist on the platform. Confirm delivery is available for the address Request ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Confirm delivery or pickup. Validate and confirm order delivery or pickup. POST https://merchant-api.ifood.com.br/order/v1.0/orders/{id}/verifyDeliveryCode ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "Confirm an order post. The Merchant API provides means to interact with merchants on the platform. The Shipping API allows the merchant to send orders to iFood ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Implement the Order API step by step, from receiving orders through complete resolution.Prerequisites: Configure your endpoint to receive events directly. ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.opendelivery.com.br/api-portal/content/docs",
+    "name": "Documentação | Portal Open Delivery",
+    "snippet": "Through the Open Delivery API it is possible to: Confirm receipt of order; Notify that an order is ready for pickup; Notify that an order has been dispatched.",
+    "host_name": "developer.opendelivery.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.wolt.com/docs/api",
+    "name": "API reference for Order API - Wolt for Developers",
+    "snippet": "This endpoint is valid only for Self Delivery after the order is marked as ready. It sends a push notification to confirm the courier's arrival at the customer ...",
+    "host_name": "developer.wolt.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

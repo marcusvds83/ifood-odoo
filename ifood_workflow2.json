@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "If merchant delivery: track driver to destination; If iFood: wait for delivery confirmation event. CONCLUDED. Code: CONCLUDED Order was finished (delivered or ...\nIf merchant delivery: track driver to destination If iFood: wait for delivery confirmation event CONCLUDED Code: CONCLUDED Order was finished (delivered or ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Response (202 Accepted)System automatically marks as CONCLUDED after delivery. 12. Track delivery (iFood). For orders delivered by iFood, track in real time: ...\nImplement the Order API step by step, from receiving orders through complete resolution.Prerequisites: Confirm order Confirm receipt within 8 minutes. ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/order/workflow",
+    "name": "Guia de implementação - iFood Developer",
+    "snippet": "CONCLUDED — Concluído; CANCELLED — Cancelado. FOOD_SELF_SERVICE ... Confirmar pedido. Use POST /orders/{id}/confirm para confirmar o pedido.Requisição: curl ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow/?category=FOOD",
+    "name": "Introdução - iFood Developer",
+    "snippet": "order details 4- Confirm order POST /orders/{id}/confirm ... endpoint POST /orders/{id}/confirm. ... O evento de CONCLUDED é gerado somente pelo próprio iFood.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/financial/api-reconciliation",
+    "name": "API Reconciliation - Financial - iFood Developer",
+    "snippet": "Order short ID (4 digits). impacto_no_repasse, string, Whether entry affects ... concluded. Therefore, the value to be transferred to the store for this ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.pluxeegroup.com/sites/g/files/jclxxe221/files/2024-10/Pluxee_Annual_Report_2024.pdf",
+    "name": "[PDF] FY24 - Annual Report 2024 - Pluxee",
+    "snippet": "... concluded with Santander in Brazil. We also performed specific audit procedures related to important estimates of management. We ...",
+    "host_name": "www.pluxeegroup.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.prosus.com/~/media/Files/P/Prosus-CORP/results-reports-and-events-archive/latest-results/fy-2021/2021-annual-report.pdf",
+    "name": "[PDF] Improving everyday life for millions of people - Prosus",
+    "snippet": "... process is concluded, reports are closed and feedback is provided to reporters. • 17 reports are in progress, with relevant management and ...",
+    "host_name": "www.prosus.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.sec.gov/Archives/edgar/data/1712807/000162828025020406/pags-20241231.htm",
+    "name": "pags-20241231 - SEC.gov",
+    "snippet": "We understand that the PAX Technology investigation was concluded. If any of our POS devices' suppliers, service providers or business partners are investigated ...",
+    "host_name": "www.sec.gov",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://mlab.cyber.nyu.edu/static/ccs-19.pdf",
+    "name": "[PDF] The Tracking Ecosystem of Over-the-Top TV Streaming Devices",
+    "snippet": "We discovered only six cases of false positives (out of 40 detections) where the crawler erroneously concluded video play- back had taken place. These were ...",
+    "host_name": "mlab.cyber.nyu.edu",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.computerweekly.com/news/252482642/Pizza-Hut-optimises-pizza-delivery-platform-during-lockdown-with-data-analytics",
+    "name": "Pizza Hut optimises pizza delivery platform during lockdown with",
+    "snippet": "He concluded with the controversial proposition that “pineapple on pizza is fine”. Read more about data analytics in e-commerce retail.",
+    "host_name": "www.computerweekly.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
