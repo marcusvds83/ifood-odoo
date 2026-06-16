@@ -1,0 +1,23 @@
+{
+  "province": "省份",
+  "classify": "综合 | 物理 | 历史 | 文科 | 理科",
+  "subjects": "物理,化学,生物",
+  "score": 0,
+  "batch": "本科批",
+  "rank": null,
+  "gradeType": null,
+  "interests": "兴趣爱好",
+  "family_situation": "家庭情况",
+  "career_direction": "未来就业/发展方向",
+  "subject_scores": {
+    "语文": 0,
+    "数学": 0,
+    "英语": 0
+  },
+  "preferred_cities": ["北京", "上海"],
+  "preferred_provinces": ["北京", "上海"],
+  "preferred_universities": ["院校全称"],
+  "preferred_tags": ["985", "211"],
+  "preferred_major_classes": ["计算机类", "电子信息类"],
+  "notes": "排除性偏好及其他补充"
+}
