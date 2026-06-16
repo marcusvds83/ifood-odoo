@@ -150,7 +150,12 @@ async def handle_order_webhook(request: Request, response: Response):
 
         # ── KEEPALIVE: heartbeat do iFood ─────────────────────
         if event_type == "KEEPALIVE":
-            logger.debug("[KEEPALIVE] Heartbeat recebido - ack silencioso")
+            logger.debug("[KEEPALIVE] Heartbeat recebido")
+            # Aproveitar o heartbeat para verificar cancelamentos pendentes no Odoo
+            try:
+                await _check_odoo_pending_cancellations()
+            except Exception as poll_err:
+                logger.warning("[KEEPALIVE] Falha ao verificar cancelamentos Odoo: %s", poll_err)
             return {"status": "ok", "eventType": "KEEPALIVE"}
 
         # ── PLC: Novo Pedido ──────────────────────────────────
@@ -403,6 +408,87 @@ def _update_odoo_status(ifood_order_id: str, status: str) -> bool:
         logger.error("[ODOO] Falha ao atualizar status %s para pedido %s: %s",
                      status, ifood_order_id, e, exc_info=True)
         raise
+
+
+# ── Polling: Cancelamentos Odoo → iFood ────────────────────
+
+async def _check_odoo_pending_cancellations() -> dict:
+    """Verifica pedidos cancelados no Odoo que ainda nao foram cancelados no iFood.
+
+    Busca sale.order onde:
+      - state = 'cancel' (cancelado no Odoo)
+      - x_studio_ifood_order_id esta preenchido
+      - x_studio_ifood_status != 'cancelled' (ainda nao propagado)
+
+    Para cada pedido encontrado, chama o iFood cancellation/accept.
+    """
+    logger.info("[ODOO_POLL] Verificando cancelamentos pendentes no Odoo...")
+
+    odoo_client = OdooClient(settings)
+    results = {"checked": 0, "cancelled": 0, "errors": []}
+
+    try:
+        orders = odoo_client.search_read(
+            "sale.order",
+            domain=[
+                ("state", "=", "cancel"),
+                ("x_studio_ifood_order_id", "!=", False),
+            ],
+            fields=[
+                "id", "x_studio_ifood_order_id",
+                "x_studio_ifood_cancel_reason",
+                "x_studio_ifood_status",
+            ],
+        )
+    except Exception as e:
+        logger.error("[ODOO_POLL] Falha ao buscar pedidos no Odoo: %s", e, exc_info=True)
+        return results
+
+    results["checked"] = len(orders)
+    if not orders:
+        logger.info("[ODOO_POLL] Nenhum cancelamento pendente encontrado")
+        return results
+
+    logger.info("[ODOO_POLL] Encontrados %d pedidos cancelados no Odoo", len(orders))
+
+    async with IFoodAPIClient(settings) as ifood_client:
+        for order in orders:
+            ifood_id = str(order.get("x_studio_ifood_order_id", ""))
+            ifood_status = str(order.get("x_studio_ifood_status", ""))
+
+            if not ifood_id:
+                continue
+
+            # Ja foi cancelado no iFood?
+            if ifood_status == "cancelled":
+                continue
+
+            reason_code = str(order.get("x_studio_ifood_cancel_reason", ""))
+
+            logger.info("[ODOO_POLL] Cancelando pedido %s no iFood (motivo: %s)...",
+                         ifood_id, reason_code)
+
+            try:
+                await ifood_client.accept_cancellation(ifood_id, reason_code=reason_code)
+                results["cancelled"] += 1
+
+                # Atualizar status no Odoo
+                try:
+                    sync_service = OdooSyncService(odoo_client, ifood_client)
+                    sync_service.update_order_status(ifood_id, "cancelled")
+                except Exception:
+                    pass
+
+                logger.info("[ODOO_POLL] Pedido %s cancelado no iFood com sucesso!", ifood_id)
+
+            except Exception as e:
+                logger.error("[ODOO_POLL] Falha ao cancelar pedido %s: %s",
+                             ifood_id, e, exc_info=True)
+                results["errors"].append(f"{ifood_id}: {str(e)}")
+
+    logger.info("[ODOO_POLL] Resultado: verificados=%d, cancelados=%d",
+                 results["checked"], results["cancelled"])
+    return results
 
 
 # ── Catalog webhook ──────────────────────────────────────────

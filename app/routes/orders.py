@@ -246,6 +246,22 @@ async def resync_pending_orders():
     return results
 
 
+# ── POLL: Verificar cancelamentos Odoo → iFood ──────────────
+
+@router.post("/poll-cancellations")
+async def poll_odoo_cancellations():
+    """Verifica pedidos cancelados no Odoo e propaga o cancelamento ao iFood.
+
+    Busca sale.order onde state='cancel' e x_studio_ifood_status != 'cancelled'.
+    Para cada pedido encontrado, chama iFood cancellation/accept com o
+    motivo do campo x_studio_ifood_cancel_reason.
+
+    Tambem e chamado automaticamente a cada KEEPALIVE do iFood.
+    """
+    from app.routes.ifood_webhooks import _check_odoo_pending_cancellations
+    return await _check_odoo_pending_cancellations()
+
+
 # ── Sync manual de pedido especifico ─────────────────────────
 
 @router.post("/sync/{ifood_order_id}")
@@ -391,6 +407,7 @@ async def accept_cancellation(ifood_order_id: str):
 # ── Cancelar pedido originado do ODOO ────────────────────────
 # Este endpoint e chamado pela Automacao do Odoo quando o usuario
 # clica no botao "Cancelar" (action_cancel) em uma cotacao/pedido.
+# Tambem pode ser chamado manualmente para forcar a verificacao.
 
 @router.post("/cancel-from-odoo/{ifood_order_id}")
 async def cancel_from_odoo(ifood_order_id: str, body: dict = None):
