@@ -388,6 +388,72 @@ async def accept_cancellation(ifood_order_id: str):
         )
 
 
+# ── Cancelar pedido originado do ODOO ────────────────────────
+# Este endpoint e chamado pela Automacao do Odoo quando o usuario
+# clica no botao "Cancelar" (action_cancel) em uma cotacao/pedido.
+
+from pydantic import BaseModel
+
+class OdooCancelRequest(BaseModel):
+    reason: str = ""
+
+@router.post("/cancel-from-odoo/{ifood_order_id}")
+async def cancel_from_odoo(ifood_order_id: str, req: OdooCancelRequest = None):
+    """Cancela pedido no iFood originado do Odoo (botao Cancelar).
+
+    Chamado pela Automacao do Odoo quando action_cancel e acionado.
+    O motivo de cancelamento (codigo 501-509) vem do campo
+    x_studio_ifood_cancel_reason da sale.order no Odoo.
+    """
+    reason = req.reason if req else ""
+
+    IFOOD_REASONS = {
+        "501": "Erro no sistema",
+        "502": "Pedido duplicado",
+        "503": "Item ou loja indisponivel",
+        "504": "Sem entregador disponivel",
+        "505": "Problema com o cardapio",
+        "506": "Endereco fora da area de entrega",
+        "507": "Suspeita de fraude",
+        "508": "Fora do horario de funcionamento",
+        "509": "Erro interno da operacao",
+    }
+
+    reason_label = IFOOD_REASONS.get(reason, reason)
+    logger.info("[ODOO_CANCEL] Pedido %s | Codigo motivo: %s (%s)",
+                ifood_order_id, reason, reason_label)
+
+    try:
+        # 1. Cancelar no iFood
+        async with IFoodAPIClient(settings) as ifood_client:
+            result = await ifood_client.accept_cancellation(ifood_order_id, reason_code=reason)
+        logger.info("[ODOO_CANCEL] iFood confirmou cancelamento: %s", str(result)[:500])
+
+        # 2. Atualizar status no Odoo
+        try:
+            odoo_client = OdooClient(settings)
+            sync_service = OdooSyncService(odoo_client, ifood_client)
+            sync_service.update_order_status(ifood_order_id, "cancelled")
+        except Exception as odoo_err:
+            logger.warning("[ODOO_CANCEL] Falha ao atualizar Odoo (nao critico): %s", odoo_err)
+
+        return {
+            "status": "ok",
+            "message": f"Order {ifood_order_id} cancelled on iFood",
+            "reason_code": reason,
+            "reason_label": reason_label,
+            "ifood_response": result,
+        }
+
+    except Exception as e:
+        logger.error("[ODOO_CANCEL] FALHA ao cancelar pedido %s no iFood: %s",
+                     ifood_order_id, e, exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to cancel order on iFood: {str(e)}",
+        )
+
+
 # ── Rejeitar cancelamento ────────────────────────────────────
 
 @router.post("/{ifood_order_id}/reject-cancellation")

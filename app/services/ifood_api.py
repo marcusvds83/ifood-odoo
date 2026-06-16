@@ -68,14 +68,26 @@ class IFoodAPIClient:
         logger.info("Requesting cancellation for order %s, reason: %s", order_id, reason)
         return await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason})
 
-    async def accept_cancellation(self, order_id: str) -> dict:
-        logger.info("[CANCELLATION] Aceitando cancelamento do pedido %s no iFood", order_id)
+    async def accept_cancellation(self, order_id: str, reason_code: str = "") -> dict:
+        """Aceita/solicita cancelamento de pedido no iFood.
+
+        Usado tanto para cancelamento solicitado pelo cliente (CAN webhook)
+        quanto para cancelamento iniciado pelo merchant (Odoo -> middleware).
+
+        Args:
+            order_id: ID do pedido no iFood.
+            reason_code: Codigo do motivo (501-509), opcional.
+        """
+        logger.info("[CANCELLATION] Aceitando cancelamento pedido %s - motivo: %s", order_id, reason_code)
+        body = None
+        if reason_code:
+            body = {"cancellationCode": reason_code}
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancellation/accept")
-            logger.info("[CANCELLATION] Cancelamento ACEITO para pedido %s - Resposta: %s", order_id, result)
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancellation/accept", json_body=body)
+            logger.info("[CANCELLATION] Cancelamento ACEITO pedido %s - Resposta: %s", order_id, result)
             return result
         except Exception as e:
-            logger.error("[CANCELLATION] FALHA ao aceitar cancelamento pedido %s: %s", order_id, e, exc_info=True)
+            logger.error("[CANCELLATION] FALHA cancelamento pedido %s: %s", order_id, e, exc_info=True)
             raise
 
     async def reject_cancellation(self, order_id: str, reason: str = "") -> dict:
