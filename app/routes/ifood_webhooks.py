@@ -383,10 +383,12 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
     1. Receber CANCELLATION_REQUESTED via webhook (ja respondido com 202)
     2. Buscar motivos validos via GET /cancellationReasons (NAO hardcode!)
     3. Chamar POST /orders/{orderId}/cancel com motivo valido
-    4. Aguardar evento CANCELLED (ou CANCELLATION_REQUEST_FAILED)
-    5. Atualizar Odoo com o status final
+    4. Enviar acknowledgment via POST /statuses/cancellation/acknowledged
+    5. Aguardar evento CANCELLED (ou CANCELLATION_REQUEST_FAILED)
+    6. Atualizar Odoo com o status final
 
     IMPORTANTE: O endpoint correto e POST /cancel (NAO /cancellation/accept).
+    OBRIGATORIO: Chamar /statuses/cancellation/acknowledged para Firefly Audit.
     """
     logger.info("[CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO (background) ===")
     logger.info("[CANCELLATION_REQUESTED] Pedido: %s | Merchant: %s", order_id, merchant_id)
@@ -437,7 +439,33 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
                 "cancelled": False,
             })
 
-        # ── PASSO 3: Atualizar Odoo para 'cancellation_requested' ──
+        # ── PASSO 3: Enviar acknowledgment de cancelamento ─────
+        # OBRIGATORIO para homologacao - Firefly Audit valida este ack.
+        try:
+            logger.info("[CANCELLATION_REQUESTED] Enviando cancellation acknowledged...")
+            async with ifood_client:
+                ack_result = await ifood_client.acknowledge_cancellation(order_id)
+            logger.info("[CANCELLATION_REQUESTED] Acknowledgment ENVIADO pedido %s: %s",
+                         order_id, str(ack_result)[:500])
+            _log_event({
+                "level": "info",
+                "event_type": "CANCELLATION_REQUESTED",
+                "order_id": order_id,
+                "step": "acknowledge_cancellation",
+                "message": "Cancellation acknowledged enviado com sucesso",
+            })
+        except Exception as ack_err:
+            logger.error("[CANCELLATION_REQUESTED] FALHA ao enviar acknowledgment: %s", ack_err, exc_info=True)
+            _log_event({
+                "level": "error",
+                "event_type": "CANCELLATION_REQUESTED",
+                "order_id": order_id,
+                "step": "acknowledge_cancellation",
+                "message": "Falha ao enviar cancellation acknowledged",
+                "error": str(ack_err),
+            })
+
+        # ── PASSO 4: Atualizar Odoo para 'cancellation_requested' ──
         # NAO colocar 'cancelled' ainda! Aguardar o evento CANCELLED.
         try:
             sync_status = "cancellation_accepted" if cancelled else "cancellation_requested"
