@@ -72,11 +72,11 @@ class IFoodAPIClient:
         """Solicita cancelamento de pedido no iFood (fluxo merchant).
 
         Endpoint: POST /order/v1.0/orders/{orderId}/requestCancellation
-        Body: {"cancellationCode": "503"}
+        Body: {"cancellationCode": "503", "reason": "503"}
         Resposta: 202 Accepted.
         """
         logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
-        return await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"cancellationCode": reason})
+        return await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"cancellationCode": reason, "reason": reason})
 
     async def get_cancellation_reasons(self, order_id: str) -> list:
         """Busca motivos de cancelamento validos para um pedido.
@@ -101,13 +101,16 @@ class IFoodAPIClient:
         """Solicita cancelamento de pedido iniciado pelo MERCHANT (Odoo -> middleware).
 
         Endpoint: POST /order/v1.0/orders/{orderId}/requestCancellation
-        Body: {"cancellationCode": "503"}
+        Body: {"cancellationCode": "501", "reason": "501"}
         Resposta: 202 Accepted.
 
-        IMPORTANTE: Nao cancela na hora! O iFood processa e envia evento CANCELLED.
+        IMPORTANTE: O campo 'reason' e obrigatorio alem de 'cancellationCode'.
+        Nao cancela na hora! O iFood processa e envia evento CANCELLED.
         """
+        if not reason_code:
+            reason_code = "501"
         logger.info("[CANCELLATION] Merchant solicitando cancelamento pedido %s - motivo: %s", order_id, reason_code)
-        body = {"cancellationCode": reason_code} if reason_code else {"cancellationCode": "501"}
+        body = {"cancellationCode": reason_code, "reason": reason_code}
         try:
             result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body=body)
             logger.info("[CANCELLATION] Solicitacao de cancelamento ENVIADA pedido %s (202 Accepted) - aguardando evento CANCELLED", order_id)
