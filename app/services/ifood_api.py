@@ -82,10 +82,20 @@ class IFoodAPIClient:
         """Busca motivos de cancelamento validos para um pedido.
 
         Endpoint: GET /order/v1.0/orders/{orderId}/cancellationReasons
+
+        A resposta pode vir como:
+        - Lista direta: ["OTHER", "ITEM_UNAVAILABLE", ...]
+        - Dict com chave "reasons": {"reasons": [...]}
         """
         logger.info("[CANCELLATION] Buscando motivos de cancelamento para pedido %s", order_id)
         result = await self._request("GET", f"/order/v1.0/orders/{order_id}/cancellationReasons")
-        return result.get("reasons", [])
+        logger.info("[CANCELLATION] Resposta cancellationReasons: %s", str(result)[:1000])
+        # A resposta pode ser lista direta ou dict com "reasons"
+        if isinstance(result, list):
+            return result
+        if isinstance(result, dict):
+            return result.get("reasons", [])
+        return []
 
     async def merchant_request_cancellation(self, order_id: str, reason_code: str = "") -> dict:
         """Solicita cancelamento de pedido iniciado pelo MERCHANT (Odoo -> middleware).
@@ -107,14 +117,32 @@ class IFoodAPIClient:
             raise
 
     async def accept_cancellation(self, order_id: str) -> dict:
-        """Aceita cancelamento SOLICITADO PELO CLIENTE (evento CAN do iFood).
+        """Aceita cancelamento SOLICITADO PELO CLIENTE (evento CANCELLATION_REQUESTED do iFood).
 
-        Endpoint: POST /order/v1.0/orders/{orderId}/cancellation/accept
+        Fluxo correto (obrigatorio para homologacao):
+        1. Buscar motivos validos via GET /cancellationReasons
+        2. Chamar POST /order/v1.0/orders/{orderId}/cancel com motivo valido
+
+        NAO pode hardcode motivos - iFood exige buscar via API.
         """
         logger.info("[CANCELLATION] Aceitando cancelamento pedido %s (solicitado pelo cliente)", order_id)
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancellation/accept")
-            logger.info("[CANCELLATION] Cancelamento ACEITO pedido %s - Resposta: %s", order_id, result)
+            # Passo 1: Buscar motivos de cancelamento validos
+            logger.info("[CANCELLATION] Buscando motivos de cancelamento para pedido %s...", order_id)
+            reasons = await self.get_cancellation_reasons(order_id)
+
+            if not reasons:
+                logger.warning("[CANCELLATION] Nenhum motivo retornado para pedido %s, usando 'OTHER'", order_id)
+                reason_code = "OTHER"
+            else:
+                # Usar o primeiro motivo disponivel
+                reason_code = reasons[0] if isinstance(reasons[0], str) else str(reasons[0].get("code", reasons[0].get("id", "OTHER")))
+                logger.info("[CANCELLATION] Motivos disponiveis: %s | Selecionado: %s", reasons, reason_code)
+
+            # Passo 2: Chamar endpoint de cancelamento com motivo valido
+            logger.info("[CANCELLATION] Chamando POST /order/v1.0/orders/%s/cancel com reason=%s", order_id, reason_code)
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancel", json_body={"reason": reason_code})
+            logger.info("[CANCELLATION] Cancelamento SOLICITADO pedido %s - Resposta: %s", order_id, result)
             return result
         except Exception as e:
             logger.error("[CANCELLATION] FALHA cancelamento pedido %s: %s", order_id, e, exc_info=True)
