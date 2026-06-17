@@ -577,7 +577,7 @@ async def _check_odoo_pending_cancellations() -> dict:
                 continue
 
             # Ja foi cancelado ou ja tem solicitacao em andamento?
-            if ifood_status in ("cancelled", "cancellation_requested"):
+            if ifood_status in ("cancelled", "cancellation_requested", "cancellation_accepted"):
                 continue
 
             reason_code = str(order.get("x_studio_ifood_cancel_reason", ""))
@@ -591,17 +591,20 @@ async def _check_odoo_pending_cancellations() -> dict:
                          ifood_id, reason_code)
 
             try:
-                await ifood_client.merchant_request_cancellation(ifood_id, reason_code=reason_code)
+                cancel_result = await ifood_client.merchant_request_cancellation(ifood_id, reason_code=reason_code)
                 results["requested"] += 1
 
-                # Marcar como 'cancellation_requested' no Odoo (nao 'cancelled' ainda!)
+                # Se ja estava cancelado, marcar direto como 'cancelled'
+                final_status = "cancelled" if cancel_result.get("status") == "already_cancelled" else "cancellation_requested"
                 try:
                     sync_service = OdooSyncService(odoo_client, ifood_client)
-                    sync_service.update_order_status(ifood_id, "cancellation_requested")
+                    sync_service.update_order_status(ifood_id, final_status)
                 except Exception:
                     pass
 
-                logger.info("[ODOO_POLL] Solicitacao de cancelamento ENVIADA para pedido %s - aguardando evento CANCELLED do iFood", ifood_id)
+                logger.info("[ODOO_POLL] Cancelamento %s para pedido %s - status Odoo: %s",
+                             "ja estava cancelado" if final_status == "cancelled" else "ENVIADO",
+                             ifood_id, final_status)
 
             except Exception as e:
                 logger.error("[ODOO_POLL] Falha ao solicitar cancelamento pedido %s: %s",

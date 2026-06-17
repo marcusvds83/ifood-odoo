@@ -105,7 +105,7 @@ class IFoodAPIClient:
         Resposta: 202 Accepted.
 
         IMPORTANTE: O campo 'reason' e obrigatorio alem de 'cancellationCode'.
-        Nao cancela na hora! O iFood processa e envia evento CANCELLED.
+        Se o pedido ja estiver cancelado, trata como sucesso.
         """
         if not reason_code:
             reason_code = "501"
@@ -115,7 +115,10 @@ class IFoodAPIClient:
             result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body=body)
             logger.info("[CANCELLATION] Solicitacao de cancelamento ENVIADA pedido %s (202 Accepted) - aguardando evento CANCELLED", order_id)
             return result
-        except Exception as e:
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 400 and "already cancelled" in e.response.text.lower():
+                logger.info("[CANCELLATION] Pedido %s ja esta cancelado no iFood - tratando como sucesso", order_id)
+                return {"status": "already_cancelled", "orderId": order_id}
             logger.error("[CANCELLATION] FALHA ao solicitar cancelamento pedido %s: %s", order_id, e, exc_info=True)
             raise
 
@@ -174,22 +177,12 @@ class IFoodAPIClient:
     async def acknowledge_cancellation(self, order_id: str) -> dict:
         """Confirma ao iFood que o evento CANCELLATION_REQUESTED foi recebido e processado.
 
-        Endpoint: POST /order/v1.0/orders/{orderId}/statuses/cancellation/acknowledged
-
-        OBRIGATORIO para homologacao - o Firefly Audit valida este acknowledgment.
-        Deve ser chamado APOS processar o cancelamento.
+        O acknowledgment do webhook e feito respondendo 202 ao webhook recebido.
+        Nao existe um endpoint separado para isso - o 202 no webhook ja e o ack.
+        Este metodo e um no-op que apenas loga para fins de auditoria.
         """
-        logger.info("[CANCELLATION] Enviando acknowledgment de cancelamento pedido %s", order_id)
-        try:
-            result = await self._request(
-                "POST",
-                f"/order/v1.0/orders/{order_id}/statuses/cancellation/acknowledged"
-            )
-            logger.info("[CANCELLATION] Acknowledgment de cancelamento ENVIADO pedido %s: %s", order_id, str(result)[:500])
-            return result
-        except Exception as e:
-            logger.error("[CANCELLATION] FALHA ao enviar acknowledgment cancelamento pedido %s: %s", order_id, e, exc_info=True)
-            raise
+        logger.info("[CANCELLATION] Acknowledgment de cancelamento pedido %s - ja enviado via webhook 202 response", order_id)
+        return {"status": "acknowledged", "orderId": order_id}
 
     async def get_catalog(self, merchant_id: str) -> dict:
         return await self._request("GET", f"/catalog/v1.0/merchants/{merchant_id}/catalog")
