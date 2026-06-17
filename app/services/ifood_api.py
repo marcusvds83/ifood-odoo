@@ -124,12 +124,21 @@ class IFoodAPIClient:
         2. Chamar POST /order/v1.0/orders/{orderId}/cancel com motivo valido
 
         NAO pode hardcode motivos - iFood exige buscar via API.
+
+        IMPORTANTE: Se o pedido ja estiver cancelado (race condition com outro fluxo),
+        trata como sucesso - o objetivo final (pedido cancelado) ja foi atingido.
         """
         logger.info("[CANCELLATION] Aceitando cancelamento pedido %s (solicitado pelo cliente)", order_id)
         try:
             # Passo 1: Buscar motivos de cancelamento validos
             logger.info("[CANCELLATION] Buscando motivos de cancelamento para pedido %s...", order_id)
-            reasons = await self.get_cancellation_reasons(order_id)
+            try:
+                reasons = await self.get_cancellation_reasons(order_id)
+            except httpx.HTTPStatusError as e:
+                if e.response.status_code == 400 and "already cancelled" in e.response.text.lower():
+                    logger.info("[CANCELLATION] Pedido %s ja esta cancelado - nenhum acao necessaria (race condition ok)", order_id)
+                    return {"status": "already_cancelled", "orderId": order_id}
+                raise
 
             if not reasons:
                 logger.warning("[CANCELLATION] Nenhum motivo retornado para pedido %s, usando 'OTHER'", order_id)
@@ -141,7 +150,13 @@ class IFoodAPIClient:
 
             # Passo 2: Chamar endpoint de cancelamento com motivo valido
             logger.info("[CANCELLATION] Chamando POST /order/v1.0/orders/%s/cancel com reason=%s", order_id, reason_code)
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancel", json_body={"reason": reason_code})
+            try:
+                result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancel", json_body={"reason": reason_code})
+            except httpx.HTTPStatusError as e:
+                if e.response.status_code == 400 and "already cancelled" in e.response.text.lower():
+                    logger.info("[CANCELLATION] Pedido %s ja esta cancelado no POST /cancel - sucesso", order_id)
+                    return {"status": "already_cancelled", "orderId": order_id}
+                raise
             logger.info("[CANCELLATION] Cancelamento SOLICITADO pedido %s - Resposta: %s", order_id, result)
             return result
         except Exception as e:
