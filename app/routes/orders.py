@@ -253,7 +253,7 @@ async def poll_odoo_cancellations():
     """Verifica pedidos cancelados no Odoo e propaga o cancelamento ao iFood.
 
     Busca sale.order onde state='cancel' e x_studio_ifood_status != 'cancelled'.
-    Para cada pedido encontrado, chama iFood cancellation/accept com o
+    Para cada pedido encontrado, chama POST /requestCancellation na API iFood com o
     motivo do campo x_studio_ifood_cancel_reason.
 
     Tambem e chamado automaticamente a cada KEEPALIVE do iFood.
@@ -447,7 +447,7 @@ async def cancel_from_odoo(ifood_order_id: str, body: dict = None):
     try:
         # 1. Solicitar cancelamento no iFood (202 Accepted - nao cancela na hora!)
         async with IFoodAPIClient(settings) as ifood_client:
-            result = await ifood_client.merchant_request_cancellation(ifood_order_id, reason_code=reason)
+            result = await ifood_client.request_cancellation(ifood_order_id, reason=reason)
 
         logger.info("[ODOO_CANCEL] Solicitacao de cancelamento ENVIADA ao iFood: %s", str(result)[:500])
 

@@ -21,7 +21,7 @@ class IFoodAPIClient:
     def _build_url(self, path: str) -> str:
         return f"{self._config.ifood_api_base_url}{path}"
 
-    async def _request(self, method: str, path: str, params: Optional[dict] = None, json_body: Optional[dict] = None, allow_empty_body: bool = False) -> dict:
+    async def _request(self, method: str, path: str, params: Optional[dict] = None, json_body: Optional[dict] = None) -> dict:
         headers = await self._auth_service.get_authenticated_headers()
         url = self._build_url(path)
         try:
@@ -68,121 +68,89 @@ class IFoodAPIClient:
         logger.info("Dispatching order %s", order_id)
         return await self._request("POST", f"/order/v1.0/orders/{order_id}/dispatch")
 
-    async def request_cancellation(self, order_id: str, reason: str) -> dict:
-        """Solicita cancelamento de pedido no iFood (fluxo merchant).
-
-        Endpoint: POST /order/v1.0/orders/{orderId}/requestCancellation
-        Body: {"cancellationCode": "503", "reason": "503"}
-        Resposta: 202 Accepted.
-        """
-        logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
-        return await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"cancellationCode": reason, "reason": reason})
-
     async def get_cancellation_reasons(self, order_id: str) -> list:
-        """Busca motivos de cancelamento validos para um pedido.
+        """Busca motivos de cancelamento disponiveis para o pedido.
 
-        Endpoint: GET /order/v1.0/orders/{orderId}/cancellationReasons
-
-        A resposta pode vir como:
-        - Lista direta: ["OTHER", "ITEM_UNAVAILABLE", ...]
-        - Dict com chave "reasons": {"reasons": [...]}
+        GET /order/v1.0/orders/{orderId}/cancellationReasons
+        Retorna: {"reasons": [{"code": "501", "description": "..."}, ...]}
         """
         logger.info("[CANCELLATION] Buscando motivos de cancelamento para pedido %s", order_id)
-        result = await self._request("GET", f"/order/v1.0/orders/{order_id}/cancellationReasons")
-        logger.info("[CANCELLATION] Resposta cancellationReasons: %s", str(result)[:1000])
-        # A resposta pode ser lista direta ou dict com "reasons"
-        if isinstance(result, list):
-            return result
-        if isinstance(result, dict):
-            return result.get("reasons", [])
-        return []
-
-    async def merchant_request_cancellation(self, order_id: str, reason_code: str = "") -> dict:
-        """Solicita cancelamento de pedido iniciado pelo MERCHANT (Odoo -> middleware).
-
-        Endpoint: POST /order/v1.0/orders/{orderId}/requestCancellation
-        Body: {"cancellationCode": "501", "reason": "501"}
-        Resposta: 202 Accepted.
-
-        IMPORTANTE: O campo 'reason' e obrigatorio alem de 'cancellationCode'.
-        Se o pedido ja estiver cancelado, trata como sucesso.
-        """
-        if not reason_code:
-            reason_code = "501"
-        logger.info("[CANCELLATION] Merchant solicitando cancelamento pedido %s - motivo: %s", order_id, reason_code)
-        body = {"cancellationCode": reason_code, "reason": reason_code}
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body=body)
-            logger.info("[CANCELLATION] Solicitacao de cancelamento ENVIADA pedido %s (202 Accepted) - aguardando evento CANCELLED", order_id)
-            return result
+            result = await self._request("GET", f"/order/v1.0/orders/{order_id}/cancellationReasons")
+            # A API pode retornar {"reasons": [...]} ou a lista direta
+            if isinstance(result, dict) and "reasons" in result:
+                reasons = result["reasons"]
+            elif isinstance(result, list):
+                reasons = result
+            else:
+                reasons = []
+            logger.info("[CANCELLATION] Motivos encontrados: %s", reasons)
+            return reasons
         except httpx.HTTPStatusError as e:
-            if e.response.status_code == 400 and "already cancelled" in e.response.text.lower():
-                logger.info("[CANCELLATION] Pedido %s ja esta cancelado no iFood - tratando como sucesso", order_id)
-                return {"status": "already_cancelled", "orderId": order_id}
-            logger.error("[CANCELLATION] FALHA ao solicitar cancelamento pedido %s: %s", order_id, e, exc_info=True)
+            # Se o pedido ja esta cancelado, a API retorna 400
+            if e.response.status_code == 400:
+                logger.warning("[CANCELLATION] Pedido %s pode ja estar cancelado (400 ao buscar motivos): %s", order_id, e.response.text[:200])
+                return []
             raise
 
-    async def accept_cancellation(self, order_id: str) -> dict:
-        """Aceita cancelamento SOLICITADO PELO CLIENTE (evento CANCELLATION_REQUESTED do iFood).
+    async def request_cancellation(self, order_id: str, reason: str = "") -> dict:
+        """Solicita cancelamento de pedido no iFood.
 
-        Fluxo correto (obrigatorio para homologacao):
-        1. Buscar motivos validos via GET /cancellationReasons
-        2. Chamar POST /order/v1.0/orders/{orderId}/cancel com motivo valido
+        Este e o UNICO endpoint de cancelamento da API oficial iFood:
+        POST /order/v1.0/orders/{orderId}/requestCancellation
+        Body: {"reason": "codigo_do_motivo"}
+        Resposta: 202 Accepted
+        Resultado real chega via polling como evento CANCELLED.
 
-        NAO pode hardcode motivos - iFood exige buscar via API.
+        Usado tanto para cancelamento solicitado pelo cliente (CAN webhook)
+        quanto para cancelamento iniciado pelo merchant (Odoo -> middleware).
 
-        IMPORTANTE: Se o pedido ja estiver cancelado (race condition com outro fluxo),
-        trata como sucesso - o objetivo final (pedido cancelado) ja foi atingido.
+        Args:
+            order_id: ID do pedido no iFood.
+            reason: Codigo do motivo (ex: "501"). Se vazio, busca via API.
         """
-        logger.info("[CANCELLATION] Aceitando cancelamento pedido %s (solicitado pelo cliente)", order_id)
-        try:
-            # Passo 1: Buscar motivos de cancelamento validos
-            logger.info("[CANCELLATION] Buscando motivos de cancelamento para pedido %s...", order_id)
+        if not reason:
+            # Buscar motivos disponiveis via API
             try:
                 reasons = await self.get_cancellation_reasons(order_id)
-            except httpx.HTTPStatusError as e:
-                if e.response.status_code == 400 and "already cancelled" in e.response.text.lower():
-                    logger.info("[CANCELLATION] Pedido %s ja esta cancelado - nenhum acao necessaria (race condition ok)", order_id)
-                    return {"status": "already_cancelled", "orderId": order_id}
-                raise
+                if reasons:
+                    # reasons e uma lista de dicts com "code" ou lista de strings
+                    first = reasons[0]
+                    if isinstance(first, dict):
+                        reason = str(first.get("code", "501"))
+                    else:
+                        reason = str(first)
+                else:
+                    reason = "501"  # Default: Erro no sistema
+            except Exception as e:
+                logger.warning("[CANCELLATION] Nao foi possivel buscar motivos, usando default 501: %s", e)
+                reason = "501"
 
-            if not reasons:
-                logger.warning("[CANCELLATION] Nenhum motivo retornado para pedido %s, usando 'OTHER'", order_id)
-                reason_code = "OTHER"
-            else:
-                # Usar o primeiro motivo disponivel
-                reason_code = reasons[0] if isinstance(reasons[0], str) else str(reasons[0].get("code", reasons[0].get("id", "OTHER")))
-                logger.info("[CANCELLATION] Motivos disponiveis: %s | Selecionado: %s", reasons, reason_code)
-
-            # Passo 2: Chamar endpoint de cancelamento com motivo valido
-            logger.info("[CANCELLATION] Chamando POST /order/v1.0/orders/%s/cancel com reason=%s", order_id, reason_code)
-            try:
-                result = await self._request("POST", f"/order/v1.0/orders/{order_id}/cancel", json_body={"reason": reason_code})
-            except httpx.HTTPStatusError as e:
-                if e.response.status_code == 400 and "already cancelled" in e.response.text.lower():
-                    logger.info("[CANCELLATION] Pedido %s ja esta cancelado no POST /cancel - sucesso", order_id)
-                    return {"status": "already_cancelled", "orderId": order_id}
-                raise
-            logger.info("[CANCELLATION] Cancelamento SOLICITADO pedido %s - Resposta: %s", order_id, result)
+        logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
+        try:
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason})
+            logger.info("[CANCELLATION] Cancelamento solicitado pedido %s - Resposta: %s", order_id, str(result)[:500])
             return result
-        except Exception as e:
-            logger.error("[CANCELLATION] FALHA cancelamento pedido %s: %s", order_id, e, exc_info=True)
+        except httpx.HTTPStatusError as e:
+            # Se o pedido ja foi cancelado (race condition), trata como sucesso
+            if e.response.status_code == 400 and ("already cancelled" in e.response.text.lower() or "já está cancelado" in e.response.text.lower()):
+                logger.info("[CANCELLATION] Pedido %s ja esta cancelado - tratando como sucesso", order_id)
+                return {"status": "already_cancelled", "orderId": order_id}
+            if e.response.status_code == 409:
+                logger.info("[CANCELLATION] Pedido %s ja tem cancelamento em andamento - tratando como sucesso", order_id)
+                return {"status": "cancellation_in_progress", "orderId": order_id}
             raise
 
-    async def reject_cancellation(self, order_id: str, reason: str = "") -> dict:
-        logger.info("[CANCELLATION] Rejeitando cancelamento pedido %s - Motivo: %s", order_id, reason)
-        body = {"reason": reason} if reason else None
-        return await self._request("POST", f"/order/v1.0/orders/{order_id}/cancellation/reject", json_body=body)
+    async def accept_cancellation(self, order_id: str, reason_code: str = "") -> dict:
+        """Aceita cancelamento de pedido no iFood.
 
-    async def acknowledge_cancellation(self, order_id: str) -> dict:
-        """Confirma ao iFood que o evento CANCELLATION_REQUESTED foi recebido e processado.
+        ATENCAO: Usa o mesmo endpoint /requestCancellation da API oficial.
+        Nao existe /cancellation/accept na API iFood.
 
-        O acknowledgment do webhook e feito respondendo 202 ao webhook recebido.
-        Nao existe um endpoint separado para isso - o 202 no webhook ja e o ack.
-        Este metodo e um no-op que apenas loga para fins de auditoria.
+        Este metodo e um alias para request_cancellation(), mantido para
+        compatibilidade com codigos que ja o chamavam.
         """
-        logger.info("[CANCELLATION] Acknowledgment de cancelamento pedido %s - ja enviado via webhook 202 response", order_id)
-        return {"status": "acknowledged", "orderId": order_id}
+        return await self.request_cancellation(order_id, reason=reason_code)
 
     async def get_catalog(self, merchant_id: str) -> dict:
         return await self._request("GET", f"/catalog/v1.0/merchants/{merchant_id}/catalog")
