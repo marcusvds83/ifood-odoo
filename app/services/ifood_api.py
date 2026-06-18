@@ -128,7 +128,7 @@ class IFoodAPIClient:
 
         logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason})
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"cancellationCode": reason, "reason": reason})
             logger.info("[CANCELLATION] Cancelamento solicitado pedido %s - Resposta: %s", order_id, str(result)[:500])
             return result
         except httpx.HTTPStatusError as e:
