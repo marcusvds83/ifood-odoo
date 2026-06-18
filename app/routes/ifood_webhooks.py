@@ -347,18 +347,18 @@ async def _handle_plc(order_id: str, merchant_id: str, payload: dict, body: byte
 # ── CAN Handler: Cancelamento Solicitado (Background) ────────
 
 async def _handle_can_background(order_id: str, merchant_id: str, payload: dict, body: bytes) -> None:
-    """Processa evento CANCELLATION_REQUESTED em background.
+    """Processa evento CANCELLATION_REQUESTED (CAN) em background.
 
-    Fluxo correto pela API oficial iFood:
-    1. O webhook ja retornou 202 = acknowledgment para Firefly Audit (NAO existe endpoint separado)
-    2. GET /cancellationReasons -> buscar motivo valido
-    3. POST /requestCancellation com {"reason": "codigo"} -> 202 Accepted
-    4. Resultado vem no proximo polling como evento CANCELLED
-    5. Atualizar Odoo
+    Fluxo correto validado pelo Firefly Audit:
+    1. Webhook ja retornou 202 (resposta rapida)
+    2. Extrair cancellationCode do metadata do evento CAN
+    3. POST /statuses/cancellationRequested com {"cancellationCode": "xxx"}
+       -> Este e o ENDPOINT que o Firefly Audit valida!
+    4. Atualizar Odoo
 
-    ATENCAO: NAO existem os endpoints /cancellation/accept, /cancel, ou
-    /statuses/cancellation/acknowledged na API iFood.
-    O UNICO endpoint de cancelamento e /requestCancellation.
+    IMPORTANTE: O endpoint /statuses/cancellationRequested e DIFERENTE de /requestCancellation.
+    - /statuses/cancellationRequested = acknowledgment do evento CAN (Firefly Audit valida este)
+    - /requestCancellation = merchant inicia cancelamento (nao usado no fluxo CAN)
     """
     logger.info("[CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO (background) ===")
     logger.info("[CANCELLATION_REQUESTED] Pedido: %s | Merchant: %s", order_id, merchant_id)
@@ -369,54 +369,64 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
         "event_type": "CANCELLATION_REQUESTED",
         "order_id": order_id,
         "merchant_id": merchant_id,
-        "message": "Evento CANCELLATION_REQUESTED recebido (202 ja retornado) - processando cancelamento",
+        "message": "Evento CANCELLATION_REQUESTED recebido (202 ja retornado) - processando",
     })
 
+    # ── Extrair cancellationCode do metadata do evento CAN ──
+    # O payload traz o codigo no metadata: CANCEL_CODE, CANCEL_REASON
+    metadata = payload.get("metadata", {})
+    cancel_code = (
+        metadata.get("CANCEL_CODE")
+        or metadata.get("CANCEL_REASON")
+        or payload.get("cancellationCode")
+        or "501"
+    )
+    logger.info("[CANCELLATION_REQUESTED] CancellationCode extraido do payload: %s", cancel_code)
+
     ifood_client = IFoodAPIClient(settings)
-    cancelled = False
+    acknowledged = False
 
     try:
-        # ── PASSO 1: Solicitar cancelamento no iFood via API oficial ─
-        # Endpoint: POST /requestCancellation com {"reason": "codigo_do_motivo"}
-        # O metodo accept_cancellation() agora e alias de request_cancellation()
-        # que busca motivos via API e chama o endpoint correto.
+        # ── PASSO 1: Enviar acknowledgment para Firefly Audit ──
+        # Endpoint: POST /order/v1.0/orders/{orderId}/statuses/cancellationRequested
+        # Body: {"cancellationCode": "504"}
         try:
-            logger.info("[CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/%s/requestCancellation", order_id)
+            logger.info("[CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/%s/statuses/cancellationRequested", order_id)
             async with ifood_client:
-                accept_result = await ifood_client.accept_cancellation(order_id)
-            cancelled = True
-            logger.info("[CANCELLATION_REQUESTED] Cancelamento SOLICITADO no iFood: %s",
-                         str(accept_result)[:500])
+                ack_result = await ifood_client.acknowledge_cancellation_requested(order_id, cancellation_code=cancel_code)
+            acknowledged = True
+            logger.info("[CANCELLATION_REQUESTED] Acknowledgment ENVIADO ao iFood: %s",
+                         str(ack_result)[:500])
             _log_event({
                 "level": "info",
                 "event_type": "CANCELLATION_REQUESTED",
                 "order_id": order_id,
-                "step": "request_cancellation",
-                "message": "POST /requestCancellation enviado com sucesso",
+                "step": "acknowledge_cancellation_requested",
+                "message": "POST /statuses/cancellationRequested enviado com sucesso",
                 "cancelled": True,
             })
         except Exception as ifood_err:
-            logger.error("[CANCELLATION_REQUESTED] FALHA ao solicitar cancelamento no iFood: %s",
+            logger.error("[CANCELLATION_REQUESTED] FALHA ao enviar acknowledgment: %s",
                          ifood_err, exc_info=True)
             _log_event({
                 "level": "error",
                 "event_type": "CANCELLATION_REQUESTED",
                 "order_id": order_id,
-                "step": "request_cancellation",
-                "message": "Falha ao chamar POST /requestCancellation",
+                "step": "acknowledge_cancellation_requested",
+                "message": "Falha ao chamar POST /statuses/cancellationRequested",
                 "error": str(ifood_err),
                 "cancelled": False,
             })
 
         # ── PASSO 2: Atualizar Odoo ──────────────────────────
         try:
-            sync_status = "cancelled" if cancelled else "cancellation_requested"
+            sync_status = "cancelled" if acknowledged else "cancellation_requested"
             _update_odoo_status(order_id, sync_status)
             logger.info("[CANCELLATION_REQUESTED] Odoo atualizado para '%s'", sync_status)
         except Exception as odoo_err:
             logger.error("[CANCELLATION_REQUESTED] Falha ao atualizar Odoo: %s", odoo_err, exc_info=True)
 
-        logger.info("[CANCELLATION_REQUESTED] === RESUMO: cancelado=%s ===", cancelled)
+        logger.info("[CANCELLATION_REQUESTED] === RESUMO: acknowledged=%s ===", acknowledged)
         logger.info("[CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===")
 
     finally:

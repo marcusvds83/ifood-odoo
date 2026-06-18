@@ -141,14 +141,35 @@ class IFoodAPIClient:
                 return {"status": "cancellation_in_progress", "orderId": order_id}
             raise
 
+    async def acknowledge_cancellation_requested(self, order_id: str, cancellation_code: str = "501") -> dict:
+        """Confirma ao iFood que recebemos e processamos o evento CANCELLATION_REQUESTED.
+
+        Endpoint: POST /order/v1.0/orders/{orderId}/statuses/cancellationRequested
+        Body: {"cancellationCode": "501"}
+
+        Este e o ENDPOINT QUE O FIREFLY AUDIT VALIDA na homologacao.
+        Deve ser chamado quando recebemos um evento CAN/CANCELLATION_REQUESTED via webhook.
+
+        O cancellationCode pode vir do metadata do proprio evento CAN:
+        payload["metadata"]["CANCEL_CODE"]
+        """
+        logger.info("[CANCELLATION] Enviando acknowledgment cancellationRequested para pedido %s - codigo: %s", order_id, cancellation_code)
+        try:
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/statuses/cancellationRequested", json_body={"cancellationCode": cancellation_code})
+            logger.info("[CANCELLATION] Acknowledgment cancellationRequested ENVIADO pedido %s: %s", order_id, str(result)[:500])
+            return result
+        except httpx.HTTPStatusError as e:
+            # Se ja esta cancelado, trata como sucesso
+            if e.response.status_code == 400 and "already cancelled" in e.response.text.lower():
+                logger.info("[CANCELLATION] Pedido %s ja cancelado ao enviar acknowledgment - tratando como sucesso", order_id)
+                return {"status": "already_cancelled", "orderId": order_id}
+            raise
+
     async def accept_cancellation(self, order_id: str, reason_code: str = "") -> dict:
         """Aceita cancelamento de pedido no iFood.
 
-        ATENCAO: Usa o mesmo endpoint /requestCancellation da API oficial.
-        Nao existe /cancellation/accept na API iFood.
-
-        Este metodo e um alias para request_cancellation(), mantido para
-        compatibilidade com codigos que ja o chamavam.
+        Para evento CAN (customer-initiated): usa /statuses/cancellationRequested
+        Para merchant-initiated (Odoo): usa /requestCancellation
         """
         return await self.request_cancellation(order_id, reason=reason_code)
 
