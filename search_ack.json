@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Polling is a simple method to receive updates from an API. Send acknowledgment for each polling with events. POST /events/acknowledgment Confirms event receipt ...\n'https://merchant-api.ifood.com.br/events/v1 ... Send POST /events/acknowledgment for all received events (code 200) immediately after the polling request.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Acknowledge event consumption. Confirm that you successfully processed events. POST https://merchant-api.ifood.com.br/order/v1.0/orders:acknowledgment Body.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/references",
+    "name": "Referências - iFood Developer",
+    "snippet": "The Order API provides means to interact with orders on the platform. ed into three core parts: Events, Details and Actions, GET /events:polling Get New Events ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "After processing events, confirm they were consumed: curl -X POST \"https://merchant-api.ifood.com.br/order/v1.0/orders:acknowledgment\" \\ -H \"Authorization ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/events/intro",
+    "name": "Introduction - iFood Developer",
+    "snippet": "POST /events/acknowledgment - Confirms receipt of events. Webhook. Receives POST requests on your configured endpoint. Base URL: https://merchant-api.ifood.com.\nBase URL: https://merchant-api.ifood.com.br/events/v1.0 Refer to the API reference for complete details of each endpoint. NextEvent polling. Was this page ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/catalog/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Event polling Webhook overview. The pre-configured Postman collections cover all endpoints on this page. Create a complete item with products, add-on groups, ...\nReference of Catalog API v2.0 endpoints. Test in Postman. The pre-configured Postman collections cover all endpoints on this page.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/getting-started/documentation/glossary",
+    "name": "Glossary - iFood Developer",
+    "snippet": "The polling request is a command made to obtain recent events related to orders placed on iFood. This command should be done periodically so that new events are ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=aWgwtfJfb9c",
+    "name": "iFood Developer - API de Pedidos - Primeiros Passos com o Postman",
+    "snippet": "Importando collections no Postman e testando a API de Pedidos do iFood. Neste vídeo você irá aprender como começar a utilizar a API de ...",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/events/presence",
+    "name": "Presença - iFood Developer",
+    "snippet": "Você faz requisições de polling a cada 30 segundos; Enquanto o polling continua, o merchant fica online; Se o polling parar, o merchant fica offline. Resposta ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "body, uuid, Yes, Quote ID obtained in previous stage (valid ~24h). Example request. curl -X POST \"https://merchant-api.ifood.com.br/shipping/v1.0/orders/{ ...\nOrders on iFood platform. Use this documentation to request iFood delivery drivers for orders that already exist on the platform.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

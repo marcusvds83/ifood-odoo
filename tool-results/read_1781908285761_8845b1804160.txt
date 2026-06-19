@@ -347,21 +347,21 @@
    347→# ── CAN Handler: Cancelamento Solicitado (Background) ────────
    348→
    349→async def _handle_can_background(order_id: str, merchant_id: str, payload: dict, body: bytes) -> None:
-   350→    """Processa evento CANCELLATION_REQUESTED (CAN) em background.
+   350→    """Processa evento CAN (cancelamento) em background.
    351→
-   352→    Fluxo correto validado pelo Firefly Audit:
-   353→    1. Webhook ja retornou 202 (resposta rapida)
-   354→    2. Extrair cancellationCode do metadata do evento CAN
-   355→    3. POST /statuses/cancellationRequested com {"cancellationCode": "xxx"}
-   356→       -> Este e o ENDPOINT que o Firefly Audit valida!
-   357→    4. Atualizar Odoo
-   358→
-   359→    IMPORTANTE: O endpoint /statuses/cancellationRequested e DIFERENTE de /requestCancellation.
-   360→    - /statuses/cancellationRequested = acknowledgment do evento CAN (Firefly Audit valida este)
-   361→    - /requestCancellation = merchant inicia cancelamento (nao usado no fluxo CAN)
-   362→    """
+   352→    O iFood envia eventos CAN com dois possiveis fullCode:
+   353→    - "CANCELLATION_REQUESTED": cliente pediu cancelamento, merchant DEVE aceitar
+   354→    - "CANCELLED": pedido ja foi cancelado (pelo sistema/timer), merchant so atualiza
+   355→
+   356→    Fluxo:
+   357→    1. Verificar fullCode do payload
+   358→    2. Se CANCELLATION_REQUESTED: chamar POST /requestCancellation (unico endpoint real)
+   359→    3. Se CANCELLED: pular chamada API (ja esta cancelado)
+   360→    4. Atualizar Odoo
+   361→    """
+   362→    full_code = payload.get("fullCode", "")
    363→    logger.info("[CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO (background) ===")
-   364→    logger.info("[CANCELLATION_REQUESTED] Pedido: %s | Merchant: %s", order_id, merchant_id)
+   364→    logger.info("[CANCELLATION_REQUESTED] Pedido: %s | Merchant: %s | fullCode: %s", order_id, merchant_id, full_code)
    365→    logger.info("[CANCELLATION_REQUESTED] Payload: %s", body.decode("utf-8", errors="replace")[:3000])
    366→
    367→    _log_event({
@@ -369,290 +369,306 @@
    369→        "event_type": "CANCELLATION_REQUESTED",
    370→        "order_id": order_id,
    371→        "merchant_id": merchant_id,
-   372→        "message": "Evento CANCELLATION_REQUESTED recebido (202 ja retornado) - processando",
-   373→    })
-   374→
-   375→    # ── Extrair cancellationCode do metadata do evento CAN ──
-   376→    # O payload traz o codigo no metadata: CANCEL_CODE, CANCEL_REASON
+   372→        "full_code": full_code,
+   373→        "message": "Evento CAN recebido (202 ja retornado) - processando",
+   374→    })
+   375→
+   376→    # ── Extrair cancellationCode do metadata do evento CAN ──
    377→    metadata = payload.get("metadata", {})
-   378→    cancel_code = (
-   379→        metadata.get("CANCEL_CODE")
-   380→        or metadata.get("CANCEL_REASON")
-   381→        or payload.get("cancellationCode")
-   382→        or "501"
-   383→    )
-   384→    logger.info("[CANCELLATION_REQUESTED] CancellationCode extraido do payload: %s", cancel_code)
-   385→
-   386→    ifood_client = IFoodAPIClient(settings)
-   387→    acknowledged = False
-   388→
-   389→    try:
-   390→        # ── PASSO 1: Enviar acknowledgment para Firefly Audit ──
-   391→        # Endpoint: POST /order/v1.0/orders/{orderId}/statuses/cancellationRequested
-   392→        # Body: {"cancellationCode": "504"}
-   393→        try:
-   394→            logger.info("[CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/%s/statuses/cancellationRequested", order_id)
-   395→            async with ifood_client:
-   396→                ack_result = await ifood_client.acknowledge_cancellation_requested(order_id, cancellation_code=cancel_code)
-   397→            acknowledged = True
-   398→            logger.info("[CANCELLATION_REQUESTED] Acknowledgment ENVIADO ao iFood: %s",
-   399→                         str(ack_result)[:500])
-   400→            _log_event({
-   401→                "level": "info",
-   402→                "event_type": "CANCELLATION_REQUESTED",
-   403→                "order_id": order_id,
-   404→                "step": "acknowledge_cancellation_requested",
-   405→                "message": "POST /statuses/cancellationRequested enviado com sucesso",
-   406→                "cancelled": True,
-   407→            })
-   408→        except Exception as ifood_err:
-   409→            logger.error("[CANCELLATION_REQUESTED] FALHA ao enviar acknowledgment: %s",
-   410→                         ifood_err, exc_info=True)
-   411→            _log_event({
-   412→                "level": "error",
-   413→                "event_type": "CANCELLATION_REQUESTED",
-   414→                "order_id": order_id,
-   415→                "step": "acknowledge_cancellation_requested",
-   416→                "message": "Falha ao chamar POST /statuses/cancellationRequested",
-   417→                "error": str(ifood_err),
-   418→                "cancelled": False,
-   419→            })
-   420→
-   421→        # ── PASSO 2: Atualizar Odoo ──────────────────────────
-   422→        try:
-   423→            sync_status = "cancelled" if acknowledged else "cancellation_requested"
-   424→            _update_odoo_status(order_id, sync_status)
-   425→            logger.info("[CANCELLATION_REQUESTED] Odoo atualizado para '%s'", sync_status)
-   426→        except Exception as odoo_err:
-   427→            logger.error("[CANCELLATION_REQUESTED] Falha ao atualizar Odoo: %s", odoo_err, exc_info=True)
-   428→
-   429→        logger.info("[CANCELLATION_REQUESTED] === RESUMO: acknowledged=%s ===", acknowledged)
-   430→        logger.info("[CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===")
-   431→
-   432→    finally:
-   433→        try:
-   434→            await ifood_client.close()
-   435→        except Exception:
-   436→            pass
-   437→
-   438→
-   439→# ── Helper: Atualizar status no Odoo ─────────────────────────
-   440→
-   441→def _update_odoo_status(ifood_order_id: str, status: str) -> bool:
-   442→    """Atualiza o campo x_studio_ifood_status no sale.order do Odoo."""
-   443→    try:
-   444→        odoo_client = OdooClient(settings)
-   445→        sync_service = OdooSyncService(odoo_client, IFoodAPIClient(settings))
-   446→        return sync_service.update_order_status(ifood_order_id, status)
-   447→    except Exception as e:
-   448→        logger.error("[ODOO] Falha ao atualizar status %s para pedido %s: %s",
-   449→                     status, ifood_order_id, e, exc_info=True)
-   450→        raise
-   451→
-   452→
-   453→def _update_odoo_state(ifood_order_id: str, state: str) -> None:
-   454→    """Muda o state do sale.order no Odoo (ex: 'done', 'cancel')."""
-   455→    try:
-   456→        odoo_client = OdooClient(settings)
-   457→        # Buscar o ID do sale.order pelo x_studio_ifood_order_id
-   458→        orders = odoo_client.search_read(
-   459→            "sale.order",
-   460→            domain=[("x_studio_ifood_order_id", "=", ifood_order_id)],
-   461→            fields=["id", "state"],
-   462→        )
-   463→        if not orders:
-   464→            logger.warning("[ODOO] Pedido %s nao encontrado no Odoo para mudar state", ifood_order_id)
-   465→            return
-   466→        for order in orders:
-   467→            if order.get("state") == state:
-   468→                continue
-   469→            odoo_client.execute_kw(
-   470→                "sale.order",
-   471→                "write",
-   472→                [[order["id"]], {"state": state}],
-   473→            )
-   474→            logger.info("[ODOO] Pedido %s (Odoo %d) -> state='%s'", ifood_order_id, order["id"], state)
-   475→    except Exception as e:
-   476→        logger.error("[ODOO] Falha ao mudar state '%s' para pedido %s: %s",
-   477→                     state, ifood_order_id, e, exc_info=True)
-   478→
-   479→
-   480→# ── Polling: Cancelamentos Odoo → iFood ────────────────────
-   481→
-   482→async def _check_odoo_pending_cancellations() -> dict:
-   483→    """Verifica pedidos cancelados no Odoo que ainda nao foram cancelados no iFood.
-   484→
-   485→    Busca sale.order onde:
-   486→      - state = 'cancel' (cancelado no Odoo)
-   487→      - x_studio_ifood_order_id esta preenchido
-   488→      - x_studio_ifood_status != 'cancelled' (ainda nao propagado)
-   489→
-   490→    Para cada pedido encontrado, chama POST /requestCancellation na API iFood.
-   491→    """
-   492→    logger.info("[ODOO_POLL] Verificando cancelamentos pendentes no Odoo...")
-   493→
-   494→    odoo_client = OdooClient(settings)
-   495→    results = {"checked": 0, "cancelled": 0, "errors": []}
-   496→
-   497→    try:
-   498→        orders = odoo_client.search_read(
-   499→            "sale.order",
-   500→            domain=[
-   501→                ("state", "=", "cancel"),
-   502→                ("x_studio_ifood_order_id", "!=", False),
-   503→            ],
-   504→            fields=[
-   505→                "id", "x_studio_ifood_order_id",
-   506→                "x_studio_ifood_cancel_reason",
-   507→                "x_studio_ifood_status",
-   508→            ],
-   509→        )
-   510→    except Exception as e:
-   511→        logger.error("[ODOO_POLL] Falha ao buscar pedidos no Odoo: %s", e, exc_info=True)
-   512→        return results
-   513→
-   514→    results["checked"] = len(orders)
-   515→    if not orders:
-   516→        logger.info("[ODOO_POLL] Nenhum cancelamento pendente encontrado")
-   517→        return results
-   518→
-   519→    logger.info("[ODOO_POLL] Encontrados %d pedidos cancelados no Odoo", len(orders))
-   520→
-   521→    async with IFoodAPIClient(settings) as ifood_client:
-   522→        for order in orders:
-   523→            ifood_id = str(order.get("x_studio_ifood_order_id", ""))
-   524→            ifood_status = str(order.get("x_studio_ifood_status", ""))
-   525→
-   526→            if not ifood_id:
-   527→                continue
-   528→
-   529→            # Ja foi cancelado ou tem solicitacao em andamento?
-   530→            if ifood_status in ("cancelled", "cancellation_requested", "cancellation_accepted"):
-   531→                continue
-   532→
-   533→            reason_code = str(order.get("x_studio_ifood_cancel_reason", ""))
-   534→            # Extrair apenas o codigo numerico (ex: "506:Endereco..." -> "506")
-   535→            if ":" in reason_code:
-   536→                reason_code = reason_code.split(":")[0].strip()
-   537→            if not reason_code or not reason_code.isdigit():
-   538→                reason_code = "501"  # default: Erro no sistema
-   539→
-   540→            logger.info("[ODOO_POLL] Solicitando cancelamento pedido %s no iFood (motivo: %s)...",
-   541→                         ifood_id, reason_code)
-   542→
-   543→            try:
-   544→                await ifood_client.accept_cancellation(ifood_id, reason_code=reason_code)
-   545→                results["cancelled"] += 1
-   546→
-   547→                # Atualizar status no Odoo
-   548→                try:
-   549→                    sync_service = OdooSyncService(odoo_client, ifood_client)
-   550→                    sync_service.update_order_status(ifood_id, "cancelled")
-   551→                except Exception:
-   552→                    pass
-   553→
-   554→                logger.info("[ODOO_POLL] Pedido %s cancelamento solicitado no iFood com sucesso!", ifood_id)
+   378→    # Tentar extrair de varias posicoes possiveis no metadata
+   379→    cancel_code = (
+   380→        metadata.get("CANCEL_CODE")
+   381→        or metadata.get("CANCEL_REASON")
+   382→        or metadata.get("cancellationCode")
+   383→        or payload.get("cancellationCode")
+   384→        or ""
+   385→    )
+   386→    logger.info("[CANCELLATION_REQUESTED] CancellationCode extraido do payload: %s", cancel_code or "(vazio, buscara via API)")
+   387→
+   388→    ifood_client = IFoodAPIClient(settings)
+   389→    acknowledged = False
+   390→
+   391→    try:
+   392→        # ── Verificar se pedido ja esta cancelado (fullCode = CANCELLED) ──
+   393→        if full_code == "CANCELLED":
+   394→            logger.info("[CANCELLATION_REQUESTED] fullCode=CANCELLED - pedido ja cancelado pelo iFood, pulando chamada API")
+   395→            acknowledged = True  # Ja esta cancelado, trata como sucesso
+   396→            _log_event({
+   397→                "level": "info",
+   398→                "event_type": "CANCELLATION_REQUESTED",
+   399→                "order_id": order_id,
+   400→                "step": "already_cancelled",
+   401→                "message": "Pedido ja CANCELLED (fullCode), sem necessidade de chamada API",
+   402→                "cancelled": True,
+   403→            })
+   404→        else:
+   405→            # ── PASSO 1: Aceitar cancelamento via /requestCancellation ──
+   406→            # Este e o UNICO endpoint de cancelamento que existe na API iFood.
+   407→            # O /statuses/cancellationRequested retorna 404 (nao existe).
+   408→            try:
+   409→                logger.info("[CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/%s/requestCancellation (codigo: %s)",
+   410→                             order_id, cancel_code or "(busca via API)")
+   411→                async with ifood_client:
+   412→                    ack_result = await ifood_client.acknowledge_cancellation_requested(order_id, cancellation_code=cancel_code)
+   413→                acknowledged = True
+   414→                logger.info("[CANCELLATION_REQUESTED] Cancelamento ACEITO no iFood: %s",
+   415→                             str(ack_result)[:500])
+   416→                _log_event({
+   417→                    "level": "info",
+   418→                    "event_type": "CANCELLATION_REQUESTED",
+   419→                    "order_id": order_id,
+   420→                    "step": "requestCancellation",
+   421→                    "message": "POST /requestCancellation enviado com sucesso",
+   422→                    "cancelled": True,
+   423→                })
+   424→            except Exception as ifood_err:
+   425→                logger.error("[CANCELLATION_REQUESTED] FALHA ao aceitar cancelamento: %s",
+   426→                             ifood_err, exc_info=True)
+   427→                _log_event({
+   428→                    "level": "error",
+   429→                    "event_type": "CANCELLATION_REQUESTED",
+   430→                    "order_id": order_id,
+   431→                    "step": "requestCancellation",
+   432→                    "message": "Falha ao chamar POST /requestCancellation",
+   433→                    "error": str(ifood_err),
+   434→                    "cancelled": False,
+   435→                })
+   436→
+   437→        # ── PASSO 2: Atualizar Odoo ──────────────────────────
+   438→        try:
+   439→            sync_status = "cancelled" if acknowledged else "cancellation_requested"
+   440→            _update_odoo_status(order_id, sync_status)
+   441→            logger.info("[CANCELLATION_REQUESTED] Odoo atualizado para '%s'", sync_status)
+   442→        except Exception as odoo_err:
+   443→            logger.error("[CANCELLATION_REQUESTED] Falha ao atualizar Odoo: %s", odoo_err, exc_info=True)
+   444→
+   445→        logger.info("[CANCELLATION_REQUESTED] === RESUMO: acknowledged=%s | fullCode=%s ===", acknowledged, full_code)
+   446→        logger.info("[CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===")
+   447→
+   448→    finally:
+   449→        try:
+   450→            await ifood_client.close()
+   451→        except Exception:
+   452→            pass
+   453→
+   454→
+   455→# ── Helper: Atualizar status no Odoo ─────────────────────────
+   456→
+   457→def _update_odoo_status(ifood_order_id: str, status: str) -> bool:
+   458→    """Atualiza o campo x_studio_ifood_status no sale.order do Odoo."""
+   459→    try:
+   460→        odoo_client = OdooClient(settings)
+   461→        sync_service = OdooSyncService(odoo_client, IFoodAPIClient(settings))
+   462→        return sync_service.update_order_status(ifood_order_id, status)
+   463→    except Exception as e:
+   464→        logger.error("[ODOO] Falha ao atualizar status %s para pedido %s: %s",
+   465→                     status, ifood_order_id, e, exc_info=True)
+   466→        raise
+   467→
+   468→
+   469→def _update_odoo_state(ifood_order_id: str, state: str) -> None:
+   470→    """Muda o state do sale.order no Odoo (ex: 'done', 'cancel')."""
+   471→    try:
+   472→        odoo_client = OdooClient(settings)
+   473→        # Buscar o ID do sale.order pelo x_studio_ifood_order_id
+   474→        orders = odoo_client.search_read(
+   475→            "sale.order",
+   476→            domain=[("x_studio_ifood_order_id", "=", ifood_order_id)],
+   477→            fields=["id", "state"],
+   478→        )
+   479→        if not orders:
+   480→            logger.warning("[ODOO] Pedido %s nao encontrado no Odoo para mudar state", ifood_order_id)
+   481→            return
+   482→        for order in orders:
+   483→            if order.get("state") == state:
+   484→                continue
+   485→            odoo_client.execute_kw(
+   486→                "sale.order",
+   487→                "write",
+   488→                [[order["id"]], {"state": state}],
+   489→            )
+   490→            logger.info("[ODOO] Pedido %s (Odoo %d) -> state='%s'", ifood_order_id, order["id"], state)
+   491→    except Exception as e:
+   492→        logger.error("[ODOO] Falha ao mudar state '%s' para pedido %s: %s",
+   493→                     state, ifood_order_id, e, exc_info=True)
+   494→
+   495→
+   496→# ── Polling: Cancelamentos Odoo → iFood ────────────────────
+   497→
+   498→async def _check_odoo_pending_cancellations() -> dict:
+   499→    """Verifica pedidos cancelados no Odoo que ainda nao foram cancelados no iFood.
+   500→
+   501→    Busca sale.order onde:
+   502→      - state = 'cancel' (cancelado no Odoo)
+   503→      - x_studio_ifood_order_id esta preenchido
+   504→      - x_studio_ifood_status != 'cancelled' (ainda nao propagado)
+   505→
+   506→    Para cada pedido encontrado, chama POST /requestCancellation na API iFood.
+   507→    """
+   508→    logger.info("[ODOO_POLL] Verificando cancelamentos pendentes no Odoo...")
+   509→
+   510→    odoo_client = OdooClient(settings)
+   511→    results = {"checked": 0, "cancelled": 0, "errors": []}
+   512→
+   513→    try:
+   514→        orders = odoo_client.search_read(
+   515→            "sale.order",
+   516→            domain=[
+   517→                ("state", "=", "cancel"),
+   518→                ("x_studio_ifood_order_id", "!=", False),
+   519→            ],
+   520→            fields=[
+   521→                "id", "x_studio_ifood_order_id",
+   522→                "x_studio_ifood_cancel_reason",
+   523→                "x_studio_ifood_status",
+   524→            ],
+   525→        )
+   526→    except Exception as e:
+   527→        logger.error("[ODOO_POLL] Falha ao buscar pedidos no Odoo: %s", e, exc_info=True)
+   528→        return results
+   529→
+   530→    results["checked"] = len(orders)
+   531→    if not orders:
+   532→        logger.info("[ODOO_POLL] Nenhum cancelamento pendente encontrado")
+   533→        return results
+   534→
+   535→    logger.info("[ODOO_POLL] Encontrados %d pedidos cancelados no Odoo", len(orders))
+   536→
+   537→    async with IFoodAPIClient(settings) as ifood_client:
+   538→        for order in orders:
+   539→            ifood_id = str(order.get("x_studio_ifood_order_id", ""))
+   540→            ifood_status = str(order.get("x_studio_ifood_status", ""))
+   541→
+   542→            if not ifood_id:
+   543→                continue
+   544→
+   545→            # Ja foi cancelado ou tem solicitacao em andamento?
+   546→            if ifood_status in ("cancelled", "cancellation_requested", "cancellation_accepted"):
+   547→                continue
+   548→
+   549→            reason_code = str(order.get("x_studio_ifood_cancel_reason", ""))
+   550→            # Extrair apenas o codigo numerico (ex: "506:Endereco..." -> "506")
+   551→            if ":" in reason_code:
+   552→                reason_code = reason_code.split(":")[0].strip()
+   553→            if not reason_code or not reason_code.isdigit():
+   554→                reason_code = "501"  # default: Erro no sistema
    555→
-   556→            except Exception as e:
-   557→                logger.error("[ODOO_POLL] Falha ao solicitar cancelamento pedido %s: %s",
-   558→                             ifood_id, e, exc_info=True)
-   559→                results["errors"].append(f"{ifood_id}: {str(e)}")
-   560→
-   561→    logger.info("[ODOO_POLL] Resultado: verificados=%d, cancelados=%d",
-   562→                 results["checked"], results["cancelled"])
-   563→    return results
-   564→
-   565→
-   566→# ── Polling: Despachos Odoo → iFood ──────────────────────────
-   567→
-   568→async def _check_odoo_pending_dispatches() -> dict:
-   569→    """Verifica pedidos confirmados no Odoo que ainda nao foram despachados no iFood.
-   570→
-   571→    Busca sale.order onde:
-   572→      - state = 'sale' (confirmado via action_confirm no Odoo)
-   573→      - x_studio_ifood_order_id esta preenchido
-   574→      - x_studio_ifood_status != 'dispatched' e != 'cancelled'
-   575→
-   576→    Para cada pedido encontrado, chama dispatch no iFood.
-   577→    """
-   578→    logger.info("[ODOO_DISPATCH] Verificando despachos pendentes no Odoo...")
-   579→
-   580→    odoo_client = OdooClient(settings)
-   581→    results = {"checked": 0, "dispatched": 0, "errors": []}
-   582→
-   583→    try:
-   584→        orders = odoo_client.search_read(
-   585→            "sale.order",
-   586→            domain=[
-   587→                ("state", "=", "sale"),
-   588→                ("x_studio_ifood_order_id", "!=", False),
-   589→            ],
-   590→            fields=[
-   591→                "id", "x_studio_ifood_order_id",
-   592→                "x_studio_ifood_status",
-   593→            ],
-   594→        )
-   595→    except Exception as e:
-   596→        logger.error("[ODOO_DISPATCH] Falha ao buscar pedidos no Odoo: %s", e, exc_info=True)
-   597→        return results
+   556→            logger.info("[ODOO_POLL] Solicitando cancelamento pedido %s no iFood (motivo: %s)...",
+   557→                         ifood_id, reason_code)
+   558→
+   559→            try:
+   560→                await ifood_client.accept_cancellation(ifood_id, reason_code=reason_code)
+   561→                results["cancelled"] += 1
+   562→
+   563→                # Atualizar status no Odoo
+   564→                try:
+   565→                    sync_service = OdooSyncService(odoo_client, ifood_client)
+   566→                    sync_service.update_order_status(ifood_id, "cancelled")
+   567→                except Exception:
+   568→                    pass
+   569→
+   570→                logger.info("[ODOO_POLL] Pedido %s cancelamento solicitado no iFood com sucesso!", ifood_id)
+   571→
+   572→            except Exception as e:
+   573→                logger.error("[ODOO_POLL] Falha ao solicitar cancelamento pedido %s: %s",
+   574→                             ifood_id, e, exc_info=True)
+   575→                results["errors"].append(f"{ifood_id}: {str(e)}")
+   576→
+   577→    logger.info("[ODOO_POLL] Resultado: verificados=%d, cancelados=%d",
+   578→                 results["checked"], results["cancelled"])
+   579→    return results
+   580→
+   581→
+   582→# ── Polling: Despachos Odoo → iFood ──────────────────────────
+   583→
+   584→async def _check_odoo_pending_dispatches() -> dict:
+   585→    """Verifica pedidos confirmados no Odoo que ainda nao foram despachados no iFood.
+   586→
+   587→    Busca sale.order onde:
+   588→      - state = 'sale' (confirmado via action_confirm no Odoo)
+   589→      - x_studio_ifood_order_id esta preenchido
+   590→      - x_studio_ifood_status != 'dispatched' e != 'cancelled'
+   591→
+   592→    Para cada pedido encontrado, chama dispatch no iFood.
+   593→    """
+   594→    logger.info("[ODOO_DISPATCH] Verificando despachos pendentes no Odoo...")
+   595→
+   596→    odoo_client = OdooClient(settings)
+   597→    results = {"checked": 0, "dispatched": 0, "errors": []}
    598→
-   599→    results["checked"] = len(orders)
-   600→    if not orders:
-   601→        logger.info("[ODOO_DISPATCH] Nenhum despacho pendente encontrado")
-   602→        return results
-   603→
-   604→    async with IFoodAPIClient(settings) as ifood_client:
-   605→        for order in orders:
-   606→            ifood_id = str(order.get("x_studio_ifood_order_id", ""))
-   607→            ifood_status = str(order.get("x_studio_ifood_status", ""))
-   608→
-   609→            if not ifood_id:
-   610→                continue
-   611→
-   612→            # Ja foi despachado ou cancelado?
-   613→            if ifood_status in ("dispatched", "cancelled", "cancellation_requested", "delivered", "concluded"):
-   614→                continue
-   615→
-   616→            logger.info("[ODOO_DISPATCH] Despachando pedido %s no iFood (status atual: %s)...",
-   617→                         ifood_id, ifood_status)
-   618→
-   619→            try:
-   620→                await ifood_client.dispatch_order(ifood_id)
-   621→                results["dispatched"] += 1
-   622→
-   623→                # Atualizar status no Odoo
-   624→                try:
-   625→                    sync_service = OdooSyncService(odoo_client, ifood_client)
-   626→                    sync_service.update_order_status(ifood_id, "dispatched")
-   627→                except Exception:
-   628→                    pass
-   629→
-   630→                logger.info("[ODOO_DISPATCH] Pedido %s DESPACHADO no iFood com sucesso!", ifood_id)
+   599→    try:
+   600→        orders = odoo_client.search_read(
+   601→            "sale.order",
+   602→            domain=[
+   603→                ("state", "=", "sale"),
+   604→                ("x_studio_ifood_order_id", "!=", False),
+   605→            ],
+   606→            fields=[
+   607→                "id", "x_studio_ifood_order_id",
+   608→                "x_studio_ifood_status",
+   609→            ],
+   610→        )
+   611→    except Exception as e:
+   612→        logger.error("[ODOO_DISPATCH] Falha ao buscar pedidos no Odoo: %s", e, exc_info=True)
+   613→        return results
+   614→
+   615→    results["checked"] = len(orders)
+   616→    if not orders:
+   617→        logger.info("[ODOO_DISPATCH] Nenhum despacho pendente encontrado")
+   618→        return results
+   619→
+   620→    async with IFoodAPIClient(settings) as ifood_client:
+   621→        for order in orders:
+   622→            ifood_id = str(order.get("x_studio_ifood_order_id", ""))
+   623→            ifood_status = str(order.get("x_studio_ifood_status", ""))
+   624→
+   625→            if not ifood_id:
+   626→                continue
+   627→
+   628→            # Ja foi despachado ou cancelado?
+   629→            if ifood_status in ("dispatched", "cancelled", "cancellation_requested", "delivered", "concluded"):
+   630→                continue
    631→
-   632→            except Exception as e:
-   633→                logger.error("[ODOO_DISPATCH] Falha ao despachar pedido %s: %s",
-   634→                             ifood_id, e, exc_info=True)
-   635→                results["errors"].append(f"{ifood_id}: {str(e)}")
-   636→
-   637→    if results["dispatched"] > 0:
-   638→        logger.info("[ODOO_DISPATCH] Resultado: verificados=%d, despachados=%d",
-   639→                     results["checked"], results["dispatched"])
-   640→    return results
-   641→
-   642→
-   643→# ── Catalog webhook ──────────────────────────────────────────
-   644→
-   645→@router.post("/webhooks/ifood/catalog")
-   646→@router.get("/webhooks/ifood/catalog")
-   647→async def handle_catalog_webhook(request: Request):
-   648→    """Recebe eventos de catalogo do iFood."""
-   649→    try:
-   650→        body = await request.body()
-   651→        logger.info("Webhook catalogo iFood recebido (method: %s, body_len: %d)",
-   652→                     request.method, len(body))
-   653→        logger.debug("Body RAW: %s", body.decode("utf-8", errors="replace")[:3000])
-   654→        return {"status": "ok", "message": "received"}
-   655→
-   656→    except Exception as e:
-   657→        logger.error("Erro no webhook catalogo: %s", e, exc_info=True)
-   658→        return {"status": "ok", "message": "received"}
+   632→            logger.info("[ODOO_DISPATCH] Despachando pedido %s no iFood (status atual: %s)...",
+   633→                         ifood_id, ifood_status)
+   634→
+   635→            try:
+   636→                await ifood_client.dispatch_order(ifood_id)
+   637→                results["dispatched"] += 1
+   638→
+   639→                # Atualizar status no Odoo
+   640→                try:
+   641→                    sync_service = OdooSyncService(odoo_client, ifood_client)
+   642→                    sync_service.update_order_status(ifood_id, "dispatched")
+   643→                except Exception:
+   644→                    pass
+   645→
+   646→                logger.info("[ODOO_DISPATCH] Pedido %s DESPACHADO no iFood com sucesso!", ifood_id)
+   647→
+   648→            except Exception as e:
+   649→                logger.error("[ODOO_DISPATCH] Falha ao despachar pedido %s: %s",
+   650→                             ifood_id, e, exc_info=True)
+   651→                results["errors"].append(f"{ifood_id}: {str(e)}")
+   652→
+   653→    if results["dispatched"] > 0:
+   654→        logger.info("[ODOO_DISPATCH] Resultado: verificados=%d, despachados=%d",
+   655→                     results["checked"], results["dispatched"])
+   656→    return results
+   657→
+   658→
+   659→# ── Catalog webhook ──────────────────────────────────────────
+   660→
+   661→@router.post("/webhooks/ifood/catalog")
+   662→@router.get("/webhooks/ifood/catalog")
+   663→async def handle_catalog_webhook(request: Request):
+   664→    """Recebe eventos de catalogo do iFood."""
+   665→    try:
+   666→        body = await request.body()
+   667→        logger.info("Webhook catalogo iFood recebido (method: %s, body_len: %d)",
+   668→                     request.method, len(body))
+   669→        logger.debug("Body RAW: %s", body.decode("utf-8", errors="replace")[:3000])
+   670→        return {"status": "ok", "message": "received"}
+   671→
+   672→    except Exception as e:
+   673→        logger.error("Erro no webhook catalogo: %s", e, exc_info=True)
+   674→        return {"status": "ok", "message": "received"}

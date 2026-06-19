@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Understand all events that iFood sends during the order lifecycle. This reference shows structure, meaning, and required actions for each event. How to receive ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Polling is a simple method to receive updates from an API. Your system sends regular requests, every 30 seconds, to the GET /events:polling endpoint and checks ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/references",
+    "name": "Referências - iFood Developer",
+    "snippet": "The Order API provides means to interact with orders on the platform. It is separated into three core parts: Events, Details and Actions, which are described in ...\nGet New Events. POST​/events​/acknowledgment. Acknowledge Events. Schemas. Order. v1.0. The Order API provides means to interact with orders on the platform.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "Orders on iFood platform. Use this documentation to request iFood delivery drivers for orders that already exist on the platform.\nUse this documentation to request iFood delivery drivers for orders that already exist on the platform. This flow is ideal when you have orders with orderId and ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/events/intro",
+    "name": "Introduction - iFood Developer",
+    "snippet": "Introduction. The Events module allows your integration to receive real-time notifications about changes in order status. When an order is confirmed, ...\niFood sends events directly to an HTTP endpoint configured in your integration. Offers real-time delivery and greater operational efficiency. Choose the ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Response (202 Accepted)Important: Acknowledge only events you've successfully processed. Unacknowledged events will return in next polling. 3. Get order ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/fundamentals",
+    "name": "Fundamentals - iFood Developer",
+    "snippet": "iFood publishes an event when something happens (new order, customer cancels, driver assigned, etc.) You react to the event by calling an action (confirm, start ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=aWgwtfJfb9c",
+    "name": "iFood Developer - API de Pedidos - Primeiros Passos com o Postman",
+    "snippet": "Importando collections no Postman e testando a API de Pedidos do iFood. Neste vídeo você irá aprender como começar a utilizar a API de ...",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/homologacao",
+    "name": "Homologation criteria - iFood Developer",
+    "snippet": "Send /acknowledgment immediately after processing each event. Failing to acknowledge events can cause reprocessing. Deduplication, Implement logic to identify ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-overview",
+    "name": "Webhook overview - iFood Developer",
+    "snippet": "iFood attempts to deliver events for an order for up to 15 minutes after the first attempt. If all attempts fail, the event is discarded. iFood may adjust the ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

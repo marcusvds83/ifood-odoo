@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://blog.stephencleary.com/2022/03/cancellation-4-polling.html",
+    "name": "Cancellation, Part 4: Polling - Stephen Cleary",
+    "snippet": "Polling is an appropriate option for observing cancellation if your code is synchronous, such as CPU-bound code.",
+    "host_name": "blog.stephencleary.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.stripe.com/api/climate/order/cancel?lang=python",
+    "name": "Cancel an order | Stripe API Reference",
+    "snippet": "You can cancel an order within 24 hours of creation. Stripe refunds the reservation amount_subtotal , but not the amount_fees for user-triggered cancellations.",
+    "host_name": "docs.stripe.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/58899967/how-to-cancel-event-in-a-function",
+    "name": "How to cancel event in a function - python - Stack Overflow",
+    "snippet": "I need to cancel a specific event in which the user input the name. However s.cancel never allows me to do that since I'm guessing the variable is local.",
+    "host_name": "stackoverflow.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/dotnet/standard/threading/how-to-listen-for-cancellation-requests-by-polling",
+    "name": "How to: Listen for Cancellation Requests by Polling - Microsoft Learn",
+    "snippet": "The following example shows one way that user code can poll a cancellation token at regular intervals to see whether cancellation has been requested from the ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://trio.readthedocs.io/en/stable/reference-core.html",
+    "name": "Trio's core functionality — Trio 0.32.0 documentation",
+    "snippet": "If a cancel scope becomes cancelled before entering its with block, the Cancelled exception will be raised at the first checkpoint inside the with block. This ...",
+    "host_name": "trio.readthedocs.io",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.python.org/3/library/select.html",
+    "name": "select — Waiting for I/O completion — Python 3.14.6 documentation",
+    "snippet": "Register a file descriptor with the polling object. Future calls to the poll() method will then check whether the file descriptor has any pending I/O events. fd ...",
+    "host_name": "docs.python.org",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.shippit.com/api_guide/order/cancel-order/orders-examples-cancel.html",
+    "name": "Cancel order code examples | Developer Centre - Shippit APIs",
+    "snippet": "Cancel an order code examples. Bash: # You can also use wget curl -X DELETE https://app.staging.shippit.",
+    "host_name": "developer.shippit.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://help.airbridge.io/en/guides/analyzing-real-purchase-performance",
+    "name": "Collecting Order Cancel Events for Accurate Sales Performance",
+    "snippet": "An Order Complete event must always precede an Order Cancel event. Several data points must match between the Order Complete and Order Cancel ...",
+    "host_name": "help.airbridge.io",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.developers.optimizely.com/feature-experimentation/docs/event-batching-python",
+    "name": "Event batching for the Python SDK - Optimizely",
+    "snippet": "The Optimizely Feature Experimentation Python SDK lets you batch events and includes options to set a maximum batch size and flush interval timeout.",
+    "host_name": "docs.developers.optimizely.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.kraken.com/api/docs/websocket-v1/cancelorder",
+    "name": "Cancel Order | Kraken API Center",
+    "snippet": "The cancelOrder request cancels one or more open orders in a single request. The orders to be cancelled can be identified by a range of client or Kraken ...",
+    "host_name": "docs.kraken.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
