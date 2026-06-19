@@ -22,7 +22,16 @@ async def lifespan(app: FastAPI):
     logger.info("iFood API Base URL: %s", settings.ifood_api_base_url)
     logger.info("Odoo URL: %s", settings.odoo_url)
     logger.info("=" * 60)
+
+    # Iniciar polling de eventos iFood (obrigatorio para homologacao Firefly Audit)
+    from app.services.event_polling import start_polling, stop_polling
+    start_polling()
+    logger.info("[STARTUP] Polling de eventos iFood iniciado (30s)")
+
     yield
+
+    # Parar polling no shutdown
+    stop_polling()
     logger.info("iFood-Odoo Middleware shutting down")
 
 
