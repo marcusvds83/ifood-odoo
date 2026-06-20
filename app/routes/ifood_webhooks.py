@@ -375,10 +375,12 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
 
     # ── Extrair cancellationCode do metadata do evento CAN ──
     metadata = payload.get("metadata", {})
-    # Tentar extrair de varias posicoes possiveis no metadata
+    # O evento CANCELLATION_REQUESTED traz o codigo em varios campos possiveis
     cancel_code = (
         metadata.get("CANCEL_CODE")
         or metadata.get("CANCEL_REASON")
+        or metadata.get("reason_code")
+        or metadata.get("details")
         or metadata.get("cancellationCode")
         or payload.get("cancellationCode")
         or ""

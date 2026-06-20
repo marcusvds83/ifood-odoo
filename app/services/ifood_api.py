@@ -128,7 +128,7 @@ class IFoodAPIClient:
 
         logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"cancellationCode": reason, "reason": reason})
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason})
             logger.info("[CANCELLATION] Cancelamento solicitado pedido %s - Resposta: %s", order_id, str(result)[:500])
             return result
         except httpx.HTTPStatusError as e:
@@ -171,7 +171,7 @@ class IFoodAPIClient:
             result = await self._request(
                 "POST",
                 f"/order/v1.0/orders/{order_id}/requestCancellation",
-                json_body={"cancellationCode": cancellation_code, "reason": cancellation_code}
+                json_body={"reason": cancellation_code}
             )
             logger.info("[CANCELLATION] Cancelamento ACEITO pedido %s via /requestCancellation: %s", order_id, str(result)[:500])
             return result
@@ -229,24 +229,44 @@ class IFoodAPIClient:
             return []
 
     async def acknowledge_events(self, event_ids: list) -> dict:
-        """Confirma ao iFood que os eventos foram processados (modulo Events).
+        """Confirma ao iFood que os eventos foram processados.
 
-        POST /events/v1.0/events/acknowledgment
-        Body: lista de IDs dos eventos processados (campo 'id' de cada evento).
+        A doc oficial mostra o body como:
+          {"acknowledgedEventIds": ["evt_123", "evt_124"]}
+
+        Tenta primeiro o endpoint Events, depois Order como fallback.
         Max 2000 IDs por request.
         Eventos nao confirmados voltam no proximo polling.
         """
         if not event_ids:
             logger.debug("[ACK] Nenhum evento para acknowledge")
             return {}
-        logger.info("[ACK] Enviando acknowledgment para %d evento(s): %s", len(event_ids), event_ids)
-        try:
-            result = await self._request("POST", "/events/v1.0/events/acknowledgment", json_body=event_ids)
-            logger.info("[ACK] Acknowledgment enviado com sucesso: %s", str(result)[:500])
-            return result
-        except httpx.HTTPStatusError as e:
-            logger.error("[ACK] Erro ao enviar acknowledgment: HTTP %s - %s", e.response.status_code, e.response.text[:500])
-            raise
+
+        # Garantir max 2000 IDs por request (limite da API)
+        chunks = [event_ids[i:i+2000] for i in range(0, len(event_ids), 2000)]
+        last_result = {}
+
+        for chunk in chunks:
+            body = {"acknowledgedEventIds": chunk}
+            logger.info("[ACK] Enviando acknowledgment para %d evento(s)", len(chunk))
+
+            # Tentar endpoint Events primeiro
+            for endpoint in ["/events/v1.0/events/acknowledgment",
+                            "/order/v1.0/orders:acknowledgment"]:
+                try:
+                    result = await self._request("POST", endpoint, json_body=body)
+                    logger.info("[ACK] Acknowledgment OK via %s: %s", endpoint, str(result)[:300])
+                    last_result = result
+                    break
+                except httpx.HTTPStatusError as e:
+                    logger.warning("[ACK] Falha via %s: HTTP %s - %s",
+                                   endpoint, e.response.status_code, e.response.text[:300])
+                    continue
+            else:
+                # Ambos falharam
+                logger.error("[ACK] Todos os endpoints de acknowledgment falharam para %d eventos", len(chunk))
+
+        return last_result
 
     async def get_catalog(self, merchant_id: str) -> dict:
         return await self._request("GET", f"/catalog/v1.0/merchants/{merchant_id}/catalog")
