@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "The API only uses the ID to process acknowledgment. Each request accepts up to 2000 IDs.Guidelines: Send acknowledgment for each polling with events.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "v1.0. The Merchant API provides means to interact with merchants on the platform. It is separated into four core parts.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Implementation guide — Order API ; 2. Acknowledge event consumption · \"https://merchant-api.ifood.com.br/order/v1.0/orders:acknowledgment\" ; 5. Confirm order · \" ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/intro",
+    "name": "Introduction - iFood Developer",
+    "snippet": "The Events module allows your integration to receive real-time notifications about changes in order status. /acknowledgment - Confirms receipt of events",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "Orders on iFood platform. Use this documentation to request iFood delivery drivers for orders that already exist on the platform.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.pagerduty.com/docs/events-api-v1-overview",
+    "name": "Events API v1 Overview - PagerDuty Developer Documentation",
+    "snippet": "Events API v1. The PagerDuty Events API is used to add PagerDuty's advanced incident management functionality to any system that can make an HTTP API call.",
+    "host_name": "developer.pagerduty.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Understand all events that iFood sends during the order lifecycle. This reference shows structure, meaning, and required actions for each event.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=0dgiGavzu8Y",
+    "name": "Meet the new Merchant API - YouTube",
+    "snippet": "O iFood está sempre evoluindo, e estamos prontos para um passo importante que vai aprimorar os nossos serviços de integração.",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform",
+    "name": "Order negotiation platform - iFood Developer",
+    "snippet": "HandshakeDispute. Entity sent in HANDSHAKE_DISPUTE event containing negotiation, requested action, evidence, deadline, and automatic timeout action. Includes ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.gobiz.com/docs/api/event-list",
+    "name": "Event List - GoBiz Developer Portal",
+    "snippet": "It is in the ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ or YYYY-MM-DDTHH:MM:SS±hh:mm). String, Required. Merchant Accepted Event - Body Parameters​. Code Sample.",
+    "host_name": "developer.gobiz.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

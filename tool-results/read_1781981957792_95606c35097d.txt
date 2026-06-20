@@ -1,0 +1,260 @@
+     1→2026-06-20 18:49:17 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+     2→2026-06-20 18:49:17 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+     3→2026-06-20 18:49:19 | INFO     | app.routes.ifood_webhooks | ============================================================
+     4→2026-06-20 18:49:19 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+     5→2026-06-20 18:49:19 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+     6→2026-06-20 18:49:19 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+     7→2026-06-20 18:49:19 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+     8→2026-06-20 18:49:20 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+     9→2026-06-20 18:49:20 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+    10→2026-06-20 18:49:20 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+    11→2026-06-20 18:49:20 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+    12→2026-06-20 18:49:21 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    13→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+    14→2026-06-20 18:49:30 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+    15→2026-06-20 18:49:30 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+    16→2026-06-20 18:49:30 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+    17→2026-06-20 18:49:30 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+    18→2026-06-20 18:49:30 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+    19→2026-06-20 18:49:30 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+    20→2026-06-20 18:49:30 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+    21→2026-06-20 18:49:30 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+    22→2026-06-20 18:49:30 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+    23→2026-06-20 18:49:30 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+    24→2026-06-20 18:49:47 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+    25→2026-06-20 18:49:47 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+    26→2026-06-20 18:49:47 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+    27→2026-06-20 18:49:47 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+    28→2026-06-20 18:49:47 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+    29→2026-06-20 18:49:47 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+    30→2026-06-20 18:49:47 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+    31→2026-06-20 18:49:47 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+    32→2026-06-20 18:49:47 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+    33→2026-06-20 18:49:47 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+    34→2026-06-20 18:50:00 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+    35→2026-06-20 18:50:00 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+    36→2026-06-20 18:50:00 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+    37→2026-06-20 18:50:00 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+    38→2026-06-20 18:50:00 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+    39→2026-06-20 18:50:00 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+    40→2026-06-20 18:50:00 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+    41→2026-06-20 18:50:00 | INFO     | app.routes.ifood_webhooks | ============================================================
+    42→2026-06-20 18:50:00 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+    43→2026-06-20 18:50:00 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+    44→2026-06-20 18:50:00 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+    45→2026-06-20 18:50:00 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+    46→2026-06-20 18:50:00 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+    47→2026-06-20 18:50:00 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+    48→2026-06-20 18:50:00 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+    49→2026-06-20 18:50:01 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    50→2026-06-20 18:50:01 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+    51→2026-06-20 18:50:01 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+    52→2026-06-20 18:50:01 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+    53→2026-06-20 18:50:02 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    54→INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+    55→2026-06-20 18:50:17 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+    56→2026-06-20 18:50:17 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+    57→2026-06-20 18:50:17 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+    58→2026-06-20 18:50:17 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+    59→2026-06-20 18:50:17 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+    60→2026-06-20 18:50:17 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+    61→2026-06-20 18:50:17 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+    62→2026-06-20 18:50:17 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+    63→2026-06-20 18:50:17 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+    64→2026-06-20 18:50:17 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+    65→2026-06-20 18:50:22 | INFO     | app.routes.ifood_webhooks | ============================================================
+    66→2026-06-20 18:50:22 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+    67→2026-06-20 18:50:22 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+    68→2026-06-20 18:50:22 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+    69→2026-06-20 18:50:22 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+    70→2026-06-20 18:50:22 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    71→2026-06-20 18:50:22 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+    72→2026-06-20 18:50:22 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+    73→2026-06-20 18:50:22 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+    74→2026-06-20 18:50:23 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    75→INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+    76→2026-06-20 18:50:30 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+    77→2026-06-20 18:50:30 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+    78→2026-06-20 18:50:30 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+    79→2026-06-20 18:50:30 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+    80→2026-06-20 18:50:30 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+    81→2026-06-20 18:50:30 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+    82→2026-06-20 18:50:30 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+    83→2026-06-20 18:50:30 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+    84→2026-06-20 18:50:30 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+    85→2026-06-20 18:50:30 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+    86→2026-06-20 18:50:47 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+    87→2026-06-20 18:50:47 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+    88→2026-06-20 18:50:47 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+    89→2026-06-20 18:50:47 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+    90→2026-06-20 18:50:47 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+    91→2026-06-20 18:50:47 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+    92→2026-06-20 18:50:47 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+    93→2026-06-20 18:50:48 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+    94→2026-06-20 18:50:48 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+    95→2026-06-20 18:50:48 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+    96→2026-06-20 18:50:49 | INFO     | app.routes.ifood_webhooks | ============================================================
+    97→2026-06-20 18:50:49 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+    98→2026-06-20 18:50:49 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+    99→2026-06-20 18:50:49 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   100→2026-06-20 18:50:49 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   101→2026-06-20 18:50:49 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   102→2026-06-20 18:50:49 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   103→2026-06-20 18:50:49 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   104→2026-06-20 18:50:49 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   105→2026-06-20 18:50:50 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   106→INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   107→2026-06-20 18:51:00 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   108→2026-06-20 18:51:00 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   109→2026-06-20 18:51:00 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   110→2026-06-20 18:51:00 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   111→2026-06-20 18:51:00 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   112→2026-06-20 18:51:00 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   113→2026-06-20 18:51:00 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   114→2026-06-20 18:51:00 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   115→2026-06-20 18:51:00 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   116→2026-06-20 18:51:00 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   117→2026-06-20 18:51:18 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   118→2026-06-20 18:51:18 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   119→2026-06-20 18:51:18 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   120→2026-06-20 18:51:18 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   121→2026-06-20 18:51:18 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   122→2026-06-20 18:51:18 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   123→2026-06-20 18:51:18 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   124→2026-06-20 18:51:18 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   125→2026-06-20 18:51:18 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   126→2026-06-20 18:51:18 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   127→2026-06-20 18:51:27 | INFO     | app.routes.ifood_webhooks | ============================================================
+   128→2026-06-20 18:51:27 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   129→2026-06-20 18:51:27 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   130→2026-06-20 18:51:27 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   131→2026-06-20 18:51:27 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   132→2026-06-20 18:51:28 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   133→2026-06-20 18:51:28 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   134→2026-06-20 18:51:28 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   135→2026-06-20 18:51:28 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   136→2026-06-20 18:51:29 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   137→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   138→2026-06-20 18:51:30 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   139→2026-06-20 18:51:30 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   140→2026-06-20 18:51:30 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   141→2026-06-20 18:51:30 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   142→2026-06-20 18:51:30 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   143→2026-06-20 18:51:30 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   144→2026-06-20 18:51:30 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   145→2026-06-20 18:51:30 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   146→2026-06-20 18:51:30 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   147→2026-06-20 18:51:30 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   148→2026-06-20 18:51:48 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   149→2026-06-20 18:51:48 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   150→2026-06-20 18:51:48 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   151→2026-06-20 18:51:48 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   152→2026-06-20 18:51:48 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   153→2026-06-20 18:51:48 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   154→2026-06-20 18:51:48 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   155→2026-06-20 18:51:48 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   156→2026-06-20 18:51:48 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   157→2026-06-20 18:51:48 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   158→2026-06-20 18:51:53 | INFO     | app.routes.ifood_webhooks | ============================================================
+   159→2026-06-20 18:51:53 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   160→2026-06-20 18:51:53 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   161→2026-06-20 18:51:53 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   162→2026-06-20 18:51:53 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   163→2026-06-20 18:51:54 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   164→2026-06-20 18:51:54 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   165→2026-06-20 18:51:54 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   166→2026-06-20 18:51:54 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   167→2026-06-20 18:51:55 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   168→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   169→2026-06-20 18:52:00 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   170→2026-06-20 18:52:00 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   171→2026-06-20 18:52:00 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   172→2026-06-20 18:52:00 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   173→2026-06-20 18:52:00 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   174→2026-06-20 18:52:00 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   175→2026-06-20 18:52:00 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   176→2026-06-20 18:52:01 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   177→2026-06-20 18:52:01 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   178→2026-06-20 18:52:01 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   179→2026-06-20 18:52:18 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   180→2026-06-20 18:52:18 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   181→2026-06-20 18:52:18 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   182→2026-06-20 18:52:18 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   183→2026-06-20 18:52:18 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   184→2026-06-20 18:52:18 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   185→2026-06-20 18:52:18 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   186→2026-06-20 18:52:18 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   187→2026-06-20 18:52:18 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   188→2026-06-20 18:52:18 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   189→2026-06-20 18:52:31 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   190→2026-06-20 18:52:31 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   191→2026-06-20 18:52:31 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   192→2026-06-20 18:52:31 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   193→2026-06-20 18:52:31 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   194→2026-06-20 18:52:31 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   195→2026-06-20 18:52:31 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   196→2026-06-20 18:52:31 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   197→2026-06-20 18:52:31 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   198→2026-06-20 18:52:31 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   199→2026-06-20 18:52:32 | INFO     | app.routes.ifood_webhooks | ============================================================
+   200→2026-06-20 18:52:32 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   201→2026-06-20 18:52:32 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   202→2026-06-20 18:52:32 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   203→2026-06-20 18:52:32 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   204→2026-06-20 18:52:33 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   205→2026-06-20 18:52:33 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   206→2026-06-20 18:52:33 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   207→2026-06-20 18:52:33 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   208→2026-06-20 18:52:33 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   209→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   210→2026-06-20 18:52:48 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   211→2026-06-20 18:52:48 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   212→2026-06-20 18:52:48 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   213→2026-06-20 18:52:48 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   214→2026-06-20 18:52:48 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   215→2026-06-20 18:52:48 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   216→2026-06-20 18:52:48 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   217→2026-06-20 18:52:48 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   218→2026-06-20 18:52:48 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   219→2026-06-20 18:52:48 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   220→2026-06-20 18:52:53 | INFO     | app.routes.ifood_webhooks | ============================================================
+   221→2026-06-20 18:52:53 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   222→2026-06-20 18:52:53 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   223→2026-06-20 18:52:53 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   224→2026-06-20 18:52:53 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   225→2026-06-20 18:52:54 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   226→2026-06-20 18:52:54 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   227→2026-06-20 18:52:54 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   228→2026-06-20 18:52:54 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   229→2026-06-20 18:52:55 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   230→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   231→2026-06-20 18:53:01 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   232→2026-06-20 18:53:01 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   233→2026-06-20 18:53:01 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   234→2026-06-20 18:53:01 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   235→2026-06-20 18:53:01 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   236→2026-06-20 18:53:01 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   237→2026-06-20 18:53:01 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   238→2026-06-20 18:53:01 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   239→2026-06-20 18:53:01 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   240→2026-06-20 18:53:01 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   241→2026-06-20 18:53:18 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   242→2026-06-20 18:53:18 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   243→2026-06-20 18:53:18 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   244→2026-06-20 18:53:18 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   245→2026-06-20 18:53:18 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   246→2026-06-20 18:53:18 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   247→2026-06-20 18:53:18 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   248→2026-06-20 18:53:18 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   249→2026-06-20 18:53:18 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   250→2026-06-20 18:53:18 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}
+   251→2026-06-20 18:58:19 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via polling...
+   252→2026-06-20 18:58:19 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   253→2026-06-20 18:58:19 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   254→2026-06-20 18:58:19 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   255→2026-06-20 18:58:19 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   256→2026-06-20 18:58:19 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   257→2026-06-20 18:58:19 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   258→2026-06-20 18:58:19 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling "HTTP/1.1 404 Not Found"
+   259→2026-06-20 18:58:19 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 404 | Body len: 48
+   260→2026-06-20 18:58:19 | ERROR    | app.services.ifood_api | [POLLING] Erro: GET /orders:polling -> HTTP 404 - {"message":"no Route matched with those values"}

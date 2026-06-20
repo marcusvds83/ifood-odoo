@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "When there are events, the API returns code 200 with the list. If there are no events, it returns 204.Polling is easy to implement, but can increase traffic and ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "This reference shows structure, meaning, and required actions for each event. How to receive events. Choose a method:Polling (checking periodically):.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/events/intro",
+    "name": "Introduction - iFood Developer",
+    "snippet": "Introduction. The Events module allows your integration to receive real-time notifications about changes in order status. When an order is confirmed, ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "v1.0. The Merchant API provides means to interact with merchants on the platform. It is separated into four core parts.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Unacknowledged events will return in next polling. 3. Get order details. Detalhes do pedido. Obtenha os detalhes do pedido antes de confirmar ou cancelar. Use ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/events/polling-overview",
+    "name": "Polling de eventos - iFood Developer",
+    "snippet": "Polling de eventos. Polling é um método simples para receber atualizações de uma API. Seu sistema envia requisições regulares ao endpoint GET ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform",
+    "name": "Order negotiation platform - iFood Developer",
+    "snippet": "Negotiate post-delivery issues with customers — cancellations, returns, refunds through mediated proposals. Quickstart. Consume HANDSHAKE_DISPUTE via polling or ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/getting-started/documentation/best-practices",
+    "name": "Best practices - iFood Developer",
+    "snippet": "Frequency: Execute polling every 30 seconds to keep the merchant active on the platform. Filters: Use the x-polling-merchants header to filter events by ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=tW_FIVfi_MU",
+    "name": "Lançamento das novas APIs do iFood | Merchant | Pedidos - YouTube",
+    "snippet": "Acesse o novo Portal do Desenvolvedor: https://developer.ifood.com.br/ Hoje, vamos apresentar as principais novidades: 0 ... Como criar um ...",
+    "host_name": "www.youtube.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform-guide",
+    "name": "Order negotiation implementation guide - iFood Developer",
+    "snippet": "After the merchant's response, an event called HANDSHAKE_SETTLEMENT representing the option the merchant chose will be available via polling in the merchant-api ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
