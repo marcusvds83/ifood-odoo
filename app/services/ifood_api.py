@@ -195,22 +195,26 @@ class IFoodAPIClient:
         return await self.request_cancellation(order_id, reason=reason_code)
 
     # ── Event Polling & Acknowledgment (obrigatorio para homologacao) ──
+    # Docs: https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview
+    # GET /events/v1.0/events:polling — retrieves new events
+    # POST /events/v1.0/events/acknowledgment — confirms receipt (body: list of event IDs, max 2000)
 
     async def poll_events(self) -> list:
-        """Busca novos eventos via polling.
+        """Busca novos eventos via polling (modulo Events do iFood).
 
-        GET /order/v1.0/orders:polling
+        GET /events/v1.0/events:polling
         Deve ser chamado a cada 30 segundos.
         Retorna lista de eventos pendentes.
+        Sem eventos = 204 No Content.
         """
-        logger.info("[POLLING] Buscando eventos via polling...")
+        logger.info("[POLLING] Buscando eventos via GET /events/v1.0/events:polling...")
         try:
             headers = await self._auth_service.get_authenticated_headers()
-            url = self._build_url("/order/v1.0/orders:polling")
+            url = self._build_url("/events/v1.0/events:polling")
             response = await self.http_client.get(url, headers=headers, timeout=30.0)
             logger.info("[POLLING] Response: HTTP %s | Body len: %s", response.status_code, len(response.content))
             if response.status_code == 204 or not response.content or response.content.strip() == b'':
-                logger.info("[POLLING] Nenhum evento pendente (204/vazio)")
+                logger.debug("[POLLING] Nenhum evento pendente (204/vazio)")
                 return []
             response.raise_for_status()
             data = response.json()
@@ -218,25 +222,26 @@ class IFoodAPIClient:
             logger.info("[POLLING] %d evento(s) recebido(s)", len(events) if isinstance(events, list) else 1)
             return events if isinstance(events, list) else [events]
         except httpx.HTTPStatusError as e:
-            logger.error("[POLLING] Erro: %s %s -> HTTP %s - %s", "GET", "/orders:polling", e.response.status_code, e.response.text[:500])
+            logger.error("[POLLING] Erro: GET /events:polling -> HTTP %s - %s", e.response.status_code, e.response.text[:500])
             return []
         except Exception as e:
             logger.error("[POLLING] Erro inesperado: %s", e)
             return []
 
-    async def acknowledge_events(self, event_codes: list) -> dict:
-        """Confirma ao iFood que os eventos foram processados.
+    async def acknowledge_events(self, event_ids: list) -> dict:
+        """Confirma ao iFood que os eventos foram processados (modulo Events).
 
-        POST /order/v1.0/orders:acknowledgment
-        Body: lista de codigos dos eventos processados
+        POST /events/v1.0/events/acknowledgment
+        Body: lista de IDs dos eventos processados (campo 'id' de cada evento).
+        Max 2000 IDs por request.
         Eventos nao confirmados voltam no proximo polling.
         """
-        if not event_codes:
-            logger.info("[ACK] Nenhum evento para acknowledge")
+        if not event_ids:
+            logger.debug("[ACK] Nenhum evento para acknowledge")
             return {}
-        logger.info("[ACK] Enviando acknowledgment para %d evento(s): %s", len(event_codes), event_codes)
+        logger.info("[ACK] Enviando acknowledgment para %d evento(s): %s", len(event_ids), event_ids)
         try:
-            result = await self._request("POST", "/order/v1.0/orders:acknowledgment", json_body=event_codes)
+            result = await self._request("POST", "/events/v1.0/events/acknowledgment", json_body=event_ids)
             logger.info("[ACK] Acknowledgment enviado com sucesso: %s", str(result)[:500])
             return result
         except httpx.HTTPStatusError as e:

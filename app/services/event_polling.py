@@ -1,9 +1,14 @@
-"""Servico de polling de eventos iFood.
+"""Servico de polling de eventos iFood (modulo Events).
 
 O Firefly Audit valida que o merchant:
-1. Le eventos via GET /orders:polling (a cada 30s)
+1. Le eventos via GET /events/v1.0/events:polling (a cada 30s)
 2. Processa cada evento (para CAN: cancellationReasons -> requestCancellation)
-3. Confirma via POST /orders:acknowledgment
+3. Confirma via POST /events/v1.0/events/acknowledgment (envia lista de event IDs)
+
+Docs: https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview
+- O acknowledgment usa o campo 'id' do evento (nao 'code')
+- Max 2000 IDs por request de acknowledgment
+- Eventos nao confirmados voltam no proximo polling
 
 Este modulo roda como background task e executa esse loop continuamente.
 """
@@ -29,8 +34,10 @@ async def process_polled_event(event: dict, ifood_client: IFoodAPIClient) -> boo
     Retorna True se processado com sucesso (deve ser acknowledgado).
     """
     # Extrair dados do evento (formato pode variar)
+    # O evento do modulo Events tem campos: id, code, fullCode, orderId, merchantId, createdAt
     event_code = (
-        event.get("code")
+        event.get("fullCode")
+        or event.get("code")
         or event.get("eventType")
         or event.get("event")
         or event.get("type")
@@ -79,16 +86,16 @@ async def process_polled_event(event: dict, ifood_client: IFoodAPIClient) -> boo
 
 
 async def _polling_loop() -> None:
-    """Loop principal de polling de eventos iFood.
+    """Loop principal de polling de eventos iFood (modulo Events).
 
     Executa a cada 30 segundos:
-    1. GET /orders:polling
+    1. GET /events/v1.0/events:polling
     2. Processa cada evento
-    3. POST /orders:acknowledgment
+    3. POST /events/v1.0/events/acknowledgment (com lista de event IDs)
     """
     global _polling_running
     _polling_running = True
-    logger.info("[POLLING] === INICIANDO LOOP DE POLLING (30s) ===")
+    logger.info("[POLLING] === INICIANDO LOOP DE POLLING (30s) - Events Module ===")
 
     while _polling_running:
         try:
@@ -101,23 +108,30 @@ async def _polling_loop() -> None:
                 if events:
                     logger.info("[POLLING] %d evento(s) para processar", len(events))
 
-                    # Passo 2: Processar cada evento
-                    processed_codes = []
+                    # Passo 2: Processar cada evento e coletar IDs para acknowledgment
+                    event_ids_to_ack = []
                     for event in events:
+                        # O campo 'id' e o identificador unico do evento para acknowledgment
+                        event_id = event.get("id", "")
                         event_code = (
-                            event.get("code")
-                            or event.get("fullCode")
-                            or event.get("id", "")
+                            event.get("fullCode")
+                            or event.get("code")
+                            or ""
                         )
+
+                        logger.info("[POLLING] Evento recebido: id=%s code=%s orderId=%s",
+                                     event_id, event_code, event.get("orderId", ""))
+
                         success = await process_polled_event(event, ifood_client)
-                        if success and event_code:
-                            processed_codes.append(event_code)
+                        if success and event_id:
+                            event_ids_to_ack.append(event_id)
 
                     # Passo 3: Acknowledge todos os eventos processados
-                    if processed_codes:
+                    if event_ids_to_ack:
                         try:
-                            await ifood_client.acknowledge_events(processed_codes)
-                            logger.info("[POLLING] Acknowledgment enviado para %d evento(s)", len(processed_codes))
+                            await ifood_client.acknowledge_events(event_ids_to_ack)
+                            logger.info("[POLLING] Acknowledgment enviado para %d evento(s): %s",
+                                         len(event_ids_to_ack), event_ids_to_ack)
                         except Exception as ack_err:
                             logger.error("[POLLING] Falha no acknowledgment (eventos voltarao): %s", ack_err)
 
