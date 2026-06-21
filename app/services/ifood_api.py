@@ -128,7 +128,7 @@ class IFoodAPIClient:
 
         logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason})
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason, "cancellationCode": reason})
             logger.info("[CANCELLATION] Cancelamento solicitado pedido %s - Resposta: %s", order_id, str(result)[:500])
             return result
         except httpx.HTTPStatusError as e:
@@ -171,7 +171,7 @@ class IFoodAPIClient:
             result = await self._request(
                 "POST",
                 f"/order/v1.0/orders/{order_id}/requestCancellation",
-                json_body={"reason": cancellation_code}
+                json_body={"reason": cancellation_code, "cancellationCode": cancellation_code}
             )
             logger.info("[CANCELLATION] Cancelamento ACEITO pedido %s via /requestCancellation: %s", order_id, str(result)[:500])
             return result
@@ -231,10 +231,10 @@ class IFoodAPIClient:
     async def acknowledge_events(self, event_ids: list) -> dict:
         """Confirma ao iFood que os eventos foram processados.
 
-        A doc oficial mostra o body como:
-          {"acknowledgedEventIds": ["evt_123", "evt_124"]}
+        Formato do body (confirmado por repos GitHub funcionais):
+          [{"id": "evt_123"}, {"id": "evt_124"}]
 
-        Tenta primeiro o endpoint Events, depois Order como fallback.
+        Endpoint: POST /events/v1.0/events/acknowledgment
         Max 2000 IDs por request.
         Eventos nao confirmados voltam no proximo polling.
         """
@@ -247,24 +247,17 @@ class IFoodAPIClient:
         last_result = {}
 
         for chunk in chunks:
-            body = {"acknowledgedEventIds": chunk}
+            # Body correto: array de objetos com campo "id"
+            body = [{"id": eid} for eid in chunk]
             logger.info("[ACK] Enviando acknowledgment para %d evento(s)", len(chunk))
 
-            # Tentar endpoint Events primeiro
-            for endpoint in ["/events/v1.0/events/acknowledgment",
-                            "/order/v1.0/orders:acknowledgment"]:
-                try:
-                    result = await self._request("POST", endpoint, json_body=body)
-                    logger.info("[ACK] Acknowledgment OK via %s: %s", endpoint, str(result)[:300])
-                    last_result = result
-                    break
-                except httpx.HTTPStatusError as e:
-                    logger.warning("[ACK] Falha via %s: HTTP %s - %s",
-                                   endpoint, e.response.status_code, e.response.text[:300])
-                    continue
-            else:
-                # Ambos falharam
-                logger.error("[ACK] Todos os endpoints de acknowledgment falharam para %d eventos", len(chunk))
+            try:
+                result = await self._request("POST", "/events/v1.0/events/acknowledgment", json_body=body)
+                logger.info("[ACK] Acknowledgment OK: %s", str(result)[:300])
+                last_result = result
+            except httpx.HTTPStatusError as e:
+                logger.error("[ACK] Falha acknowledgment: HTTP %s - %s",
+                             e.response.status_code, e.response.text[:300])
 
         return last_result
 
