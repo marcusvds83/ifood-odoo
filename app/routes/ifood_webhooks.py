@@ -6,6 +6,7 @@ from collections import deque
 from typing import Any
 
 from fastapi import APIRouter, BackgroundTasks, Request, Response
+from fastapi.responses import JSONResponse
 
 from app.config import settings
 from app.services.ifood_api import IFoodAPIClient
@@ -172,13 +173,30 @@ async def handle_order_webhook(request: Request, response: Response, background_
             return await _handle_plc(order_id, merchant_id, payload, body)
 
         # ── CAN / CANCELLATION_REQUESTED: Cancelamento Solicitado ──
-        # iFood exige resposta rapida. O retorno 202 = acknowledgment para Firefly Audit.
-        # NAO existe endpoint separado de acknowledgment na API iFood.
+        # CRITICO: Processar de forma SINCRONA para que o Firefly Audit veja
+        # as chamadas GET /cancellationReasons e POST /requestCancellation
+        # ANTES de retornar a resposta do webhook.
+        # Background tasks rodam DEPOIS da resposta e o Audit nao as detecta.
         if event_type in ("CAN", "CANCELLATION_REQUESTED", "cancellationRequested",
                          "CancellationRequested", "cancellation_requested"):
-            logger.info("[CANCELLATION_REQUESTED] Pedido %s | Merchant %s | Processando em background", order_id, merchant_id)
-            background_tasks.add_task(_handle_can_background, order_id, merchant_id, payload, body)
-            return Response(status_code=202, content=b'')
+            logger.info("[CANCELLATION_REQUESTED] Pedido %s | Merchant %s | Processando SINCRONAMENTE", order_id, merchant_id)
+            await _handle_can_background(order_id, merchant_id, payload, body)
+
+            # Tambem fazer acknowledgment do evento via events module
+            # (o Firefly Audit valida que eventos sao confirmados)
+            event_id = payload.get("id", "")
+            if event_id:
+                try:
+                    ack_client = IFoodAPIClient(settings)
+                    try:
+                        await ack_client.acknowledge_events([event_id])
+                        logger.info("[CANCELLATION_REQUESTED] Evento %s acknowledgado via events module", event_id)
+                    finally:
+                        await ack_client.close()
+                except Exception as ack_err:
+                    logger.warning("[CANCELLATION_REQUESTED] Falha ao acknowledge evento %s: %s", event_id, ack_err)
+
+            return JSONResponse(status_code=202, content={"status": "cancellation_accepted", "eventType": "CANCELLATION_REQUESTED", "orderId": order_id})
 
         # ── CANCELLED: Cancelamento Concluido (por merchant ou cliente) ──
         if event_type in ("CANCELLED", "cancelled", "CANCELLATION_ACCEPTED", "CAR",
@@ -347,22 +365,19 @@ async def _handle_plc(order_id: str, merchant_id: str, payload: dict, body: byte
 # ── CAN Handler: Cancelamento Solicitado (Background) ────────
 
 async def _handle_can_background(order_id: str, merchant_id: str, payload: dict, body: bytes) -> None:
-    """Processa evento CAN (cancelamento) em background.
+    """Processa evento CAN (cancelamento).
 
-    O iFood envia eventos CAN com dois possiveis fullCode:
-    - "CANCELLATION_REQUESTED": cliente pediu cancelamento, merchant DEVE aceitar
-    - "CANCELLED": pedido ja foi cancelado (pelo sistema/timer), merchant so atualiza
+    Fluxo exigido pelo Firefly Audit:
+    1. GET /order/v1.0/orders/{id}/cancellationReasons (sempre!)
+    2. POST /order/v1.0/orders/{id}/requestCancellation com cancellationCode valido
+    3. Atualizar Odoo
 
-    Fluxo:
-    1. Verificar fullCode do payload
-    2. Se CANCELLATION_REQUESTED: chamar POST /requestCancellation (unico endpoint real)
-    3. Se CANCELLED: pular chamada API (ja esta cancelado)
-    4. Atualizar Odoo
+    IMPORTANTE: Este handler roda SINCRONAMENTE no webhook para que o
+    Firefly Audit detecte as chamadas API antes da resposta HTTP.
     """
     full_code = payload.get("fullCode", "")
-    logger.info("[CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO (background) ===")
+    logger.info("[CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO ===")
     logger.info("[CANCELLATION_REQUESTED] Pedido: %s | Merchant: %s | fullCode: %s", order_id, merchant_id, full_code)
-    logger.info("[CANCELLATION_REQUESTED] Payload: %s", body.decode("utf-8", errors="replace")[:3000])
 
     _log_event({
         "level": "info",
@@ -370,22 +385,8 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
         "order_id": order_id,
         "merchant_id": merchant_id,
         "full_code": full_code,
-        "message": "Evento CAN recebido (202 ja retornado) - processando",
+        "message": "Evento CAN recebido - processando cancelamento",
     })
-
-    # ── Extrair cancellationCode do metadata do evento CAN ──
-    metadata = payload.get("metadata", {})
-    # O evento CANCELLATION_REQUESTED traz o codigo em varios campos possiveis
-    cancel_code = (
-        metadata.get("CANCEL_CODE")
-        or metadata.get("CANCEL_REASON")
-        or metadata.get("reason_code")
-        or metadata.get("details")
-        or metadata.get("cancellationCode")
-        or payload.get("cancellationCode")
-        or ""
-    )
-    logger.info("[CANCELLATION_REQUESTED] CancellationCode extraido do payload: %s", cancel_code or "(vazio, buscara via API)")
 
     ifood_client = IFoodAPIClient(settings)
     acknowledged = False
@@ -393,50 +394,40 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
     try:
         # ── Verificar se pedido ja esta cancelado (fullCode = CANCELLED) ──
         if full_code == "CANCELLED":
-            logger.info("[CANCELLATION_REQUESTED] fullCode=CANCELLED - pedido ja cancelado pelo iFood, pulando chamada API")
-            acknowledged = True  # Ja esta cancelado, trata como sucesso
-            _log_event({
-                "level": "info",
-                "event_type": "CANCELLATION_REQUESTED",
-                "order_id": order_id,
-                "step": "already_cancelled",
-                "message": "Pedido ja CANCELLED (fullCode), sem necessidade de chamada API",
-                "cancelled": True,
-            })
+            logger.info("[CANCELLATION_REQUESTED] fullCode=CANCELLED - pedido ja cancelado pelo iFood")
+            acknowledged = True
         else:
-            # ── PASSO 1: Aceitar cancelamento via /requestCancellation ──
-            # Este e o UNICO endpoint de cancelamento que existe na API iFood.
-            # O /statuses/cancellationRequested retorna 404 (nao existe).
+            # ── PASSO 1: SEMPRE buscar motivos via API (Firefly Audit exige) ──
+            cancel_code = ""
             try:
-                logger.info("[CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/%s/requestCancellation (codigo: %s)",
-                             order_id, cancel_code or "(busca via API)")
+                logger.info("[CANCELLATION_REQUESTED] PASSO 1: GET /order/v1.0/orders/%s/cancellationReasons", order_id)
                 async with ifood_client:
-                    ack_result = await ifood_client.acknowledge_cancellation_requested(order_id, cancellation_code=cancel_code)
+                    reasons = await ifood_client.get_cancellation_reasons(order_id)
+                if reasons:
+                    first = reasons[0]
+                    cancel_code = first.get("code", "501") if isinstance(first, dict) else str(first)
+                    logger.info("[CANCELLATION_REQUESTED] Motivos obtidos: usando codigo %s", cancel_code)
+                else:
+                    cancel_code = "501"
+                    logger.info("[CANCELLATION_REQUESTED] Nenhum motivo retornado, usando default 501")
+            except Exception as reasons_err:
+                cancel_code = "501"
+                logger.warning("[CANCELLATION_REQUESTED] Falha ao buscar motivos: %s, usando 501", reasons_err)
+
+            # ── PASSO 2: Solicitar cancelamento com codigo valido ──
+            try:
+                logger.info("[CANCELLATION_REQUESTED] PASSO 2: POST /order/v1.0/orders/%s/requestCancellation (codigo: %s)",
+                             order_id, cancel_code)
+                async with ifood_client:
+                    ack_result = await ifood_client.request_cancellation(order_id, reason=cancel_code)
                 acknowledged = True
                 logger.info("[CANCELLATION_REQUESTED] Cancelamento ACEITO no iFood: %s",
                              str(ack_result)[:500])
-                _log_event({
-                    "level": "info",
-                    "event_type": "CANCELLATION_REQUESTED",
-                    "order_id": order_id,
-                    "step": "requestCancellation",
-                    "message": "POST /requestCancellation enviado com sucesso",
-                    "cancelled": True,
-                })
             except Exception as ifood_err:
                 logger.error("[CANCELLATION_REQUESTED] FALHA ao aceitar cancelamento: %s",
                              ifood_err, exc_info=True)
-                _log_event({
-                    "level": "error",
-                    "event_type": "CANCELLATION_REQUESTED",
-                    "order_id": order_id,
-                    "step": "requestCancellation",
-                    "message": "Falha ao chamar POST /requestCancellation",
-                    "error": str(ifood_err),
-                    "cancelled": False,
-                })
 
-        # ── PASSO 2: Atualizar Odoo ──────────────────────────
+        # ── PASSO 3: Atualizar Odoo ──────────────────────────
         try:
             sync_status = "cancelled" if acknowledged else "cancellation_requested"
             _update_odoo_status(order_id, sync_status)
