@@ -379,7 +379,7 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
 
     Fluxo exigido pelo Firefly Audit:
     1. GET /order/v1.0/orders/{id}/cancellationReasons (sempre!)
-    2. POST /order/v1.0/orders/{id}/requestCancellation com cancellationCode valido
+    2. POST /order/v1.0/orders/{id}/requestCancellation com {"reason": "codigo"} (formato oficial iFood)
     3. Atualizar Odoo
 
     IMPORTANTE: Este handler roda SINCRONAMENTE no webhook para que o
