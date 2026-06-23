@@ -21,7 +21,7 @@ class IFoodAPIClient:
     def _build_url(self, path: str) -> str:
         return f"{self._config.ifood_api_base_url}{path}"
 
-    async def _request(self, method: str, path: str, params: Optional[dict] = None, json_body: Optional[dict] = None) -> dict:
+    async def _request(self, method: str, path: str, params: Optional[dict] = None, json_body = None) -> dict:
         headers = await self._auth_service.get_authenticated_headers()
         url = self._build_url(path)
         try:
@@ -98,7 +98,7 @@ class IFoodAPIClient:
 
         Este e o UNICO endpoint de cancelamento da API oficial iFood:
         POST /order/v1.0/orders/{orderId}/requestCancellation
-        Body: {"reason": "codigo_do_motivo"}
+        Body: {"cancellationCode": "codigo_do_motivo"}
         Resposta: 202 Accepted
         Resultado real chega via polling como evento CANCELLED.
 
@@ -128,7 +128,7 @@ class IFoodAPIClient:
 
         logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason, "cancellationCode": reason})
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"cancellationCode": reason})
             logger.info("[CANCELLATION] Cancelamento solicitado pedido %s - Resposta: %s", order_id, str(result)[:500])
             return result
         except httpx.HTTPStatusError as e:
@@ -171,7 +171,7 @@ class IFoodAPIClient:
             result = await self._request(
                 "POST",
                 f"/order/v1.0/orders/{order_id}/requestCancellation",
-                json_body={"reason": cancellation_code, "cancellationCode": cancellation_code}
+                json_body={"cancellationCode": cancellation_code}
             )
             logger.info("[CANCELLATION] Cancelamento ACEITO pedido %s via /requestCancellation: %s", order_id, str(result)[:500])
             return result
@@ -231,8 +231,8 @@ class IFoodAPIClient:
     async def acknowledge_events(self, event_ids: list) -> dict:
         """Confirma ao iFood que os eventos foram processados.
 
-        Formato do body (confirmado por curl real do iFood - forum Qt):
-          [{"id": "event_id1"}, {"id": "event_id2"}]
+        Formato do body (codigo Python oficial iFood):
+          {"events": [{"id": "event_id1"}, {"id": "event_id2"}]}
 
         Endpoint: POST /events/v1.0/events/acknowledgment
         Max 2000 IDs por request.
@@ -247,9 +247,9 @@ class IFoodAPIClient:
         last_result = {}
 
         for chunk in chunks:
-            # Body correto: array de objetos com campo "id" (formato real iFood)
-            body = [{"id": eid} for eid in chunk]
-            logger.info("[ACK] Enviando acknowledgment para %d evento(s) - formato: [{\"id\": ...}]", len(chunk))
+            # Body correto (codigo Python oficial iFood): {"events": [{"id": eid}, ...]}
+            body = {"events": [{"id": eid} for eid in chunk]}
+            logger.info("[ACK] Enviando acknowledgment para %d evento(s) - formato: {\"events\": [{\"id\": ...}]}", len(chunk))
 
             try:
                 result = await self._request("POST", "/events/v1.0/events/acknowledgment", json_body=body)
