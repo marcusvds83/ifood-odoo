@@ -231,10 +231,10 @@ class IFoodAPIClient:
     async def acknowledge_events(self, event_ids: list) -> dict:
         """Confirma ao iFood que os eventos foram processados.
 
-        Formato do body (codigo Python oficial iFood):
-          {"events": [{"id": "event_id1"}, {"id": "event_id2"}]}
+        Formato do body (TESTADO E CONFIRMADO 22/06 - retornou 202):
+          [{"id": "event_id1"}, {"id": "event_id2"}]
 
-        Endpoint: POST /events/acknowledgment (URL oficial iFood)
+        Endpoint: POST /events/v1.0/events/acknowledgment
         Max 2000 IDs por request.
         Eventos nao confirmados voltam no proximo polling.
         """
@@ -247,12 +247,12 @@ class IFoodAPIClient:
         last_result = {}
 
         for chunk in chunks:
-            # Body correto (codigo Python oficial iFood): {"events": [{"id": eid}, ...]}
-            body = {"events": [{"id": eid} for eid in chunk]}
-            logger.info("[ACK] Enviando acknowledgment para %d evento(s) - URL: /events/acknowledgment", len(chunk))
+            # Body correto (TESTADO 22/06 - 202 Accepted): [{"id": eid}, ...]
+            body = [{"id": eid} for eid in chunk]
+            logger.info("[ACK] Enviando acknowledgment para %d evento(s) - formato: [{\"id\": ...}]", len(chunk))
 
             try:
-                result = await self._request("POST", "/events/acknowledgment", json_body=body)
+                result = await self._request("POST", "/events/v1.0/events/acknowledgment", json_body=body)
                 logger.info("[ACK] Acknowledgment OK: %s", str(result)[:300])
                 last_result = result
             except httpx.HTTPStatusError as e:
