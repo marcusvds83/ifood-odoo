@@ -128,7 +128,7 @@ class IFoodAPIClient:
 
         logger.info("[CANCELLATION] Solicitando cancelamento pedido %s - motivo: %s", order_id, reason)
         try:
-            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason})
+            result = await self._request("POST", f"/order/v1.0/orders/{order_id}/requestCancellation", json_body={"reason": reason, "cancellationCode": reason})
             logger.info("[CANCELLATION] Cancelamento solicitado pedido %s - Resposta: %s", order_id, str(result)[:500])
             return result
         except httpx.HTTPStatusError as e:
@@ -171,7 +171,7 @@ class IFoodAPIClient:
             result = await self._request(
                 "POST",
                 f"/order/v1.0/orders/{order_id}/requestCancellation",
-                json_body={"reason": cancellation_code}
+                json_body={"reason": cancellation_code, "cancellationCode": cancellation_code}
             )
             logger.info("[CANCELLATION] Cancelamento ACEITO pedido %s via /requestCancellation: %s", order_id, str(result)[:500])
             return result
@@ -231,8 +231,8 @@ class IFoodAPIClient:
     async def acknowledge_events(self, event_ids: list) -> dict:
         """Confirma ao iFood que os eventos foram processados.
 
-        Formato do body (DOCUMENTACAO OFICIAL iFood):
-          {"eventIds": ["id_do_evento1", "id_do_evento2"]}
+        Formato do body (confirmado por curl real do iFood - forum Qt):
+          [{"id": "event_id1"}, {"id": "event_id2"}]
 
         Endpoint: POST /events/v1.0/events/acknowledgment
         Max 2000 IDs por request.
@@ -247,9 +247,9 @@ class IFoodAPIClient:
         last_result = {}
 
         for chunk in chunks:
-            # Body correto (formato oficial iFood): objeto com chave "eventIds"
-            body = {"eventIds": chunk}
-            logger.info("[ACK] Enviando acknowledgment para %d evento(s) - body: {eventIds: [...]}", len(chunk))
+            # Body correto: array de objetos com campo "id" (formato real iFood)
+            body = [{"id": eid} for eid in chunk]
+            logger.info("[ACK] Enviando acknowledgment para %d evento(s) - formato: [{\"id\": ...}]", len(chunk))
 
             try:
                 result = await self._request("POST", "/events/v1.0/events/acknowledgment", json_body=body)
