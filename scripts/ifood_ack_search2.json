@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/events/polling-overview",
+    "name": "Polling de eventos - iFood Developer",
+    "snippet": "URL: https://merchant- api . ifood .com.br/ events / v1 . 0 / events / acknowledgment Autenticação: JWT Bearer TokenRespostas: 202: Accepted (evento será processado ... Read more",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev.clickmeeting.com/api-doc/curl-examples",
+    "name": "cURL Examples - ClickMeeting DevZone",
+    "snippet": "Here's a simple example – let's create an event . We use the event ... curl --request POST https:// api .clickmeeting.com/ v1 /conferences --header \"X ... Read more",
+    "host_name": "dev.clickmeeting.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.kibocommerce.com/developer-guides/event",
+    "name": "Events/Webhooks API - Kibo Documentation",
+    "snippet": "Common workflows like creating subscriptions and debugging failed deliveries using the Dead Letter Queue (with accurate, tested examples ). How to avoid the most ... Read more",
+    "host_name": "docs.kibocommerce.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://loops.so/docs/api-reference/examples/events",
+    "name": "Events API examples - Loops",
+    "snippet": "06-May-2026 — Copy/paste code examples for sending events to Loops via API and SDKs to trigger workflows and attach event properties, with sample ...",
+    "host_name": "loops.so",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "URL: https://merchant- api . ifood .com.br/ events / v1 . 0 / events / acknowledgment Authentication: JWT Bearer TokenResponse Codes: ... IDs must be unique. Example cURL :. Read more\nAlways send /acknowledgment when receiving. The API only uses the ID to process acknowledgment. Each request accepts up to 2000 IDs.Guidelines: Example cURL: ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://help.xmatters.com/xmapi",
+    "name": "xMatters REST API Reference",
+    "snippet": "This ensures that your existing integrations and incoming signals will continue to function without interruption. For more information on the Events to Alerts ... Read more",
+    "host_name": "help.xmatters.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://guicommits.com/challenges-on-integrating-ifood",
+    "name": "Architectural challenges on integrating ifood - Gui Commits",
+    "snippet": "... 0 /merchants/merchant_id/availabilities; Notify you received your events : https://pos- api . ifood .com.br/ v1 . 0 / events / acknowledgment . And no , I can't use v3. 0 to ... Read more\nI will share abstractions, concepts, and describe real challenges and real architectural decisions on integrating with ifood.",
+    "host_name": "guicommits.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.parcelperform.com/docs/api-guides-reference/blfc895yi4bx3-create-events",
+    "name": "Create Events (v5.0) | API Guides & References - Parcel Perform",
+    "snippet": "Date and time for the manual event . If not provided, the current date & time will be taken (in UTC) Format without timezone (assumed UTC): YYYY-MM-DDThh:mm ... Read more",
+    "host_name": "developers.parcelperform.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "After processing events , confirm they were consumed: curl -X POST \"https://merchant- api . ifood .com.br/order/ v1 . 0 /orders: acknowledgment \" \\ -H \"Authorization ... Read more\nAfter processing events, confirm they were consumed: curl -X POST \"https://merchant-api.ifood.com.br/order/v1.0/orders:acknowledgment\" \\ -H \"Authorization ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/50071943/curl-send-json-data-not-working-using-c",
+    "name": "curl send JSON data not working using C++ - Stack Overflow",
+    "snippet": "... cUrl library and it's not working. This is the command: Copy. curl --request POST \\ --url https://pos- api . ifood .com.br/ v1 . 0 / events / ... Read more",
+    "host_name": "stackoverflow.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

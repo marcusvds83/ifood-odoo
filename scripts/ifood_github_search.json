@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://guicommits.com/challenges-on-integrating-ifood",
+    "name": "Architectural challenges on integrating ifood - Gui Commits",
+    "snippet": "I will share abstractions, concepts, and describe real challenges and real architectural decisions on integrating with ifood.",
+    "host_name": "guicommits.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/google/merchant-api-samples",
+    "name": "google/merchant-api-samples - GitHub",
+    "snippet": "Merchant API Code Samples in Java, Python and PHP. Merchant API is a redesign of the Content API for Shopping. - google/merchant-api-samples.",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/IBM/eventstreams-python-sdk",
+    "name": "IBM/eventstreams-python-sdk: Event Streams SDK allows  - GitHub",
+    "snippet": "Event Streams provides a REST API to help connect your existing systems to your Event Streams Kafka cluster. Using the API, you can integrate Event Streams ...",
+    "host_name": "github.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Also filter events by type and group, if necessary. Send POST /events/acknowledgment for all received events (code 200) immediately after the polling request.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/amzn/selling-partner-api-samples/blob/main/use-cases/merchant-fulfillment/code/python/src/eligible_shipment_handler.py",
+    "name": "amzn/selling-partner-api-samples - merchant-fulfillment - GitHub",
+    "snippet": "Sample code for Amazon Selling Partner API use cases - selling-partner-api-samples/use-cases/merchant-fulfillment/code/python/src/eligible_shipment_handler ...",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/ifsantana/ifood-backend-connection-test",
+    "name": "ifsantana/ifood-backend-connection-test - GitHub",
+    "snippet": "Your task is to develop one (or more, feel free) service(s) to: handle connection between Restaurant and iFood Platform; store and delete schedules of ...",
+    "host_name": "github.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/LeandroRodrigo10/ifood-integrator-poc",
+    "name": "LeandroRodrigo10/ifood-integrator-poc: Proof of concept of  - GitHub",
+    "snippet": "Event-driven marketplace integration prototype designed to demonstrate the architectural core of an ERP integration module. This project simulates how an ERP ...",
+    "host_name": "github.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=FAFhiPbkFEc",
+    "name": "Event Sourcing in Python - YouTube",
+    "snippet": "Event Sources 06:32 GitHub 06:34 Demo.",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/topics/merchant-api",
+    "name": "merchant-api · GitHub Topics",
+    "snippet": "The first free, open-source, self-hosted MCP server for Google Merchant Center (GMC). 126 tools over Merchant API v1 — products, inventory, reports, ...",
+    "host_name": "github.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.thethingsnetwork.org/forum/t/how-to-use-event-api/57252",
+    "name": "How to use Event API? - The Things Network",
+    "snippet": "I'm trying to make a script using the Event API, but I can't get it to work. The reason for using it, is that I need to monitor some events on my gateways.",
+    "host_name": "www.thethingsnetwork.org",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
