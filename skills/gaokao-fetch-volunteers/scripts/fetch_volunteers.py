@@ -10,11 +10,21 @@ import sys
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+
+from province_config import (
+    PROVINCES_REQUIRING_GRADE_TYPE,
+    batch_list_query_params,
+    sanitize_payload_for_api,
+    validate_classify,
+    validate_subjects_for_volunteer_api,
+)
 
 # ========== 接口配置（修改此处即可切换环境）==========
 BASE_URL = "https://publicapi.chatglm.cn/chatglm_public/skill"
 API_PATH = "/zp/volunteer/intelligenceVolunteer"
+BATCH_LIST_PATH = "/zp/volunteer/batch/list"
 # =====================================================
 
 TYPE_LABELS = {
@@ -25,30 +35,23 @@ TYPE_LABELS = {
     "YI": "易",
 }
 
-# 测试环境下部分省份 batch 需特殊取值，否则会返回「没有可填报的批次」
-PROVINCE_BATCH: dict[str, str] = {
+PROVINCE_BATCH_FALLBACK: dict[str, str] = {
     "天津": "本科批A段",
     "浙江": "普通类一段",
     "山东": "普通类一段",
     "四川": "本科批B段",
     "云南": "本科批B段",
-    "甘肃": "本科批C段",
+    "甘肃": "本科批",
     "宁夏": "本科批B段",
     "新疆": "本科一批",
 }
 
 
-def resolve_batch(province: str | None, batch: str | None) -> str | None:
-    """根据省份自动修正 batch。
-
-    规则：
-    - batch 为空：若省份在映射中，自动补上
-    - batch 为「本科批」：若省份在映射中，自动替换为实测可用值
-    - 其他：保持不变
-    """
+def resolve_batch_fallback(province: str | None, batch: str | None) -> str | None:
+    """批次 API 失败时的省份静态兜底。"""
     if not province:
         return batch
-    mapped = PROVINCE_BATCH.get(province)
+    mapped = PROVINCE_BATCH_FALLBACK.get(province)
     if not mapped:
         return batch
     if batch is None:
@@ -56,6 +59,123 @@ def resolve_batch(province: str | None, batch: str | None) -> str | None:
     if str(batch).strip() == "本科批":
         return mapped
     return batch
+
+
+def batch_list_url(
+    params: dict[str, Any],
+    base_url: str | None = None,
+) -> str:
+    root = (base_url or BASE_URL).rstrip("/")
+    path = BATCH_LIST_PATH if BATCH_LIST_PATH.startswith("/") else f"/{BATCH_LIST_PATH}"
+    query = urlencode(params)
+    return f"{root}{path}?{query}"
+
+
+def call_batch_list_api(
+    params: dict[str, Any],
+    base_url: str | None = None,
+    timeout: int = 60,
+) -> list[dict[str, Any]]:
+    """GET 批次列表，返回 result 数组。"""
+    url = batch_list_url(params, base_url)
+    req = Request(url, method="GET", headers={"Accept": "*/*"})
+    try:
+        with urlopen(req, timeout=timeout) as resp:
+            charset = resp.headers.get_content_charset() or "utf-8"
+            text = resp.read().decode(charset)
+    except HTTPError as e:
+        detail = e.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"批次接口 HTTP {e.code}: {detail}") from e
+    except URLError as e:
+        raise RuntimeError(f"批次接口网络失败: {e.reason}") from e
+
+    raw = json.loads(text)
+    if raw.get("status") != 0:
+        raise ValueError(f"批次接口异常: status={raw.get('status')}, message={raw.get('message')}")
+    result = raw.get("result")
+    if not isinstance(result, list):
+        raise ValueError("批次接口返回格式异常：result 非数组")
+    if not result:
+        province = params.get("province")
+        classify = params.get("classify")
+        grade_type = params.get("gradeType")
+        hint = f"classify={classify}"
+        if grade_type:
+            hint += f", gradeType={grade_type}"
+        raise ValueError(
+            f"批次列表为空（{province}，{hint}）。"
+            f"请确认 classify 与省份选科模式一致（见 reference.md）"
+        )
+    return result
+
+
+def select_batch_from_list(
+    items: list[dict[str, Any]],
+    user_score: int,
+    preferred_batch: str | None = None,
+    grade_type: str | None = None,
+) -> dict[str, Any]:
+    """从批次列表中选取与分数、层次最匹配的一项。"""
+    if not items:
+        raise ValueError("没有可填报的批次")
+
+    candidates = list(items)
+
+    # 1. 精确批次名（非泛称「本科批」）
+    if preferred_batch and preferred_batch.strip() not in ("本科批", "专科批"):
+        exact = [x for x in candidates if x.get("batch") == preferred_batch]
+        if exact:
+            return exact[0]
+
+    # 2. 按 gradeType / 泛称本科批·专科批 过滤
+    if grade_type:
+        filtered = [x for x in candidates if x.get("gradeType") == grade_type]
+        if filtered:
+            candidates = filtered
+    elif preferred_batch == "本科批":
+        filtered = [x for x in candidates if x.get("gradeType") == "本科"]
+        if filtered:
+            candidates = filtered
+    elif preferred_batch == "专科批":
+        filtered = [x for x in candidates if x.get("gradeType") == "专科"]
+        if filtered:
+            candidates = filtered
+
+    # 3. 分数达线：取控制线下考生分数仍达标的批次中，控制线最高者（偏本科一段）
+    qualified = [x for x in candidates if user_score >= int(x.get("score") or 0)]
+    pool = qualified if qualified else candidates
+    return max(pool, key=lambda x: int(x.get("score") or 0))
+
+
+def apply_batch_item_to_payload(payload: dict[str, Any], batch_item: dict[str, Any]) -> None:
+    """将选中批次写入志愿请求体。"""
+    payload["batch"] = batch_item.get("batch")
+    if batch_item.get("type"):
+        payload["volunteerType"] = batch_item["type"]
+    province = payload.get("province")
+    if (
+        province in PROVINCES_REQUIRING_GRADE_TYPE
+        and batch_item.get("gradeType")
+        and not payload.get("gradeType")
+    ):
+        payload["gradeType"] = batch_item["gradeType"]
+
+
+def resolve_batch_via_api(
+    payload: dict[str, Any],
+    base_url: str | None = None,
+) -> tuple[str, dict[str, Any], list[dict[str, Any]]]:
+    """调用批次接口并选定 batch，返回 (batch名, 选中项, 全部项)。"""
+    params = batch_list_query_params(payload)
+    items = call_batch_list_api(params, base_url=base_url)
+    selected = select_batch_from_list(
+        items,
+        user_score=int(payload["score"]),
+        preferred_batch=payload.get("batch"),
+        grade_type=payload.get("gradeType"),
+    )
+    apply_batch_item_to_payload(payload, selected)
+    return selected.get("batch") or "", selected, items
 
 
 def _parse_json_field(value: Any) -> Any:
@@ -343,7 +463,7 @@ def main() -> int:
         "--auto-batch",
         action=argparse.BooleanOptionalAction,
         default=True,
-        help="是否按省份自动补全/修正 batch（默认开启）",
+        help="是否通过 batch/list 接口自动解析批次（默认开启）",
     )
     parser.add_argument("--universitys", help="心仪高校，逗号分隔")
     parser.add_argument("--provinces", help="省份意向，逗号分隔")
@@ -369,7 +489,9 @@ def main() -> int:
         return 1
 
     if not args.student and not args.config:
-        required = ["province", "classify", "score", "batch"]
+        required = ["province", "classify", "score"]
+        if not args.auto_batch:
+            required.append("batch")
         missing = [k for k in required if payload.get(k) is None]
         if missing:
             print(
@@ -378,14 +500,44 @@ def main() -> int:
             )
             return 1
 
-    # CLI 中 null 用字符串 "null" 传入时转为 None
-    for key in ("subjects", "gradeType", "rank", "universitys", "provinces", "tags", "majorClass"):
+    # CLI 中 null 用字符串 "null" 传入时转为 None（subjects 在 sanitize 阶段按省处理）
+    for key in ("gradeType", "rank", "universitys", "provinces", "tags", "majorClass"):
         if payload.get(key) == "null":
             payload[key] = None
 
-    # 自动修正 batch（可通过 --no-auto-batch 关闭）
+    try:
+        validate_classify(str(payload.get("province", "")), payload.get("classify"))
+    except ValueError as e:
+        print(f"错误: {e}", file=sys.stderr)
+        return 1
+
+    batch_resolution: dict[str, Any] | None = None
     if args.auto_batch:
-        payload["batch"] = resolve_batch(payload.get("province"), payload.get("batch"))
+        try:
+            batch_name, selected, all_items = resolve_batch_via_api(payload, base_url=args.base_url)
+            batch_resolution = {
+                "source": "batch/list",
+                "selected": selected,
+                "available": all_items,
+            }
+            print(
+                f"批次: {batch_name}（{selected.get('gradeType', '')} / {selected.get('type', '')}）",
+                file=sys.stderr,
+            )
+        except (RuntimeError, ValueError, json.JSONDecodeError) as e:
+            print(f"警告: 批次接口失败，使用静态兜底 — {e}", file=sys.stderr)
+            payload["batch"] = resolve_batch_fallback(payload.get("province"), payload.get("batch"))
+            batch_resolution = {"source": "fallback", "batch": payload.get("batch")}
+    elif not payload.get("batch"):
+        print("错误: 已关闭 --auto-batch 且未提供 batch", file=sys.stderr)
+        return 1
+
+    sanitize_payload_for_api(payload)
+    try:
+        validate_subjects_for_volunteer_api(payload)
+    except ValueError as e:
+        print(f"错误: {e}", file=sys.stderr)
+        return 1
 
     print(f"请求: {api_url(args.base_url)}", file=sys.stderr)
     try:
@@ -405,6 +557,8 @@ def main() -> int:
         return 1
 
     parsed["request"] = payload
+    if batch_resolution:
+        parsed["batch_resolution"] = batch_resolution
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(parsed, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"已保存解析结果: {args.output}（共 {parsed['stats']['total']} 所院校）")

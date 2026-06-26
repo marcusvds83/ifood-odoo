@@ -151,7 +151,16 @@ def main() -> int:
         return 1
 
     payload = student_to_api_payload(student)
-    required = ["province", "classify", "score", "batch"]
+    try:
+        from province_config import validate_classify, validate_subjects_for_volunteer_api
+
+        validate_classify(str(payload.get("province", "")), payload.get("classify"))
+        validate_subjects_for_volunteer_api(payload)
+    except ValueError as e:
+        print(f"错误: {e}", file=sys.stderr)
+        return 1
+
+    required = ["province", "classify", "score"]
     missing = [k for k in required if not payload.get(k)]
     if missing:
         print(f"错误: student.json 缺少 API 必填字段 {missing}", file=sys.stderr)
