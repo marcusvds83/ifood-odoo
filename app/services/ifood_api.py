@@ -89,7 +89,7 @@ class IFoodAPIClient:
         except httpx.HTTPStatusError as e:
             # Se o pedido ja esta cancelado, a API retorna 400
             if e.response.status_code == 400:
-                logger.warning("[CANCELLATION] Pedido %s pode ja estar cancelado (400 ao buscar motivos): %s", order_id, e.response.text[:200])
+                logger.warning("[CANCELLATION] Pedido %s - 400 ao buscar motivos (pedido ja cancelado?): %s", order_id, e.response.text[:500])
                 return []
             raise
 

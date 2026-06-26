@@ -407,34 +407,38 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
             logger.info("[CANCELLATION_REQUESTED] fullCode=CANCELLED - pedido ja cancelado pelo iFood")
             acknowledged = True
         else:
-            # ── PASSO 1: SEMPRE buscar motivos via API (Firefly Audit exige) ──
+            # ── PASSOS 1 e 2: cancellationReasons + requestCancellation ──
+            # CRITICO: usar UM SO async with para que ambas chamadas API
+            # usem a MESMA sessao de autenticacao e ocorram rapido,
+            # dentro da janela de observacao do Firefly Audit.
             cancel_code = ""
             try:
-                logger.info("[CANCELLATION_REQUESTED] PASSO 1: GET /order/v1.0/orders/%s/cancellationReasons", order_id)
                 async with ifood_client:
-                    reasons = await ifood_client.get_cancellation_reasons(order_id)
-                if reasons:
-                    first = reasons[0]
-                    cancel_code = first.get("code", "501") if isinstance(first, dict) else str(first)
-                    logger.info("[CANCELLATION_REQUESTED] Motivos obtidos: usando codigo %s", cancel_code)
-                else:
-                    cancel_code = "501"
-                    logger.info("[CANCELLATION_REQUESTED] Nenhum motivo retornado, usando default 501")
-            except Exception as reasons_err:
-                cancel_code = "501"
-                logger.warning("[CANCELLATION_REQUESTED] Falha ao buscar motivos: %s, usando 501", reasons_err)
+                    # PASSO 1: Buscar motivos (Firefly Audit exige esta chamada)
+                    logger.info("[CANCELLATION_REQUESTED] PASSO 1: GET /order/v1.0/orders/%s/cancellationReasons", order_id)
+                    try:
+                        reasons = await ifood_client.get_cancellation_reasons(order_id)
+                        if reasons:
+                            first = reasons[0]
+                            cancel_code = first.get("code", "501") if isinstance(first, dict) else str(first)
+                            logger.info("[CANCELLATION_REQUESTED] Motivos obtidos: usando codigo %s", cancel_code)
+                        else:
+                            cancel_code = "501"
+                            logger.info("[CANCELLATION_REQUESTED] Nenhum motivo retornado, usando default 501")
+                    except Exception as reasons_err:
+                        cancel_code = "501"
+                        logger.warning("[CANCELLATION_REQUESTED] Falha ao buscar motivos: %s, usando 501", reasons_err)
 
-            # ── PASSO 2: Solicitar cancelamento com codigo valido ──
-            try:
-                logger.info("[CANCELLATION_REQUESTED] PASSO 2: POST /order/v1.0/orders/%s/requestCancellation (codigo: %s)",
-                             order_id, cancel_code)
-                async with ifood_client:
+                    # PASSO 2: Solicitar cancelamento (mesma sessao, sem re-autenticar)
+                    logger.info("[CANCELLATION_REQUESTED] PASSO 2: POST /order/v1.0/orders/%s/requestCancellation (codigo: %s)",
+                                 order_id, cancel_code)
                     ack_result = await ifood_client.request_cancellation(order_id, reason=cancel_code)
-                acknowledged = True
-                logger.info("[CANCELLATION_REQUESTED] Cancelamento ACEITO no iFood: %s",
-                             str(ack_result)[:500])
+                    acknowledged = True
+                    logger.info("[CANCELLATION_REQUESTED] Cancelamento ACEITO no iFood: %s",
+                                 str(ack_result)[:500])
+
             except Exception as ifood_err:
-                logger.error("[CANCELLATION_REQUESTED] FALHA ao aceitar cancelamento: %s",
+                logger.error("[CANCELLATION_REQUESTED] FALHA no fluxo de cancelamento: %s",
                              ifood_err, exc_info=True)
 
         # ── PASSO 3: Atualizar Odoo ──────────────────────────
