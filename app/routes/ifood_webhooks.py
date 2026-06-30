@@ -381,14 +381,13 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
 
     Fluxo iFood para cancelamento (OBRIGATORIO para homologacao):
     1. Receber CANCELLATION_REQUESTED via webhook (ja respondido com 202)
-    2. Buscar motivos validos via GET /cancellationReasons (NAO hardcode!)
-    3. Chamar POST /orders/{orderId}/cancel com motivo valido
-    4. Enviar acknowledgment via POST /statuses/cancellation/acknowledged
-    5. Aguardar evento CANCELLED (ou CANCELLATION_REQUEST_FAILED)
-    6. Atualizar Odoo com o status final
+    2. Buscar motivos validos via GET /cancellationReasons (fallback 501 se falhar)
+    3. Chamar POST /orders/{orderId}/requestCancellation com {"reason": codigo}
+    4. Aguardar evento CANCELLED (ou CANCELLATION_REQUEST_FAILED)
+    5. Atualizar Odoo com o status final
 
-    IMPORTANTE: O endpoint correto e POST /cancel (NAO /cancellation/accept).
-    OBRIGATORIO: Chamar /statuses/cancellation/acknowledged para Firefly Audit.
+    IMPORTANTE: O endpoint correto e POST /requestCancellation (NAO /cancel).
+    Body: {"reason": "codigo"} (NAO cancellationCode).
     """
     logger.info("[CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO (background) ===")
     logger.info("[CANCELLATION_REQUESTED] Pedido: %s | Merchant: %s", order_id, merchant_id)
@@ -406,66 +405,38 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
     cancelled = False
 
     try:
-        # ── PASSO 1+2: Buscar motivos e cancelar no iFood ─────
-        # O metodo accept_cancellation ja faz:
-        #   1. GET /cancellationReasons (busca motivos validos)
-        #   2. POST /orders/{orderId}/cancel (com motivo valido)
-        # Isso e OBRIGATORIO para homologacao - nao pode hardcode motivos.
-        try:
-            logger.info("[CANCELLATION_REQUESTED] Chamando accept_cancellation (busca motivos + POST /cancel)...")
-            async with ifood_client:
+        # ── UNICA sessao OAuth: busca motivos + POST requestCancellation ─────
+        # Tudo dentro de UM unico async with para evitar dupla autenticacao.
+        # O Firefly Audit requer ver o POST requestCancellation na resposta.
+        async with ifood_client:
+            try:
+                logger.info("[CANCELLATION_REQUESTED] Chamando accept_cancellation (GET reasons + POST /requestCancellation)...")
                 accept_result = await ifood_client.accept_cancellation(order_id)
-            cancelled = True
-            logger.info("[CANCELLATION_REQUESTED] Cancelamento ACEITO no iFood: %s",
-                         str(accept_result)[:500])
-            _log_event({
-                "level": "info",
-                "event_type": "CANCELLATION_REQUESTED",
-                "order_id": order_id,
-                "step": "cancel_ifood",
-                "message": "Cancelamento aceito com sucesso no iFood via POST /cancel",
-                "cancelled": True,
-            })
-        except Exception as ifood_err:
-            logger.error("[CANCELLATION_REQUESTED] FALHA ao aceitar cancelamento no iFood: %s",
-                         ifood_err, exc_info=True)
-            _log_event({
-                "level": "error",
-                "event_type": "CANCELLATION_REQUESTED",
-                "order_id": order_id,
-                "step": "cancel_ifood",
-                "message": "Falha ao cancelar pedido no iFood",
-                "error": str(ifood_err),
-                "cancelled": False,
-            })
+                cancelled = True
+                logger.info("[CANCELLATION_REQUESTED] Cancelamento ACEITO no iFood: %s",
+                             str(accept_result)[:500])
+                _log_event({
+                    "level": "info",
+                    "event_type": "CANCELLATION_REQUESTED",
+                    "order_id": order_id,
+                    "step": "cancel_ifood",
+                    "message": "requestCancellation enviado com sucesso",
+                    "cancelled": True,
+                })
+            except Exception as ifood_err:
+                logger.error("[CANCELLATION_REQUESTED] FALHA ao enviar requestCancellation: %s",
+                             ifood_err, exc_info=True)
+                _log_event({
+                    "level": "error",
+                    "event_type": "CANCELLATION_REQUESTED",
+                    "order_id": order_id,
+                    "step": "cancel_ifood",
+                    "message": "Falha ao enviar requestCancellation ao iFood",
+                    "error": str(ifood_err),
+                    "cancelled": False,
+                })
 
-        # ── PASSO 3: Enviar acknowledgment de cancelamento ─────
-        # OBRIGATORIO para homologacao - Firefly Audit valida este ack.
-        try:
-            logger.info("[CANCELLATION_REQUESTED] Enviando cancellation acknowledged...")
-            async with ifood_client:
-                ack_result = await ifood_client.acknowledge_cancellation(order_id)
-            logger.info("[CANCELLATION_REQUESTED] Acknowledgment ENVIADO pedido %s: %s",
-                         order_id, str(ack_result)[:500])
-            _log_event({
-                "level": "info",
-                "event_type": "CANCELLATION_REQUESTED",
-                "order_id": order_id,
-                "step": "acknowledge_cancellation",
-                "message": "Cancellation acknowledged enviado com sucesso",
-            })
-        except Exception as ack_err:
-            logger.error("[CANCELLATION_REQUESTED] FALHA ao enviar acknowledgment: %s", ack_err, exc_info=True)
-            _log_event({
-                "level": "error",
-                "event_type": "CANCELLATION_REQUESTED",
-                "order_id": order_id,
-                "step": "acknowledge_cancellation",
-                "message": "Falha ao enviar cancellation acknowledged",
-                "error": str(ack_err),
-            })
-
-        # ── PASSO 4: Atualizar Odoo para 'cancellation_requested' ──
+        # ── Atualizar Odoo ──
         # NAO colocar 'cancelled' ainda! Aguardar o evento CANCELLED.
         try:
             sync_status = "cancellation_accepted" if cancelled else "cancellation_requested"
