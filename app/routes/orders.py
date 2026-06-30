@@ -446,8 +446,10 @@ async def cancel_from_odoo(ifood_order_id: str, body: dict = None):
 
     try:
         # 1. Solicitar cancelamento no iFood (202 Accepted - nao cancela na hora!)
+        # Doc oficial: body exige AMBOS cancellationCode e reason
+        reason_desc = IFOOD_REASONS.get(reason, reason)
         async with IFoodAPIClient(settings) as ifood_client:
-            result = await ifood_client.request_cancellation(ifood_order_id, reason=reason)
+            result = await ifood_client.request_cancellation(ifood_order_id, cancellation_code=reason, reason_desc=reason_desc)
 
         logger.info("[ODOO_CANCEL] Solicitacao de cancelamento ENVIADA ao iFood: %s", str(result)[:500])
 

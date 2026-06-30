@@ -405,19 +405,24 @@ async def _handle_can_background(order_id: str, merchant_id: str, payload: dict,
                         reasons = await ifood_client.get_cancellation_reasons(order_id)
                         if reasons:
                             first = reasons[0]
-                            cancel_code = first.get("code", "501") if isinstance(first, dict) else str(first)
-                            logger.info("[CANCELLATION_REQUESTED] Motivos obtidos: usando codigo %s", cancel_code)
+                            # Doc oficial: campo se chama 'cancelCodeId' (nao 'code')
+                            cancel_code = first.get("cancelCodeId", "501") if isinstance(first, dict) else str(first)
+                            cancel_desc = first.get("description", cancel_code) if isinstance(first, dict) else str(first)
+                            logger.info("[CANCELLATION_REQUESTED] Motivos obtidos: code=%s, desc=%s", cancel_code, cancel_desc)
                         else:
                             cancel_code = "501"
+                            cancel_desc = "Erro no sistema"
                             logger.info("[CANCELLATION_REQUESTED] Nenhum motivo retornado, usando default 501")
                     except Exception as reasons_err:
                         cancel_code = "501"
+                        cancel_desc = "Erro no sistema"
                         logger.warning("[CANCELLATION_REQUESTED] Falha ao buscar motivos: %s, usando 501", reasons_err)
 
                     # PASSO 2: Solicitar cancelamento (mesma sessao, sem re-autenticar)
-                    logger.info("[CANCELLATION_REQUESTED] PASSO 2: POST /order/v1.0/orders/%s/requestCancellation (codigo: %s)",
-                                 order_id, cancel_code)
-                    ack_result = await ifood_client.request_cancellation(order_id, reason=cancel_code)
+                    # Doc oficial: body exige AMBOS os campos
+                    logger.info("[CANCELLATION_REQUESTED] PASSO 2: POST /order/v1.0/orders/%s/requestCancellation (code: %s, reason: %s)",
+                                 order_id, cancel_code, cancel_desc)
+                    ack_result = await ifood_client.request_cancellation(order_id, cancellation_code=cancel_code, reason_desc=cancel_desc)
                     acknowledged = True
                     logger.info("[CANCELLATION_REQUESTED] Cancelamento ACEITO no iFood: %s",
                                  str(ack_result)[:500])
