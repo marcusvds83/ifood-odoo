@@ -208,21 +208,6 @@ async def handle_order_webhook(request: Request, response: Response, background_
             logger.info("[CANCELLATION_REQUESTED] Pedido %s | Merchant %s | fullCode=%s | Processando SINCRONAMENTE",
                          order_id, merchant_id, full_code_check)
             await _handle_can_background(order_id, merchant_id, payload, body)
-
-            # Tambem fazer acknowledgment do evento via events module
-            # (o Firefly Audit valida que eventos sao confirmados)
-            event_id = payload.get("id", "")
-            if event_id:
-                try:
-                    ack_client = IFoodAPIClient(settings)
-                    try:
-                        await ack_client.acknowledge_events([event_id])
-                        logger.info("[CANCELLATION_REQUESTED] Evento %s acknowledgado via events module", event_id)
-                    finally:
-                        await ack_client.close()
-                except Exception as ack_err:
-                    logger.warning("[CANCELLATION_REQUESTED] Falha ao acknowledge evento %s: %s", event_id, ack_err)
-
             return JSONResponse(status_code=202, content={"status": "cancellation_accepted", "eventType": "CANCELLATION_REQUESTED", "orderId": order_id})
 
         # ── DSP: Despacho ─────────────────────────────────────
