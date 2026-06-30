@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Polling is a simple method to receive updates from an API. Your system sends regular requests, every 30 seconds, to the GET /events:polling endpoint and checks ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://guicommits.com/challenges-on-integrating-ifood",
+    "name": "Architectural challenges on integrating ifood - Gui Commits",
+    "snippet": "Considering we receive 100 events in a single poll request, it would be terrible to iterate doing HTTP requests over them, right? It clearly wouldn't scale.",
+    "host_name": "guicommits.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/ifood-engineering/writing-the-new-ifood-for-partners-part-3-what-are-we-managing-now-151f011c4b40",
+    "name": "Writing the new iFood for Partners — Part 3: What are we managing",
+    "snippet": "Now that we're moving from the previous app to ours, we need to guarantee that we can keep polling events, and that has a target of every 2min.",
+    "host_name": "medium.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/williamkapke/github-event-poller",
+    "name": "williamkapke/github-event-poller: Poll GitHub Events API",
+    "snippet": "This module polls GitHub Events APIs while obeying GitHub's polling rules. js-standard-style Install It... $ npm install --save github-event-poller",
+    "host_name": "github.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/Kcpf/foodata",
+    "name": "GitHub - Kcpf/foodata: A Python wrapper around IFood API.",
+    "snippet": "The library provides a Python wrapper around the IFood API and the IFood data model. To get started, check out the examples in the examples/ folder. Also, you ...",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/danizord/clifood",
+    "name": "GitHub - danizord/clifood: API-first iFood CLI for AI agents to find",
+    "snippet": "What this is for: Find restaurants and items quickly; Build carts and prep orders; Hand off to checkout for a human confirmation (no auto-submit ...",
+    "host_name": "github.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/17296855/github-api-how-to-improve-very-in-efficient-polling-on-activity-events",
+    "name": "GitHub API: How to improve very in-efficient polling on activity events?",
+    "snippet": "I am trying to poll this API to get the latest activity. However this scheme is very in-efficient due to the design supported by Github as mentioned.",
+    "host_name": "stackoverflow.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.tradecloud1.com/api/processes/order/buyer/receive",
+    "name": "Receive an order response | Tradecloud API v2 manual",
+    "snippet": "Webhook API (Push): Tradecloud pushes order events to your system. Polling API (Pull): Your system periodically checks for order updates.",
+    "host_name": "docs.tradecloud1.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/rdvid/pdv-api-ifood",
+    "name": "GitHub - rdvid/pdv-api-ifood",
+    "snippet": "Some features that we are proud for implement: Web documentation generated with Swagger. Unit tests with Jest. Error handling using exceptions.",
+    "host_name": "github.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=0dgiGavzu8Y",
+    "name": "Meet the new Merchant API - YouTube",
+    "snippet": "O iFood está sempre evoluindo, e estamos prontos para um passo importante que vai aprimorar os nossos serviços de integração.",
+    "host_name": "www.youtube.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

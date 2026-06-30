@@ -1,0 +1,291 @@
+2026-06-22 16:34:22 | INFO     | app.services.ifood_api | Dispatching order 3e9af801-ced6-4ebd-9849-11dd84fd4990
+2026-06-22 16:34:22 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:34:22 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:34:22 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:34:22 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:34:22 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:34:22 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:34:22 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/order/v1.0/orders/3e9af801-ced6-4ebd-9849-11dd84fd4990/dispatch "HTTP/1.1 202 Accepted"
+2026-06-22 16:34:22 | INFO     | app.services.ifood_api | iFood API: POST /order/v1.0/orders/3e9af801-ced6-4ebd-9849-11dd84fd4990/dispatch -> HTTP 202 (body vazio)
+2026-06-22 16:34:22 | INFO     | app.services.odoo_sync | Status do pedido 110 atualizado para: dispatched
+2026-06-22 16:34:22 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Pedido 3e9af801-ced6-4ebd-9849-11dd84fd4990 DESPACHADO no iFood com sucesso!
+2026-06-22 16:34:22 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Resultado: verificados=3, despachados=1
+INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+2026-06-22 16:34:22 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:34:22 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:34:22 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 406
+2026-06-22 16:34:22 | INFO     | app.routes.ifood_webhooks | Evento: DSP | Pedido: 3e9af801-ced6-4ebd-9849-11dd84fd4990 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+2026-06-22 16:34:22 | INFO     | app.routes.ifood_webhooks | [DSP] Pedido despachado: 3e9af801-ced6-4ebd-9849-11dd84fd4990
+2026-06-22 16:34:23 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:34:23 | INFO     | app.services.odoo_sync | Status do pedido 110 atualizado para: dispatched
+INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 368
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | Evento: CON | Pedido: 3e9af801-ced6-4ebd-9849-11dd84fd4990 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+2026-06-22 16:34:45 | INFO     | app.routes.ifood_webhooks | Evento nao tratado: CON | Payload: {'code': 'CON', 'createdAt': '2026-06-22T16:34:44.906Z', 'fullCode': 'CONCLUDED', 'id': 'f39dfa1e-7077-48f8-8223-4889707629e2', 'merchantId': 'eb16320c-714d-4c31-9e59-48199e7f7b9a', 'metadata': {'triggerEvent': {'id': 'cce22d72-dabe-4d5a-9c15-79984be3274e', 'previousStatus': 'DISPATCHED', 'value': 'CONCLUDED'}}, 'orderId': '3e9af801-ced6-4ebd-9849-11dd84fd4990', 'salesChannel': 'IFOOD'}
+INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+2026-06-22 16:34:45 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:34:46 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 7 pedidos cancelados no Odoo
+2026-06-22 16:34:46 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=7, cancelados=0
+2026-06-22 16:34:46 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+2026-06-22 16:34:46 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:34:46 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:34:46 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:34:46 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:34:46 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:34:46 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:34:46 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:34:46 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 200 OK"
+2026-06-22 16:34:46 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 200 | Body len: 777
+2026-06-22 16:34:46 | INFO     | app.services.ifood_api | [POLLING] 2 evento(s) recebido(s)
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING] 2 evento(s) para processar
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING] Evento recebido: id=ef0a8516-d85b-4fb3-aa2f-57ab6e9f151a code=DISPATCHED orderId=3e9af801-ced6-4ebd-9849-11dd84fd4990
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING-PROCESS] Evento: DISPATCHED | Pedido: 3e9af801-ced6-4ebd-9849-11dd84fd4990 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING-PROCESS] Payload: {'id': 'ef0a8516-d85b-4fb3-aa2f-57ab6e9f151a', 'code': 'DSP', 'fullCode': 'DISPATCHED', 'orderId': '3e9af801-ced6-4ebd-9849-11dd84fd4990', 'merchantId': 'eb16320c-714d-4c31-9e59-48199e7f7b9a', 'createdAt': '2026-06-22T16:34:22.62Z', 'salesChannel': 'IFOOD', 'metadata': {'CLIENT_ID': 'credmak:credmak-intermediacoes-ltda-teste-c', 'ORIGIN': 'ORDER_API', 'appName': 'credmak-intermediacoes-ltda-teste-c', 'ownerName': 'credmak'}}
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING-PROCESS] Evento DISPATCHED nao requer acao especial, apenas acknowledge
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING] Evento recebido: id=f39dfa1e-7077-48f8-8223-4889707629e2 code=CONCLUDED orderId=3e9af801-ced6-4ebd-9849-11dd84fd4990
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING-PROCESS] Evento: CONCLUDED | Pedido: 3e9af801-ced6-4ebd-9849-11dd84fd4990 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING-PROCESS] Payload: {'id': 'f39dfa1e-7077-48f8-8223-4889707629e2', 'code': 'CON', 'fullCode': 'CONCLUDED', 'orderId': '3e9af801-ced6-4ebd-9849-11dd84fd4990', 'merchantId': 'eb16320c-714d-4c31-9e59-48199e7f7b9a', 'createdAt': '2026-06-22T16:34:44.906Z', 'salesChannel': 'IFOOD', 'metadata': {'triggerEvent': {'id': 'cce22d72-dabe-4d5a-9c15-79984be3274e', 'previousStatus': 'DISPATCHED', 'value': 'CONCLUDED'}}}
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING-PROCESS] Evento CONCLUDED nao requer acao especial, apenas acknowledge
+2026-06-22 16:34:46 | INFO     | app.services.ifood_api | [ACK] Enviando acknowledgment para 2 evento(s)
+2026-06-22 16:34:46 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/events/v1.0/events/acknowledgment "HTTP/1.1 202 Accepted"
+2026-06-22 16:34:46 | INFO     | app.services.ifood_api | iFood API: POST /events/v1.0/events/acknowledgment -> HTTP 202 (body vazio)
+2026-06-22 16:34:46 | INFO     | app.services.ifood_api | [ACK] Acknowledgment OK: {}
+2026-06-22 16:34:46 | INFO     | app.services.event_polling | [POLLING] Acknowledgment enviado para 2 evento(s): ['ef0a8516-d85b-4fb3-aa2f-57ab6e9f151a', 'f39dfa1e-7077-48f8-8223-4889707629e2']
+2026-06-22 16:34:46 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+2026-06-22 16:34:47 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:34:47 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:34:47 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:34:47 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:34:48 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:34:48 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:34:48 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:34:48 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:34:48 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:35:10 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:35:10 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:35:10 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+2026-06-22 16:35:10 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+2026-06-22 16:35:10 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+2026-06-22 16:35:11 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:35:11 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 7 pedidos cancelados no Odoo
+2026-06-22 16:35:11 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=7, cancelados=0
+2026-06-22 16:35:11 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+2026-06-22 16:35:12 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+2026-06-22 16:35:16 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:35:16 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:35:16 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:35:16 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:35:16 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:35:16 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:35:16 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:35:16 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:35:16 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:35:18 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:35:18 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:35:18 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:35:18 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:35:18 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:35:18 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:35:18 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:35:18 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:35:18 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:35:37 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:35:37 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:35:37 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+2026-06-22 16:35:37 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+2026-06-22 16:35:37 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+2026-06-22 16:35:38 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:35:38 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 7 pedidos cancelados no Odoo
+2026-06-22 16:35:38 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=7, cancelados=0
+2026-06-22 16:35:38 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+2026-06-22 16:35:38 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+2026-06-22 16:35:46 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:35:46 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:35:46 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:35:46 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:35:46 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:35:46 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:35:46 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:35:46 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:35:46 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:35:48 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:35:48 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:35:48 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:35:48 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:35:48 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:35:48 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:35:48 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:35:48 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:35:48 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 367
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | Evento: CAN | Pedido: aa5fe5e8-09da-4a18-abeb-651ceb4ed528 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido aa5fe5e8-09da-4a18-abeb-651ceb4ed528 | Merchant eb16320c-714d-4c31-9e59-48199e7f7b9a | Processando SINCRONAMENTE
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO ===
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido: aa5fe5e8-09da-4a18-abeb-651ceb4ed528 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a | fullCode: CANCELLED
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] fullCode=CANCELLED - pedido ja cancelado pelo iFood
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 367
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | Evento: CAN | Pedido: 3e9af801-ced6-4ebd-9849-11dd84fd4990 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido 3e9af801-ced6-4ebd-9849-11dd84fd4990 | Merchant eb16320c-714d-4c31-9e59-48199e7f7b9a | Processando SINCRONAMENTE
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO ===
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido: 3e9af801-ced6-4ebd-9849-11dd84fd4990 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a | fullCode: CANCELLED
+2026-06-22 16:36:03 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] fullCode=CANCELLED - pedido ja cancelado pelo iFood
+2026-06-22 16:36:04 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:36:04 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:36:04 | INFO     | app.services.odoo_sync | Status do pedido 109 atualizado para: cancelled
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Odoo atualizado para 'cancelled'
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === RESUMO: acknowledged=True | fullCode=CANCELLED ===
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===
+2026-06-22 16:36:04 | INFO     | app.services.ifood_api | [ACK] Enviando acknowledgment para 1 evento(s)
+2026-06-22 16:36:04 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:36:04 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:36:04 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 366
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | Evento: CAN | Pedido: 188a5aca-c9c2-480b-8313-35b87714412b | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido 188a5aca-c9c2-480b-8313-35b87714412b | Merchant eb16320c-714d-4c31-9e59-48199e7f7b9a | Processando SINCRONAMENTE
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO ===
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido: 188a5aca-c9c2-480b-8313-35b87714412b | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a | fullCode: CANCELLED
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] fullCode=CANCELLED - pedido ja cancelado pelo iFood
+2026-06-22 16:36:04 | INFO     | app.services.odoo_sync | Status do pedido 110 atualizado para: cancelled
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Odoo atualizado para 'cancelled'
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === RESUMO: acknowledged=True | fullCode=CANCELLED ===
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===
+2026-06-22 16:36:04 | INFO     | app.services.ifood_api | [ACK] Enviando acknowledgment para 1 evento(s)
+2026-06-22 16:36:04 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:36:04 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:36:04 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:36:04 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:36:04 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:36:04 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:36:04 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/events/v1.0/events/acknowledgment "HTTP/1.1 202 Accepted"
+2026-06-22 16:36:04 | INFO     | app.services.ifood_api | iFood API: POST /events/v1.0/events/acknowledgment -> HTTP 202 (body vazio)
+2026-06-22 16:36:04 | INFO     | app.services.ifood_api | [ACK] Acknowledgment OK: {}
+2026-06-22 16:36:04 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Evento b97dbf2c-4a2a-4647-8a73-e629446f5c13 acknowledgado via events module
+INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 202 Accepted
+2026-06-22 16:36:05 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:36:05 | INFO     | app.services.odoo_sync | Status do pedido 108 atualizado para: cancelled
+2026-06-22 16:36:05 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Odoo atualizado para 'cancelled'
+2026-06-22 16:36:05 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === RESUMO: acknowledged=True | fullCode=CANCELLED ===
+2026-06-22 16:36:05 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===
+2026-06-22 16:36:05 | INFO     | app.services.ifood_api | [ACK] Enviando acknowledgment para 1 evento(s)
+2026-06-22 16:36:05 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:36:05 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:36:05 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:36:05 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:36:05 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:36:05 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:36:05 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:36:05 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:36:05 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:36:05 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/events/v1.0/events/acknowledgment "HTTP/1.1 202 Accepted"
+2026-06-22 16:36:05 | INFO     | app.services.ifood_api | iFood API: POST /events/v1.0/events/acknowledgment -> HTTP 202 (body vazio)
+2026-06-22 16:36:05 | INFO     | app.services.ifood_api | [ACK] Acknowledgment OK: {}
+2026-06-22 16:36:05 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Evento 61fb7c3b-3e14-4ae1-a3b6-7945311e12d3 acknowledgado via events module
+2026-06-22 16:36:05 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/events/v1.0/events/acknowledgment "HTTP/1.1 202 Accepted"
+2026-06-22 16:36:05 | INFO     | app.services.ifood_api | iFood API: POST /events/v1.0/events/acknowledgment -> HTTP 202 (body vazio)
+2026-06-22 16:36:05 | INFO     | app.services.ifood_api | [ACK] Acknowledgment OK: {}
+2026-06-22 16:36:05 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Evento 0c7651e7-e53f-42a2-ba63-532248ac0007 acknowledgado via events module
+INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 202 Accepted
+INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 202 Accepted
+2026-06-22 16:36:16 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:36:16 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:36:16 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:36:16 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:36:16 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:36:16 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:36:16 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:36:16 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:36:16 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:36:18 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:36:18 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:36:18 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:36:18 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:36:18 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:36:18 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:36:18 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:36:18 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:36:18 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:36:21 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:36:21 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:36:21 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+2026-06-22 16:36:21 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+2026-06-22 16:36:21 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+2026-06-22 16:36:22 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:36:22 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 7 pedidos cancelados no Odoo
+2026-06-22 16:36:22 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=7, cancelados=0
+2026-06-22 16:36:22 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+2026-06-22 16:36:23 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+2026-06-22 16:36:40 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:36:40 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:36:40 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+2026-06-22 16:36:40 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+2026-06-22 16:36:40 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+2026-06-22 16:36:40 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:36:40 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 7 pedidos cancelados no Odoo
+2026-06-22 16:36:40 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=7, cancelados=0
+2026-06-22 16:36:40 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+2026-06-22 16:36:41 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+2026-06-22 16:36:46 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:36:46 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:36:46 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:36:46 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:36:46 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:36:46 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:36:46 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:36:47 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:36:47 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:36:48 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:36:48 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:36:48 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:36:48 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:36:48 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:36:48 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:36:48 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:36:48 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:36:48 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:37:17 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:37:17 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:37:17 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:37:17 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:37:17 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:37:17 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:37:17 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:37:17 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:37:17 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0
+2026-06-22 16:37:17 | INFO     | app.routes.ifood_webhooks | ============================================================
+2026-06-22 16:37:17 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+2026-06-22 16:37:17 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+2026-06-22 16:37:17 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+2026-06-22 16:37:17 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+2026-06-22 16:37:18 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+2026-06-22 16:37:18 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 7 pedidos cancelados no Odoo
+2026-06-22 16:37:18 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=7, cancelados=0
+2026-06-22 16:37:18 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+2026-06-22 16:37:18 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+2026-06-22 16:37:18 | INFO     | app.services.ifood_api | [POLLING] Buscando eventos via GET /events/v1.0/events:polling...
+2026-06-22 16:37:18 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+2026-06-22 16:37:18 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+2026-06-22 16:37:18 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+2026-06-22 16:37:18 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+2026-06-22 16:37:18 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+2026-06-22 16:37:18 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+2026-06-22 16:37:19 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/events/v1.0/events:polling "HTTP/1.1 204 No Content"
+2026-06-22 16:37:19 | INFO     | app.services.ifood_api | [POLLING] Response: HTTP 204 | Body len: 0

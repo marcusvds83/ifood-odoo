@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-overview",
+    "name": "Webhook overview - iFood Developer",
+    "snippet": "The webhook delivers server-to-server events in real time. We recommend its use when the integrator manages multiple merchants and centralizes orders. This ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-signature",
+    "name": "Request signature - iFood Developer",
+    "snippet": "We audit all delivered events, delivery attempts, and discarded events. Validation. The webhook uses (HMAC) with SHA256 to sign each message. The final value ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-best-practices",
+    "name": "Best practices for using webhooks - iFood Developer",
+    "snippet": "Best practices for using webhooks · Respond quickly · Validate the header using the body byte array · Handle delays · Ignore duplicate events · Track failures · Look ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/order/homologation",
+    "name": "Order module homologation - iFood Developer",
+    "snippet": "In the Developer Portal, navigate to Homologation > New homologation. Process steps. Select your app; Select the test store; Choose the event type: Polling or ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Quick reference — All events ; CANCELLATION_REQUESTED, Cancellation requested, Customer/you requested ; CANCELLATION_REQUEST_FAILED, Cancellation rejected, System ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.defectdojo.com/automation/api/notification_webhooks",
+    "name": "Notification Webhooks | DefectDojo Documentation",
+    "snippet": "Webhooks are outbound HTTP requests sent from your DefectDojo instance to a user-defined server whenever specific events occur. Setup#. Webhook endpoints are ...",
+    "host_name": "docs.defectdojo.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/audit-log-events-for-your-organization",
+    "name": "Audit log events for your organization - GitHub Docs",
+    "snippet": "Webhooks are a way for GitHub to notify your server when specific events occur for a repository, organization, or enterprise. Compared to the API or searching ...",
+    "host_name": "docs.github.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-request",
+    "name": "iFood Developer | Webhook request",
+    "snippet": "Check here how webhook request signature works and how to use it for validation. Request body: a JSON that can follow two formats: -Order events -Presence ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "For centralized applications with more than 500 merchants, we recommend using webhooks. Webhooks deliver events in real time and reduce problems with using the ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/order/errors-and-troubleshooting",
+    "name": "Errors and troubleshooting - iFood Developer",
+    "snippet": "Solution. Check system logs for orderId and requestId; Restore connectivity and verify webhook health; Review Partner Portal performance metrics; Contact ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

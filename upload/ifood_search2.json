@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "API Reference. GET /events:polling. Retrieves new order events for merchants associated with the authenticated user.URL: https://merchant-api.ifood.com.br/ ...\nPOST /events/acknowledgment Confirms event receipt, preventing them from being returned in future polling requests.URL:",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/references",
+    "name": "Referências - iFood Developer",
+    "snippet": "The Merchant API provides means to interact with merchants on the platform. It is separated into four core parts. Merchant, Status, Interruption and Opening ...\nEvents post Acknowledge Events. Authorize Events State changes. Get New Events POST /events /acknowledgment Acknowledge Events",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/events/intro",
+    "name": "Introduction - iFood Developer",
+    "snippet": "POST /events/acknowledgment - Confirms receipt of events. Webhook. Receives POST requests on your configured endpoint. Base URL: https://merchant-api.ifood.com.\nGET /events:polling - Retrieves new events POST /events/acknowledgment - Confirms receipt of events Webhook Receives POST requests on your configured endpoint",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Understand all events that iFood sends during the order lifecycle. This reference shows structure, meaning, and required actions for each event. How to receive ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/getting-started/documentation/glossary",
+    "name": "Glossary - iFood Developer",
+    "snippet": "Acknowledgement. Command used to confirm that a message was received by the client and can be removed from the queue on the server. Used in the order event ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Implementation guide — Order API ; 2. Acknowledge event consumption · \"https://merchant-api.ifood.com.br/order/v1.0/orders:acknowledgment\" ; 5. Confirm order · \" ...\niFood will send POST. After receiving event, acknowledge reading with /acknowledgment . 2. Acknowledge event consumption After processing events, confirm they ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/review/homologation",
+    "name": "Homologation criteria - iFood Developer",
+    "snippet": "Get review details. Make a GET request /merchants/{merchantId}/reviews/{reviewId}. Example cURL: curl -X GET \"https://merchant-api.ifood.com.br/review/v2.0 ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=aWgwtfJfb9c",
+    "name": "iFood Developer - API de Pedidos - Primeiros Passos com o Postman",
+    "snippet": "Importando collections no Postman e testando a API de Pedidos do iFood. Neste vídeo você irá aprender como começar a utilizar a API de ...\n... developer.ifood.com.br/docs/guides/getting-started#abrir-loja Recepção de Pedidos: Como receber e confirmar pedidos https://developer.ifood ...",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/catalog/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Create a complete item with products, add-on groups, and options. If the IDs already exist, the API updates the item. Use contextModifiers to override price, ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-overview",
+    "name": "Webhook overview - iFood Developer",
+    "snippet": "The webhook delivers server-to-server events in real time. We recommend its use when the integrator manages multiple merchants and centralizes orders. This ...\nTo use polling as fallback or reconciliation, send acknowledgment requests to the polling system. We recommend polling every 5 minutes. Most requests should ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

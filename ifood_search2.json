@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Understand all events that iFood sends during the order lifecycle. This reference shows structure, meaning, and required actions for each event. How to receive ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "The Merchant API provides means to interact with merchants on the platform. It is separated into four core parts. Merchant, Status, Interruption and Opening ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform-guide",
+    "name": "Order negotiation implementation guide - iFood Developer",
+    "snippet": "Customer must request cancellation of the orderTo request order cancellation, open the customer app, open the order, click Help > Order arrived incorrect > Fill ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform - iFood Developer",
+    "snippet": "ID of order to cancel delivery. Example request. curl -X POST \"https://merchant-api.ifood.com.br/shipping/v1.0/orders/{orderId}/cancelRequestDriver\" \\ -H ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/catalog/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Reference of Catalog API v2.0 endpoints. Test in Postman. The pre-configured Postman collections cover all endpoints on this page.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform",
+    "name": "Order negotiation platform - iFood Developer",
+    "snippet": "Order negotiation platform. Negotiate post-delivery issues with customers — cancellations, returns, refunds through mediated proposals. Quickstart. Consume ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/merchant/operations",
+    "name": "Operations - iFood Developer",
+    "snippet": "To check the status of a specific operation, use the Status API: curl --location 'https://merchant-api.ifood.com.br/merchant/v1.0/merchants/550e8400-e29b ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow/?category=FOOD",
+    "name": "Introdução - iFood Developer",
+    "snippet": "O pedido deve ser confirmado através do endpoint POST /orders/{id}/confirm.Requisição exemplo: curl -X POST \"https://merchant-api.ifood.com.br/order/v1.0/orders ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/picking/general",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Example. curl -X POST https://merchant-api.ifood.com.br/picking/v1.0/orders ... curl -X DELETE https://merchant-api.ifood.com.br/picking/v1.0/orders ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Pedido pronto para entrega. Após preparar, notifique usando:Para delivery: curl -X POST \"https://merchant-api ... /accept — Agree with cancellation; /reject ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

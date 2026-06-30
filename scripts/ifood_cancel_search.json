@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform",
+    "name": "Order negotiation platform - iFood Developer",
+    "snippet": "Reasons for negotiation decisions. Use in request bodies when required. Reason, Context. HIGH_STORE_DEMAND, Store at capacity. UNKNOWN_ISSUE ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "When there are events, the API returns code 200 with the list. If there are no events, it returns 204.Polling is easy to implement, but can increase traffic and ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Investigate why cancellation was rejected; Try again if it's a transient reason; Contact support if it's a permanent block. Delivery — Tracking events (iFood).",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "Orders on iFood platform. Use this documentation to request iFood delivery drivers for orders that already exist on the platform.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "The Merchant API provides means to interact with merchants on the platform. It is separated into four core parts. Merchant, Status, Interruption and Opening ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/review/homologation",
+    "name": "Homologation criteria - iFood Developer",
+    "snippet": "Make a GET request /merchants/{merchantId}/summary to get aggregated review data. Example cURL: curl -X GET \"https://merchant-api ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.elavon.com/products/en-uk/opayo/v1/api-reference",
+    "name": "Opayo | API reference - Elavon developer portal",
+    "snippet": "We return HTTP Response Codes to indicate the success or failure of an API request, along with further information in the body. Environments. The Test Server ...",
+    "host_name": "developer.elavon.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/item/general",
+    "name": "Introduction - iFood Developer",
+    "snippet": "Overview. Use the Item API to send and manage products. iFood processes the data based on availability rules before displaying them in the app.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Dispatching merchant delivery; Tracking iFood driver; Validating pickup/delivery codes; Cancelling orders with valid reason; Processing ORDER_PATCHED",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.checkout.com/docs/developer-resources/codes/api-response-codes",
+    "name": "API response codes - Docs - Checkout.com",
+    "snippet": "When you make a request to our API, you receive an HTTP status code indicating whether or not the HTTP request was successful.",
+    "host_name": "www.checkout.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

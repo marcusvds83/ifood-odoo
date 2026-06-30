@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Send POST /events/acknowledgment for all received events (code 200) immediately after the polling request. For Logistics Integrator applications, it's mandatory ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Choose a method:Polling (checking periodically):. curl -X GET \"https://merchant-api.ifood.com.br/order/v1.0/orders:polling\" \\ -H \"Authorization: Bearer ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Receive new orders. Orders arrive as events. Choose your consumption method: Polling (recommended to start). Check every 30 seconds: curl -X GET \"https ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "Next steps: Monitor event polling for the following events: Event ... Example request. curl -X POST \"https://merchant-api.ifood.com.br/shipping/v1 ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/31238626/curl-structuring-request-to-validate-server-sent-events",
+    "name": "cURL - Structuring request to validate server sent events",
+    "snippet": "I am new to cURL and server sent events. I know how to build a simple GET , POST requests using cURL and getting response.",
+    "host_name": "stackoverflow.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://help.splunk.com/en/splunk-enterprise/get-started/get-data-in/10.2/get-data-with-http-event-collector/use-curl-to-manage-http-event-collector-tokens-events-and-services",
+    "name": "Use cURL to manage HTTP Event Collector tokens  - Splunk Help",
+    "snippet": "The following example demonstrates how to check the indexing status of a prior HEC request. It sends the request to the ack endpoint and ...",
+    "host_name": "help.splunk.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://jvns.ca/blog/2021/01/12/day-36--server-sent-events-are-cool--and-a-fun-bug",
+    "name": "Server-sent events: a simple way to stream events from a server",
+    "snippet": "For example, here's what some server-sent events look like when I make a request with curl: $ curl -N 'http://localhost:3000/sessions/15/stream ...",
+    "host_name": "jvns.ca",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.box.com/reference/options-events",
+    "name": "Get events long poll endpoint - Box Dev Docs",
+    "snippet": "Get events long poll endpoint. Try it cURL cURL curl. Returns a paginated array of servers that can be used instead of the regular endpoints for long-polling ...",
+    "host_name": "developer.box.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gist.github.com/subfuzion/08c5d85437d5d4f00e58",
+    "name": "curl POST examples - GitHub",
+    "snippet": "This gist provides examples for using both formats, including how to use sample data files in either format with your curl requests.",
+    "host_name": "gist.github.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://forum.sentry.io/t/how-can-i-post-with-curl-a-sentry-event-which-authentication-credentials/4759",
+    "name": "How can I post with curl a sentry event? Which authentication",
+    "snippet": "How can I post with curl a sentry event? Here is a code example from Github that I am using. Create event using curl and bearer. This should ...",
+    "host_name": "forum.sentry.io",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

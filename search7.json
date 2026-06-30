@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Cancellation rejected System rejected. Review customer's proposal Respond before expiresAt with /accept , /reject , or /alternative. No response = automatic ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://knowledge.cds-global.com/hc/en-us/articles/43501929034267-Cancel-Webhook-Event",
+    "name": "Cancel Webhook Event - Knowledge Center - CDS Global",
+    "snippet": "When a workflow event occurs, Outputs require three separate webhooks to provide feedback on customer cancellations. reports when a ...",
+    "host_name": "knowledge.cds-global.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://unit.co/docs/api/events",
+    "name": "Webhook Events | Unit",
+    "snippet": "application.canceled Occurs when an Application is canceled. accepted and posted. This event does not fire for rejected payments, see payment.rejected instead.",
+    "host_name": "unit.co",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.shiphero.com/t/request-for-order-cancellation-webhook-setup-for-carrier-integration/3536",
+    "name": "Request for Order Cancellation Webhook Setup for Carrier Integration",
+    "snippet": "The order update webhook will get all order updates including cancellations. YOu can watch that and filter for status “cancelled” Which should ...",
+    "host_name": "community.shiphero.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://apidocs.shipmonk.com/reference/webhook-order-status-change",
+    "name": "Order status change - ShipMonk API",
+    "snippet": "All order-related webhooks are closely tied to the order's processing-status. Each webhook is triggered by a change in the processing-status, reflecting key ...",
+    "host_name": "apidocs.shipmonk.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.make.com/t/webhook-response-doesnt-seem-to-be-communicating/70609",
+    "name": "Webhook response doesn't seem to be communicating - Questions",
+    "snippet": "Method 1: Type code block manually Add three backticks. Method 2. Highlight and click the format button in the editor super helpful for anyone ...",
+    "host_name": "community.make.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/42533872/how-to-model-a-cancel-action-in-a-restful-way",
+    "name": "How to model a CANCEL action in a RESTful way? - Stack Overflow",
+    "snippet": "Use PUT /api/tickets/{id}/actions/cancel to submit the cancellation request. I choose PUT since there would be no more than one cancellation request in effect.",
+    "host_name": "stackoverflow.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.gravityforms.com/t/need-help-sending-notification-if-webhook-fails/19983",
+    "name": "Need help sending notification if webhook fails - Gravity Forms",
+    "snippet": "Send an email if WordPress returns an error for Webhook processing only updating the email and see if that works for you.",
+    "host_name": "community.gravityforms.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev-portal.rappi.com/en/webhook-events",
+    "name": "Webhook Events - Developer Portal | Rappi",
+    "snippet": "You can set webhooks through API that enable you to receive notifications about events that happen in your stores.",
+    "host_name": "dev-portal.rappi.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://forum.wixstudio.com/t/wix-store-webhook-for-order-paid-cancelled-and-refunded/1802",
+    "name": "Wix Store Webhook for Order Paid, Cancelled and Refunded",
+    "snippet": "My last resort is to send a post request from the onOrderPaid event, but this would require giving up on the webhook retry feature as the event ...",
+    "host_name": "forum.wixstudio.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

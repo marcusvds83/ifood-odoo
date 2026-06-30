@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://api-docs.mykeeta.com/apis/opendelivery/development-guides/orders",
+    "name": "Orders - Keeta",
+    "snippet": "Software Service (Merchant):. If the merchant wants to cancel an order, it must make a POST /orders/{orderId}/requestCancellation request. Penalties. Avoid ...",
+    "host_name": "api-docs.mykeeta.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Understand all events that iFood sends during the order lifecycle. Cancellation rejected. Record refund if accepted Address and contact",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.doordash.com/en-US/docs/marketplace/how_to/merchant_order_cancellation",
+    "name": "Implement Merchant order cancellation - DoorDash Developer",
+    "snippet": "DoorDash has the OpenAPI functionality to allow merchants to cancel orders that have previously been accepted. The endpoint URL requires the DoorDash order ID ...",
+    "host_name": "developer.doordash.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "The Merchant API provides means to interact with merchants on the platform. The Order API provides means to interact with orders on the platform. Cancellation ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/razorpay/razorpay-node/issues/426",
+    "name": "[Feature]: Api for order cancellation · Issue #426 - GitHub",
+    "snippet": "Please add an api to cancel an order, so that at the backend an order can be cancelled if no action is taken on the order after a particular ...",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://interactivebrokers.github.io/tws-api/cancel_order.html",
+    "name": "TWS API v9.72+: Cancelling Orders",
+    "snippet": "An order can be cancelled from the API with the functions IBApi::EClient::cancelOrder and IBApi::EClient::reqGlobalCancel.",
+    "host_name": "interactivebrokers.github.io",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://shopify.dev/docs/api/admin-rest/latest/resources/cancellationrequest",
+    "name": "CancellationRequest - Shopify Dev Docs",
+    "snippet": "The CancellationRequest resource represents a cancellation request made by the merchant or an order management app to a fulfillment service for a fulfillment ...",
+    "host_name": "shopify.dev",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform",
+    "name": "Order negotiation platform - iFood Developer",
+    "snippet": "Negotiate post-delivery issues with customers — cancellations, returns, refunds through mediated proposals. partial cancellation request. Cancellation or time ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.cdp.coinbase.com/api-reference/exchange-api/rest-api/orders/cancel-an-order",
+    "name": "Cancel an order - Coinbase Developer Documentation",
+    "snippet": "This endpoint requires the “trade” permission. Orders can be canceled using either the exchange assigned id or the client assigned client_oid .",
+    "host_name": "docs.cdp.coinbase.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.facebook.com/documentation/ads-commerce/commerce-platform/order-management/cancellation-refund-api",
+    "name": "Cancellation and Refund API - Meta for Developers",
+    "snippet": "Orders can be canceled after they are moved out of the FB_PROCESSING state, with an exception of orders in the FB_PROCESSING state for more than 24 hours.",
+    "host_name": "developers.facebook.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

@@ -1,0 +1,450 @@
+     1→     1→     1→2026-06-19 10:58:36 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/32f23fee-4f4c-4177-bd1b-e4e3aff8477d/statuses/cancellationRequested
+     2→     2→     2→2026-06-19 10:58:36 | INFO     | app.services.ifood_api | [CANCELLATION] Enviando acknowledgment cancellationRequested para pedido 32f23fee-4f4c-4177-bd1b-e4e3aff8477d - codigo: 504
+     3→     3→     3→2026-06-19 10:58:36 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+     4→     4→     4→2026-06-19 10:58:36 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+     5→     5→     5→2026-06-19 10:58:36 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+     6→     6→     6→2026-06-19 10:58:36 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+     7→     7→     7→2026-06-19 10:58:36 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+     8→     8→     8→2026-06-19 10:58:36 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+     9→     9→     9→2026-06-19 10:58:36 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/order/v1.0/orders/32f23fee-4f4c-4177-bd1b-e4e3aff8477d/statuses/cancellationRequested "HTTP/1.1 404 Not Found"
+    10→    10→    10→2026-06-19 10:58:36 | ERROR    | app.services.ifood_api | iFood API error: POST /order/v1.0/orders/32f23fee-4f4c-4177-bd1b-e4e3aff8477d/statuses/cancellationRequested -> HTTP 404 - {"message":"no Route matched with those values"}
+    11→    11→    11→2026-06-19 10:58:36 | ERROR    | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] FALHA ao enviar acknowledgment: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/32f23fee-4f4c-4177-bd1b-e4e3aff8477d/statuses/cancellationRequested'
+    12→    12→    12→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+    13→    13→    13→Traceback (most recent call last):
+    14→    14→    14→  File "/app/app/routes/ifood_webhooks.py", line 396, in _handle_can_background
+    15→    15→    15→    ack_result = await ifood_client.acknowledge_cancellation_requested(order_id, cancellation_code=cancel_code)
+    16→    16→    16→                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    17→    17→    17→  File "/app/app/services/ifood_api.py", line 158, in acknowledge_cancellation_requested
+    18→    18→    18→    result = await self._request("POST", f"/order/v1.0/orders/{order_id}/statuses/cancellationRequested", json_body={"cancellationCode": cancellation_code})
+    19→    19→    19→             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    20→    20→    20→  File "/app/app/services/ifood_api.py", line 29, in _request
+    21→    21→    21→    response.raise_for_status()
+    22→    22→    22→  File "/usr/local/lib/python3.12/site-packages/httpx/_models.py", line 829, in raise_for_status
+    23→    23→    23→    raise HTTPStatusError(message, request=request, response=self)
+    24→    24→    24→httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/32f23fee-4f4c-4177-bd1b-e4e3aff8477d/statuses/cancellationRequested'
+    25→    25→    25→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+    26→    26→    26→2026-06-19 10:58:36 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    27→    27→    27→2026-06-19 10:58:36 | INFO     | app.services.odoo_sync | Status do pedido 88 atualizado para: cancelled
+    28→    28→    28→2026-06-19 10:58:37 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    29→    29→    29→2026-06-19 10:58:37 | INFO     | app.services.odoo_sync | Status do pedido 88 atualizado para: cancellation_requested
+    30→    30→    30→2026-06-19 10:58:37 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Odoo atualizado para 'cancellation_requested'
+    31→    31→    31→2026-06-19 10:58:37 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === RESUMO: acknowledged=False ===
+    32→    32→    32→2026-06-19 10:58:37 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===
+    33→    33→    33→2026-06-19 10:58:37 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    34→    34→    34→INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+    35→    35→    35→2026-06-19 10:58:56 | INFO     | app.routes.ifood_webhooks | ============================================================
+    36→    36→    36→2026-06-19 10:58:56 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+    37→    37→    37→2026-06-19 10:58:56 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+    38→    38→    38→2026-06-19 10:58:56 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+    39→    39→    39→2026-06-19 10:58:56 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+    40→    40→    40→2026-06-19 10:58:57 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    41→    41→    41→2026-06-19 10:58:57 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+    42→    42→    42→2026-06-19 10:58:57 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+    43→    43→    43→2026-06-19 10:58:57 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+    44→    44→    44→2026-06-19 10:58:57 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    45→    45→    45→2026-06-19 10:58:57 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Nenhum despacho pendente encontrado
+    46→    46→    46→INFO:     10.27.157.1:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+    47→    47→    47→2026-06-19 10:59:32 | INFO     | app.routes.ifood_webhooks | ============================================================
+    48→    48→    48→2026-06-19 10:59:32 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+    49→    49→    49→2026-06-19 10:59:32 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+    50→    50→    50→2026-06-19 10:59:32 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+    51→    51→    51→2026-06-19 10:59:32 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+    52→    52→    52→2026-06-19 10:59:33 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    53→    53→    53→2026-06-19 10:59:33 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+    54→    54→    54→2026-06-19 10:59:33 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+    55→    55→    55→2026-06-19 10:59:33 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+    56→    56→    56→2026-06-19 10:59:33 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    57→    57→    57→2026-06-19 10:59:34 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Nenhum despacho pendente encontrado
+    58→    58→    58→INFO:     10.27.157.1:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+    59→    59→    59→2026-06-19 10:59:57 | INFO     | app.routes.ifood_webhooks | ============================================================
+    60→    60→    60→2026-06-19 10:59:57 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+    61→    61→    61→2026-06-19 10:59:57 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+    62→    62→    62→2026-06-19 10:59:57 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+    63→    63→    63→2026-06-19 10:59:57 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+    64→    64→    64→2026-06-19 10:59:58 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    65→    65→    65→2026-06-19 10:59:58 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+    66→    66→    66→2026-06-19 10:59:58 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+    67→    67→    67→2026-06-19 10:59:58 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+    68→    68→    68→2026-06-19 10:59:59 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    69→    69→    69→2026-06-19 10:59:59 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Nenhum despacho pendente encontrado
+    70→    70→    70→INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+    71→    71→    71→2026-06-19 11:00:28 | INFO     | app.routes.ifood_webhooks | ============================================================
+    72→    72→    72→2026-06-19 11:00:28 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+    73→    73→    73→2026-06-19 11:00:28 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+    74→    74→    74→2026-06-19 11:00:28 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+    75→    75→    75→2026-06-19 11:00:28 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+    76→    76→    76→2026-06-19 11:00:29 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    77→    77→    77→2026-06-19 11:00:29 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+    78→    78→    78→2026-06-19 11:00:29 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+    79→    79→    79→2026-06-19 11:00:29 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+    80→    80→    80→2026-06-19 11:00:30 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+    81→    81→    81→2026-06-19 11:00:30 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Despachando pedido a0fd13e3-543b-4c72-9622-a5779bb762ca no iFood (status atual: confirmed)...
+    82→    82→    82→2026-06-19 11:00:30 | INFO     | app.services.ifood_api | Dispatching order a0fd13e3-543b-4c72-9622-a5779bb762ca
+    83→    83→    83→2026-06-19 11:00:30 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+    84→    84→    84→2026-06-19 11:00:30 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+    85→    85→    85→2026-06-19 11:00:30 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+    86→    86→    86→2026-06-19 11:00:30 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+    87→    87→    87→2026-06-19 11:00:30 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+    88→    88→    88→2026-06-19 11:00:30 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+    89→    89→    89→2026-06-19 11:00:30 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/order/v1.0/orders/a0fd13e3-543b-4c72-9622-a5779bb762ca/dispatch "HTTP/1.1 202 Accepted"
+    90→    90→    90→2026-06-19 11:00:30 | INFO     | app.services.ifood_api | iFood API: POST /order/v1.0/orders/a0fd13e3-543b-4c72-9622-a5779bb762ca/dispatch -> HTTP 202 (body vazio)
+    91→    91→    91→2026-06-19 11:00:30 | INFO     | app.services.odoo_sync | Status do pedido 89 atualizado para: dispatched
+    92→    92→    92→2026-06-19 11:00:30 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Pedido a0fd13e3-543b-4c72-9622-a5779bb762ca DESPACHADO no iFood com sucesso!
+    93→    93→    93→2026-06-19 11:00:30 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Resultado: verificados=1, despachados=1
+    94→    94→    94→INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+    95→    95→    95→2026-06-19 11:00:30 | INFO     | app.routes.ifood_webhooks | ============================================================
+    96→    96→    96→2026-06-19 11:00:30 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+    97→    97→    97→2026-06-19 11:00:30 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 407
+    98→    98→    98→2026-06-19 11:00:30 | INFO     | app.routes.ifood_webhooks | Evento: DSP | Pedido: a0fd13e3-543b-4c72-9622-a5779bb762ca | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+    99→    99→    99→2026-06-19 11:00:30 | INFO     | app.routes.ifood_webhooks | [DSP] Pedido despachado: a0fd13e3-543b-4c72-9622-a5779bb762ca
+   100→   100→   100→2026-06-19 11:00:31 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   101→   101→   101→2026-06-19 11:00:31 | INFO     | app.services.odoo_sync | Status do pedido 89 atualizado para: dispatched
+   102→   102→   102→INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   103→   103→   103→2026-06-19 11:00:55 | INFO     | app.routes.ifood_webhooks | ============================================================
+   104→   104→   104→2026-06-19 11:00:55 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   105→   105→   105→2026-06-19 11:00:55 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   106→   106→   106→2026-06-19 11:00:55 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   107→   107→   107→2026-06-19 11:00:55 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   108→   108→   108→2026-06-19 11:00:56 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   109→   109→   109→2026-06-19 11:00:56 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   110→   110→   110→2026-06-19 11:00:56 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   111→   111→   111→2026-06-19 11:00:56 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   112→   112→   112→2026-06-19 11:00:57 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   113→   113→   113→INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   114→   114→   114→2026-06-19 11:01:07 | INFO     | app.routes.ifood_webhooks | ============================================================
+   115→   115→   115→2026-06-19 11:01:07 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   116→   116→   116→2026-06-19 11:01:07 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 368
+   117→   117→   117→2026-06-19 11:01:07 | INFO     | app.routes.ifood_webhooks | Evento: CON | Pedido: a0fd13e3-543b-4c72-9622-a5779bb762ca | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   118→   118→   118→2026-06-19 11:01:07 | INFO     | app.routes.ifood_webhooks | Evento nao tratado: CON | Payload: {'code': 'CON', 'createdAt': '2026-06-19T11:01:07.094Z', 'fullCode': 'CONCLUDED', 'id': 'ae4aee0a-2654-4a2e-91cd-2c061cedb511', 'merchantId': 'eb16320c-714d-4c31-9e59-48199e7f7b9a', 'metadata': {'triggerEvent': {'id': '43b01829-e3ff-4860-9813-6ea6e351c7aa', 'previousStatus': 'DISPATCHED', 'value': 'CONCLUDED'}}, 'orderId': 'a0fd13e3-543b-4c72-9622-a5779bb762ca', 'salesChannel': 'IFOOD'}
+   119→   119→   119→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   120→   120→   120→2026-06-19 11:01:32 | INFO     | app.routes.ifood_webhooks | ============================================================
+   121→   121→   121→2026-06-19 11:01:32 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   122→   122→   122→2026-06-19 11:01:32 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   123→   123→   123→2026-06-19 11:01:32 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   124→   124→   124→2026-06-19 11:01:32 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   125→   125→   125→2026-06-19 11:01:32 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   126→   126→   126→2026-06-19 11:01:33 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   127→   127→   127→2026-06-19 11:01:33 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   128→   128→   128→2026-06-19 11:01:33 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   129→   129→   129→2026-06-19 11:01:33 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   130→   130→   130→INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   131→   131→   131→2026-06-19 11:01:55 | INFO     | app.routes.ifood_webhooks | ============================================================
+   132→   132→   132→2026-06-19 11:01:55 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   133→   133→   133→2026-06-19 11:01:55 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   134→   134→   134→2026-06-19 11:01:55 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   135→   135→   135→2026-06-19 11:01:55 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   136→   136→   136→2026-06-19 11:01:55 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   137→   137→   137→2026-06-19 11:01:55 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   138→   138→   138→2026-06-19 11:01:55 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   139→   139→   139→2026-06-19 11:01:55 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   140→   140→   140→2026-06-19 11:01:56 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   141→   141→   141→INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   142→   142→   142→2026-06-19 11:02:24 | INFO     | app.routes.ifood_webhooks | ============================================================
+   143→   143→   143→2026-06-19 11:02:24 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   144→   144→   144→2026-06-19 11:02:24 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   145→   145→   145→2026-06-19 11:02:24 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   146→   146→   146→2026-06-19 11:02:24 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   147→   147→   147→2026-06-19 11:02:25 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   148→   148→   148→2026-06-19 11:02:25 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   149→   149→   149→2026-06-19 11:02:25 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   150→   150→   150→2026-06-19 11:02:25 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   151→   151→   151→2026-06-19 11:02:26 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   152→   152→   152→INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   153→   153→   153→2026-06-19 11:02:40 | INFO     | app.routes.ifood_webhooks | ============================================================
+   154→   154→   154→2026-06-19 11:02:40 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   155→   155→   155→2026-06-19 11:02:40 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 241
+   156→   156→   156→2026-06-19 11:02:40 | INFO     | app.routes.ifood_webhooks | Evento: PLC | Pedido: 70535009-b000-49a0-bd38-8bca0354f891 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   157→   157→   157→2026-06-19 11:02:40 | INFO     | app.routes.ifood_webhooks | [PLC] === INICIO FLUXO DE CONFIRMACAO ===
+   158→   158→   158→2026-06-19 11:02:40 | INFO     | app.routes.ifood_webhooks | [PLC] Pedido: 70535009-b000-49a0-bd38-8bca0354f891 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   159→   159→   159→2026-06-19 11:02:40 | INFO     | app.routes.ifood_webhooks | [PLC] Passo 1: Buscando dados do pedido no iFood...
+   160→   160→   160→2026-06-19 11:02:40 | INFO     | app.services.ifood_api | Fetching order 70535009-b000-49a0-bd38-8bca0354f891 from iFood
+   161→   161→   161→2026-06-19 11:02:40 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   162→   162→   162→2026-06-19 11:02:40 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   163→   163→   163→2026-06-19 11:02:40 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   164→   164→   164→2026-06-19 11:02:41 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   165→   165→   165→2026-06-19 11:02:41 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   166→   166→   166→2026-06-19 11:02:41 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   167→   167→   167→2026-06-19 11:02:41 | INFO     | httpx | HTTP Request: GET https://merchant-api.ifood.com.br/order/v1.0/orders/70535009-b000-49a0-bd38-8bca0354f891 "HTTP/1.1 200 OK"
+   168→   168→   168→2026-06-19 11:02:41 | INFO     | app.routes.ifood_webhooks | [PLC] Dados do pedido obtidos. Campos: ['id', 'displayId', 'createdAt', 'category', 'orderTiming', 'schedule', 'orderType', 'delivery', 'preparationStartDateTime', 'isTest', 'salesChannel', 'merchant', 'customer', 'items', 'total', 'payments', 'additionalFees', 'picking']
+   169→   169→   169→2026-06-19 11:02:41 | INFO     | app.routes.ifood_webhooks | [PLC] Chamando POST /order/v1.0/orders/70535009-b000-49a0-bd38-8bca0354f891/confirm
+   170→   170→   170→2026-06-19 11:02:41 | INFO     | app.services.ifood_api | Confirming order 70535009-b000-49a0-bd38-8bca0354f891 on iFood
+   171→   171→   171→2026-06-19 11:02:41 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/order/v1.0/orders/70535009-b000-49a0-bd38-8bca0354f891/confirm "HTTP/1.1 202 Accepted"
+   172→   172→   172→2026-06-19 11:02:41 | INFO     | app.services.ifood_api | iFood API: POST /order/v1.0/orders/70535009-b000-49a0-bd38-8bca0354f891/confirm -> HTTP 202 (body vazio)
+   173→   173→   173→2026-06-19 11:02:41 | INFO     | app.routes.ifood_webhooks | [PLC] Pedido CONFIRMADO no iFood! Resposta: {}
+   174→   174→   174→2026-06-19 11:02:41 | INFO     | app.routes.ifood_webhooks | [PLC] Passo 2: Sincronizando com Odoo...
+   175→   175→   175→2026-06-19 11:02:41 | INFO     | app.services.odoo_sync | Sincronizando pedido iFood 70535009-b000-49a0-bd38-8bca0354f891 para Odoo
+   176→   176→   176→2026-06-19 11:02:41 | INFO     | app.routes.ifood_webhooks | ============================================================
+   177→   177→   177→2026-06-19 11:02:41 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   178→   178→   178→2026-06-19 11:02:41 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 406
+   179→   179→   179→2026-06-19 11:02:41 | INFO     | app.routes.ifood_webhooks | Evento: CFM | Pedido: 70535009-b000-49a0-bd38-8bca0354f891 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   180→   180→   180→2026-06-19 11:02:41 | INFO     | app.routes.ifood_webhooks | Evento nao tratado: CFM | Payload: {'code': 'CFM', 'createdAt': '2026-06-19T11:02:41.261Z', 'fullCode': 'CONFIRMED', 'id': '4cd2a348-4314-4ce8-9a30-bd2653684683', 'merchantId': 'eb16320c-714d-4c31-9e59-48199e7f7b9a', 'metadata': {'CLIENT_ID': 'credmak:credmak-intermediacoes-ltda-teste-c', 'ORIGIN': 'ORDER_API', 'appName': 'credmak-intermediacoes-ltda-teste-c', 'ownerName': 'credmak'}, 'orderId': '70535009-b000-49a0-bd38-8bca0354f891', 'salesChannel': 'IFOOD'}
+   181→   181→   181→INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   182→   182→   182→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | ============================================================
+   183→   183→   183→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   184→   184→   184→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 264
+   185→   185→   185→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | Evento: DDCR | Pedido: 70535009-b000-49a0-bd38-8bca0354f891 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   186→   186→   186→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | Evento nao tratado: DDCR | Payload: {'code': 'DDCR', 'createdAt': '2026-06-19T11:02:41.639Z', 'fullCode': 'DELIVERY_DROP_CODE_REQUESTED', 'id': '09047d0a-f6d0-4fad-af09-126d02d0e7e8', 'merchantId': 'eb16320c-714d-4c31-9e59-48199e7f7b9a', 'orderId': '70535009-b000-49a0-bd38-8bca0354f891', 'salesChannel': 'IFOOD'}
+   187→   187→   187→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   188→   188→   188→2026-06-19 11:02:42 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   189→   189→   189→2026-06-19 11:02:42 | INFO     | app.services.odoo_sync | Cliente existente encontrado: 11 (iFood: 86d04caf-000a-49c0-9513-998b80b7f5e6)
+   190→   190→   190→2026-06-19 11:02:42 | INFO     | app.services.odoo_sync | Cliente 11 atualizado com novos dados
+   191→   191→   191→2026-06-19 11:02:42 | INFO     | app.services.odoo_sync | Partner ID do cliente: 11
+   192→   192→   192→2026-06-19 11:02:42 | INFO     | app.services.odoo_sync | sale.order 90 criado com 2 linhas
+   193→   193→   193→2026-06-19 11:02:42 | INFO     | app.services.odoo_sync | Criado sale.order ID 90 para pedido iFood 70535009-b000-49a0-bd38-8bca0354f891
+   194→   194→   194→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | [PLC] Pedido sincronizado -> Odoo sale.order 90
+   195→   195→   195→2026-06-19 11:02:42 | INFO     | app.services.odoo_sync | Status do pedido 90 atualizado para: confirmed
+   196→   196→   196→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | [PLC] Status atualizado para 'confirmed' no Odoo
+   197→   197→   197→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | [PLC] === RESUMO: confirmado=True | sync_odoo=True ===
+   198→   198→   198→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | [PLC] === FIM FLUXO DE CONFIRMACAO ===
+   199→   199→   199→2026-06-19 11:02:42 | INFO     | app.routes.ifood_webhooks | ============================================================
+   200→   200→   200→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   201→   201→   201→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] CancellationCode extraido do payload: 501
+   202→   202→   202→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/70535009-b000-49a0-bd38-8bca0354f891/statuses/cancellationRequested
+   203→   203→   203→2026-06-19 11:04:28 | INFO     | app.services.ifood_api | [CANCELLATION] Enviando acknowledgment cancellationRequested para pedido 70535009-b000-49a0-bd38-8bca0354f891 - codigo: 501
+   204→   204→   204→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   205→   205→   205→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   206→   206→   206→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   207→   207→   207→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | ============================================================
+   208→   208→   208→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   209→   209→   209→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 367
+   210→   210→   210→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | Evento: CAN | Pedido: a0fd13e3-543b-4c72-9622-a5779bb762ca | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   211→   211→   211→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido a0fd13e3-543b-4c72-9622-a5779bb762ca | Merchant eb16320c-714d-4c31-9e59-48199e7f7b9a | Processando em background
+   212→   212→   212→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 202 Accepted
+   213→   213→   213→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO (background) ===
+   214→   214→   214→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido: a0fd13e3-543b-4c72-9622-a5779bb762ca | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   215→   215→   215→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Payload: {"code":"CAN","createdAt":"2026-06-19T11:04:28.099Z","fullCode":"CANCELLED","id":"dfa10608-776c-48c9-98e2-f1d0f9e1875b","merchantId":"eb16320c-714d-4c31-9e59-48199e7f7b9a","metadata":{"triggerEvent":{"id":"c5a95549-7e75-4143-bad1-8a2ae6ea0dcb","previousStatus":"CONCLUDED","value":"CANCELLED"}},"orderId":"a0fd13e3-543b-4c72-9622-a5779bb762ca","salesChannel":"IFOOD"}
+   216→   216→   216→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] CancellationCode extraido do payload: 501
+   217→   217→   217→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/a0fd13e3-543b-4c72-9622-a5779bb762ca/statuses/cancellationRequested
+   218→   218→   218→2026-06-19 11:04:28 | INFO     | app.services.ifood_api | [CANCELLATION] Enviando acknowledgment cancellationRequested para pedido a0fd13e3-543b-4c72-9622-a5779bb762ca - codigo: 501
+   219→   219→   219→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   220→   220→   220→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   221→   221→   221→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   222→   222→   222→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | ============================================================
+   223→   223→   223→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   224→   224→   224→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 367
+   225→   225→   225→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | Evento: CAN | Pedido: 24132804-5139-452c-9703-8215f86bf2dd | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   226→   226→   226→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido 24132804-5139-452c-9703-8215f86bf2dd | Merchant eb16320c-714d-4c31-9e59-48199e7f7b9a | Processando em background
+   227→   227→   227→INFO:     10.27.157.1:0 - "POST /webhooks/ifood/orders HTTP/1.1" 202 Accepted
+   228→   228→   228→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO (background) ===
+   229→   229→   229→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido: 24132804-5139-452c-9703-8215f86bf2dd | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   230→   230→   230→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Payload: {"code":"CAN","createdAt":"2026-06-19T11:04:28.079Z","fullCode":"CANCELLED","id":"72e735f5-29fe-4f3c-9d88-aa5c76a79a47","merchantId":"eb16320c-714d-4c31-9e59-48199e7f7b9a","metadata":{"triggerEvent":{"id":"c91f2ff9-83d1-4633-996a-aeec9613ca6c","previousStatus":"CONFIRMED","value":"CANCELLED"}},"orderId":"24132804-5139-452c-9703-8215f86bf2dd","salesChannel":"IFOOD"}
+   231→   231→   231→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] CancellationCode extraido do payload: 501
+   232→   232→   232→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/24132804-5139-452c-9703-8215f86bf2dd/statuses/cancellationRequested
+   233→   233→   233→2026-06-19 11:04:28 | INFO     | app.services.ifood_api | [CANCELLATION] Enviando acknowledgment cancellationRequested para pedido 24132804-5139-452c-9703-8215f86bf2dd - codigo: 501
+   234→   234→   234→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   235→   235→   235→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   236→   236→   236→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   237→   237→   237→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | ============================================================
+   238→   238→   238→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   239→   239→   239→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 367
+   240→   240→   240→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | Evento: CAN | Pedido: ecf2dfb2-be88-4aa2-9d1d-28220e6f3683 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   241→   241→   241→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido ecf2dfb2-be88-4aa2-9d1d-28220e6f3683 | Merchant eb16320c-714d-4c31-9e59-48199e7f7b9a | Processando em background
+   242→   242→   242→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 202 Accepted
+   243→   243→   243→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === INICIO FLUXO DE CANCELAMENTO (background) ===
+   244→   244→   244→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Pedido: ecf2dfb2-be88-4aa2-9d1d-28220e6f3683 | Merchant: eb16320c-714d-4c31-9e59-48199e7f7b9a
+   245→   245→   245→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Payload: {"code":"CAN","createdAt":"2026-06-19T11:04:28.165Z","fullCode":"CANCELLED","id":"6ad2f5ae-00e7-4da2-8109-3caf78a34445","merchantId":"eb16320c-714d-4c31-9e59-48199e7f7b9a","metadata":{"triggerEvent":{"id":"ac8e113f-3a35-483e-9011-0254a5d5b557","previousStatus":"CONFIRMED","value":"CANCELLED"}},"orderId":"ecf2dfb2-be88-4aa2-9d1d-28220e6f3683","salesChannel":"IFOOD"}
+   246→   246→   246→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] CancellationCode extraido do payload: 501
+   247→   247→   247→2026-06-19 11:04:28 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Chamando POST /order/v1.0/orders/ecf2dfb2-be88-4aa2-9d1d-28220e6f3683/statuses/cancellationRequested
+   248→   248→   248→2026-06-19 11:04:28 | INFO     | app.services.ifood_api | [CANCELLATION] Enviando acknowledgment cancellationRequested para pedido ecf2dfb2-be88-4aa2-9d1d-28220e6f3683 - codigo: 501
+   249→   249→   249→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Requesting new access token from iFood
+   250→   250→   250→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Auth URL: https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token
+   251→   251→   251→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Client ID: 9d537b7a...b47f
+   252→   252→   252→2026-06-19 11:04:28 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   253→   253→   253→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   254→   254→   254→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   255→   255→   255→2026-06-19 11:04:28 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   256→   256→   256→2026-06-19 11:04:28 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   257→   257→   257→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   258→   258→   258→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   259→   259→   259→2026-06-19 11:04:28 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/order/v1.0/orders/24132804-5139-452c-9703-8215f86bf2dd/statuses/cancellationRequested "HTTP/1.1 404 Not Found"
+   260→   260→   260→2026-06-19 11:04:28 | ERROR    | app.services.ifood_api | iFood API error: POST /order/v1.0/orders/24132804-5139-452c-9703-8215f86bf2dd/statuses/cancellationRequested -> HTTP 404 - {"message":"no Route matched with those values"}
+   261→   261→   261→2026-06-19 11:04:28 | ERROR    | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] FALHA ao enviar acknowledgment: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/24132804-5139-452c-9703-8215f86bf2dd/statuses/cancellationRequested'
+   262→   262→   262→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+   263→   263→   263→Traceback (most recent call last):
+   264→   264→   264→  File "/app/app/routes/ifood_webhooks.py", line 396, in _handle_can_background
+   265→   265→   265→    ack_result = await ifood_client.acknowledge_cancellation_requested(order_id, cancellation_code=cancel_code)
+   266→   266→   266→                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   267→   267→   267→  File "/app/app/services/ifood_api.py", line 158, in acknowledge_cancellation_requested
+   268→   268→   268→    result = await self._request("POST", f"/order/v1.0/orders/{order_id}/statuses/cancellationRequested", json_body={"cancellationCode": cancellation_code})
+   269→   269→   269→             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   270→   270→   270→  File "/app/app/services/ifood_api.py", line 29, in _request
+   271→   271→   271→    response.raise_for_status()
+   272→   272→   272→  File "/usr/local/lib/python3.12/site-packages/httpx/_models.py", line 829, in raise_for_status
+   273→   273→   273→    raise HTTPStatusError(message, request=request, response=self)
+   274→   274→   274→httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/24132804-5139-452c-9703-8215f86bf2dd/statuses/cancellationRequested'
+   275→   275→   275→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+   276→   276→   276→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   277→   277→   277→2026-06-19 11:04:28 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   278→   278→   278→2026-06-19 11:04:29 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/authentication/v1.0/oauth/token "HTTP/1.1 200 OK"
+   279→   279→   279→2026-06-19 11:04:29 | INFO     | app.services.ifood_auth | iFood token response keys: ['accessToken', 'type', 'expiresIn']
+   280→   280→   280→2026-06-19 11:04:29 | INFO     | app.services.ifood_auth | Successfully obtained iFood access token (expires in 21599s)
+   281→   281→   281→2026-06-19 11:04:29 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/order/v1.0/orders/70535009-b000-49a0-bd38-8bca0354f891/statuses/cancellationRequested "HTTP/1.1 404 Not Found"
+   282→   282→   282→2026-06-19 11:04:29 | ERROR    | app.services.ifood_api | iFood API error: POST /order/v1.0/orders/70535009-b000-49a0-bd38-8bca0354f891/statuses/cancellationRequested -> HTTP 404 - {"message":"no Route matched with those values"}
+   283→   283→   283→2026-06-19 11:04:29 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/order/v1.0/orders/ecf2dfb2-be88-4aa2-9d1d-28220e6f3683/statuses/cancellationRequested "HTTP/1.1 404 Not Found"
+   284→   284→   284→2026-06-19 11:04:29 | ERROR    | app.services.ifood_api | iFood API error: POST /order/v1.0/orders/ecf2dfb2-be88-4aa2-9d1d-28220e6f3683/statuses/cancellationRequested -> HTTP 404 - {"message":"no Route matched with those values"}
+   285→   285→   285→2026-06-19 11:04:29 | ERROR    | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] FALHA ao enviar acknowledgment: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/70535009-b000-49a0-bd38-8bca0354f891/statuses/cancellationRequested'
+   286→   286→   286→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+   287→   287→   287→Traceback (most recent call last):
+   288→   288→   288→  File "/app/app/routes/ifood_webhooks.py", line 396, in _handle_can_background
+   289→   289→   289→    ack_result = await ifood_client.acknowledge_cancellation_requested(order_id, cancellation_code=cancel_code)
+   290→   290→   290→                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   291→   291→   291→  File "/app/app/services/ifood_api.py", line 158, in acknowledge_cancellation_requested
+   292→   292→   292→    result = await self._request("POST", f"/order/v1.0/orders/{order_id}/statuses/cancellationRequested", json_body={"cancellationCode": cancellation_code})
+   293→   293→   293→             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   294→   294→   294→  File "/app/app/services/ifood_api.py", line 29, in _request
+   295→   295→   295→    response.raise_for_status()
+   296→   296→   296→  File "/usr/local/lib/python3.12/site-packages/httpx/_models.py", line 829, in raise_for_status
+   297→   297→   297→    raise HTTPStatusError(message, request=request, response=self)
+   298→   298→   298→httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/70535009-b000-49a0-bd38-8bca0354f891/statuses/cancellationRequested'
+   299→   299→   299→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+   300→   300→   300→2026-06-19 11:04:29 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   301→   301→   301→2026-06-19 11:04:29 | INFO     | app.services.odoo_sync | Status do pedido 86 atualizado para: cancellation_requested
+   302→   302→   302→2026-06-19 11:04:29 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Odoo atualizado para 'cancellation_requested'
+   303→   303→   303→2026-06-19 11:04:29 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === RESUMO: acknowledged=False ===
+   304→   304→   304→2026-06-19 11:04:29 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===
+   305→   305→   305→2026-06-19 11:04:29 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   306→   306→   306→2026-06-19 11:04:30 | INFO     | app.services.odoo_sync | Status do pedido 90 atualizado para: cancellation_requested
+   307→   307→   307→2026-06-19 11:04:30 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Odoo atualizado para 'cancellation_requested'
+   308→   308→   308→2026-06-19 11:04:30 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === RESUMO: acknowledged=False ===
+   309→   309→   309→2026-06-19 11:04:30 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===
+   310→   310→   310→2026-06-19 11:04:30 | ERROR    | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] FALHA ao enviar acknowledgment: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/ecf2dfb2-be88-4aa2-9d1d-28220e6f3683/statuses/cancellationRequested'
+   311→   311→   311→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+   312→   312→   312→Traceback (most recent call last):
+   313→   313→   313→  File "/app/app/routes/ifood_webhooks.py", line 396, in _handle_can_background
+   314→   314→   314→    ack_result = await ifood_client.acknowledge_cancellation_requested(order_id, cancellation_code=cancel_code)
+   315→   315→   315→                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   316→   316→   316→  File "/app/app/services/ifood_api.py", line 158, in acknowledge_cancellation_requested
+   317→   317→   317→    result = await self._request("POST", f"/order/v1.0/orders/{order_id}/statuses/cancellationRequested", json_body={"cancellationCode": cancellation_code})
+   318→   318→   318→             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   319→   319→   319→  File "/app/app/services/ifood_api.py", line 29, in _request
+   320→   320→   320→    response.raise_for_status()
+   321→   321→   321→  File "/usr/local/lib/python3.12/site-packages/httpx/_models.py", line 829, in raise_for_status
+   322→   322→   322→    raise HTTPStatusError(message, request=request, response=self)
+   323→   323→   323→httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/ecf2dfb2-be88-4aa2-9d1d-28220e6f3683/statuses/cancellationRequested'
+   324→   324→   324→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+   325→   325→   325→2026-06-19 11:04:30 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   326→   326→   326→2026-06-19 11:04:30 | INFO     | app.services.odoo_sync | Status do pedido 87 atualizado para: cancellation_requested
+   327→   327→   327→2026-06-19 11:04:30 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Odoo atualizado para 'cancellation_requested'
+   328→   328→   328→2026-06-19 11:04:30 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === RESUMO: acknowledged=False ===
+   329→   329→   329→2026-06-19 11:04:30 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===
+   330→   330→   330→2026-06-19 11:04:30 | INFO     | httpx | HTTP Request: POST https://merchant-api.ifood.com.br/order/v1.0/orders/a0fd13e3-543b-4c72-9622-a5779bb762ca/statuses/cancellationRequested "HTTP/1.1 404 Not Found"
+   331→   331→   331→2026-06-19 11:04:30 | ERROR    | app.services.ifood_api | iFood API error: POST /order/v1.0/orders/a0fd13e3-543b-4c72-9622-a5779bb762ca/statuses/cancellationRequested -> HTTP 404 - {"message":"no Route matched with those values"}
+   332→   332→   332→2026-06-19 11:04:30 | ERROR    | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] FALHA ao enviar acknowledgment: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/a0fd13e3-543b-4c72-9622-a5779bb762ca/statuses/cancellationRequested'
+   333→   333→   333→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+   334→   334→   334→Traceback (most recent call last):
+   335→   335→   335→  File "/app/app/routes/ifood_webhooks.py", line 396, in _handle_can_background
+   336→   336→   336→    ack_result = await ifood_client.acknowledge_cancellation_requested(order_id, cancellation_code=cancel_code)
+   337→   337→   337→                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   338→   338→   338→  File "/app/app/services/ifood_api.py", line 158, in acknowledge_cancellation_requested
+   339→   339→   339→    result = await self._request("POST", f"/order/v1.0/orders/{order_id}/statuses/cancellationRequested", json_body={"cancellationCode": cancellation_code})
+   340→   340→   340→             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   341→   341→   341→  File "/app/app/services/ifood_api.py", line 29, in _request
+   342→   342→   342→    response.raise_for_status()
+   343→   343→   343→  File "/usr/local/lib/python3.12/site-packages/httpx/_models.py", line 829, in raise_for_status
+   344→   344→   344→    raise HTTPStatusError(message, request=request, response=self)
+   345→   345→   345→httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://merchant-api.ifood.com.br/order/v1.0/orders/a0fd13e3-543b-4c72-9622-a5779bb762ca/statuses/cancellationRequested'
+   346→   346→   346→For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+   347→   347→   347→2026-06-19 11:04:31 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   348→   348→   348→2026-06-19 11:04:31 | INFO     | app.services.odoo_sync | Status do pedido 89 atualizado para: cancellation_requested
+   349→   349→   349→2026-06-19 11:04:31 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] Odoo atualizado para 'cancellation_requested'
+   350→   350→   350→2026-06-19 11:04:31 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === RESUMO: acknowledged=False ===
+   351→   351→   351→2026-06-19 11:04:31 | INFO     | app.routes.ifood_webhooks | [CANCELLATION_REQUESTED] === FIM PROCESSAMENTO ===
+   352→   352→   352→2026-06-19 11:04:56 | INFO     | app.routes.ifood_webhooks | ============================================================
+   353→   353→   353→2026-06-19 11:04:56 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   354→   354→   354→2026-06-19 11:04:56 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   355→   355→   355→2026-06-19 11:04:56 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   356→   356→   356→2026-06-19 11:04:56 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   357→   357→   357→2026-06-19 11:04:57 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   358→   358→   358→2026-06-19 11:04:57 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   359→   359→   359→2026-06-19 11:04:57 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   360→   360→   360→2026-06-19 11:04:57 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   361→   361→   361→2026-06-19 11:04:58 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   362→   362→   362→INFO:     10.27.157.1:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   363→   363→   363→2026-06-19 11:05:23 | INFO     | app.routes.ifood_webhooks | ============================================================
+   364→   364→   364→2026-06-19 11:05:23 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   365→   365→   365→2026-06-19 11:05:23 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   366→   366→   366→2026-06-19 11:05:23 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   367→   367→   367→2026-06-19 11:05:23 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   368→   368→   368→2026-06-19 11:05:24 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   369→   369→   369→2026-06-19 11:05:24 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   370→   370→   370→2026-06-19 11:05:24 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   371→   371→   371→2026-06-19 11:05:24 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   372→   372→   372→2026-06-19 11:05:25 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   373→   373→   373→INFO:     10.27.157.1:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   374→   374→   374→2026-06-19 11:06:03 | INFO     | app.routes.ifood_webhooks | ============================================================
+   375→   375→   375→2026-06-19 11:06:03 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   376→   376→   376→2026-06-19 11:06:03 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   377→   377→   377→2026-06-19 11:06:03 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   378→   378→   378→2026-06-19 11:06:03 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   379→   379→   379→2026-06-19 11:06:04 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   380→   380→   380→2026-06-19 11:06:04 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   381→   381→   381→2026-06-19 11:06:04 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   382→   382→   382→2026-06-19 11:06:04 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   383→   383→   383→2026-06-19 11:06:05 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   384→   384→   384→INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   385→   385→   385→2026-06-19 11:06:30 | INFO     | app.routes.ifood_webhooks | ============================================================
+   386→   386→   386→2026-06-19 11:06:30 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   387→   387→   387→2026-06-19 11:06:30 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   388→   388→   388→2026-06-19 11:06:30 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   389→   389→   389→2026-06-19 11:06:30 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   390→   390→   390→2026-06-19 11:06:31 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   391→   391→   391→2026-06-19 11:06:31 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   392→   392→   392→2026-06-19 11:06:31 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   393→   393→   393→2026-06-19 11:06:31 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   394→   394→   394→2026-06-19 11:06:32 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   395→   395→   395→INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   396→   396→   396→2026-06-19 11:07:06 | INFO     | app.routes.ifood_webhooks | ============================================================
+   397→   397→   397→2026-06-19 11:07:06 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   398→   398→   398→2026-06-19 11:07:06 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   399→   399→   399→2026-06-19 11:07:06 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   400→   400→   400→2026-06-19 11:07:06 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   401→   401→   401→2026-06-19 11:07:07 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   402→   402→   402→2026-06-19 11:07:07 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   403→   403→   403→2026-06-19 11:07:07 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   404→   404→   404→2026-06-19 11:07:07 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   405→   405→   405→2026-06-19 11:07:08 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   406→   406→   406→INFO:     10.27.157.1:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   407→   407→   407→2026-06-19 11:07:28 | INFO     | app.routes.ifood_webhooks | ============================================================
+   408→   408→   408→2026-06-19 11:07:28 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   409→   409→   409→2026-06-19 11:07:28 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   410→   410→   410→2026-06-19 11:07:28 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   411→   411→   411→2026-06-19 11:07:28 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   412→   412→   412→2026-06-19 11:07:28 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   413→   413→   413→2026-06-19 11:07:28 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   414→   414→   414→2026-06-19 11:07:28 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   415→   415→   415→2026-06-19 11:07:28 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   416→   416→   416→2026-06-19 11:07:29 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   417→   417→   417→INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   418→   418→   418→2026-06-19 11:07:56 | INFO     | app.routes.ifood_webhooks | ============================================================
+   419→   419→   419→2026-06-19 11:07:56 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   420→   420→   420→2026-06-19 11:07:56 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   421→   421→   421→2026-06-19 11:07:56 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   422→   422→   422→2026-06-19 11:07:56 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   423→   423→   423→2026-06-19 11:07:57 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   424→   424→   424→2026-06-19 11:07:57 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   425→   425→   425→2026-06-19 11:07:57 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   426→   426→   426→2026-06-19 11:07:57 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   427→   427→   427→2026-06-19 11:07:58 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   428→   428→   428→INFO:     10.27.249.129:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   429→   429→   429→2026-06-19 11:08:28 | INFO     | app.routes.ifood_webhooks | ============================================================
+   430→   430→   430→2026-06-19 11:08:28 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   431→   431→   431→2026-06-19 11:08:28 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   432→   432→   432→2026-06-19 11:08:28 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   433→   433→   433→2026-06-19 11:08:28 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   434→   434→   434→2026-06-19 11:08:29 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   435→   435→   435→2026-06-19 11:08:29 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   436→   436→   436→2026-06-19 11:08:29 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   437→   437→   437→2026-06-19 11:08:29 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   438→   438→   438→2026-06-19 11:08:30 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   439→   439→   439→INFO:     10.29.176.131:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK
+   440→   440→   440→2026-06-19 11:09:00 | INFO     | app.routes.ifood_webhooks | ============================================================
+   441→   441→   441→2026-06-19 11:09:00 | INFO     | app.routes.ifood_webhooks | === Webhook iFood recebido ===
+   442→   442→   442→2026-06-19 11:09:00 | INFO     | app.routes.ifood_webhooks | Method: POST | Content-Type: application/json | Body len: 87
+   443→   443→   443→2026-06-19 11:09:00 | INFO     | app.routes.ifood_webhooks | Evento: KEEPALIVE | Pedido:  | Merchant: 
+   444→   444→   444→2026-06-19 11:09:00 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Verificando cancelamentos pendentes no Odoo...
+   445→   445→   445→2026-06-19 11:09:01 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   446→   446→   446→2026-06-19 11:09:01 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Encontrados 1 pedidos cancelados no Odoo
+   447→   447→   447→2026-06-19 11:09:01 | INFO     | app.routes.ifood_webhooks | [ODOO_POLL] Resultado: verificados=1, cancelados=0
+   448→   448→   448→2026-06-19 11:09:01 | INFO     | app.routes.ifood_webhooks | [ODOO_DISPATCH] Verificando despachos pendentes no Odoo...
+   449→   449→   449→2026-06-19 11:09:02 | INFO     | app.services.odoo_client | Authenticated with Odoo (uid=2, db=hwakwo)
+   450→   450→   450→INFO:     10.29.26.133:0 - "POST /webhooks/ifood/orders HTTP/1.1" 200 OK

@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "\"id\" · \"evt_124\", ; \"code\" · \"SEPARATION_STARTED\", ; \"fullCode\" · \"PREPARATION_STARTED\", ; \"orderId\" · \"ord_456\", ; \"createdAt\" · \"2024-04-25T18:05:00Z\", ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-signature",
+    "name": "Request signature - iFood Developer",
+    "snippet": "\"code\":\"PLC\",\"createdAt\":\"2023-02-20T18:19:03.20162269Z\",\"fullCode\":\"PLACED ... \"orderId\":\"2c97e104-35ed-4c18-85d7-854a40b6b9e3\",\"code\":\"PLC ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-request",
+    "name": "iFood Developer | Webhook request",
+    "snippet": "... orderId\":\"2c97e104-35ed-4c18-85d7-854a40b6b9e3\"}'. Validate the ... Send a response with 202 Accepted status code within 5 seconds to confirm event receipt.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform",
+    "name": "Order negotiation platform - iFood Developer",
+    "snippet": "CANCELLATION, Accept / Reject / REFUND. Full during preparation ... code, string (always \"HSS\"). fullCode, string (always \"HANDSHAKE_SETTLEMENT\"). orderId ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api-docs.mykeeta.com/apis/opendelivery/development-guides/orders",
+    "name": "Orders - Keeta",
+    "snippet": "The merchant Software Service that implements this webhook, should return an HTTP 200 response code with an empty response body to acknowledge receipt of the ...\ncode: An enumerator containing a cancellation reason. ... Whenever there is a new event the response will send the response code 200 with the list of events.",
+    "host_name": "api-docs.mykeeta.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://oneuptime.com/blog/post/2026-01-30-how-to-create-event-payload-design/view",
+    "name": "How to Create Event Payload Design: A Practical Guide - OneUptime",
+    "snippet": "mockReturnValue('test-uuid'); const event = createOrderPlacedEvent({ orderId: 'ord_123', customerId: 'cust_456', items: [{ sku: 'SKU-001 ...",
+    "host_name": "oneuptime.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "... orderId\": \"07110e1b-8191-4670-baed ... Send POST /events/acknowledgment for all received events (code 200) immediately after the polling request.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/logistics/workflow",
+    "name": "Introduction - iFood Developer",
+    "snippet": "Send the code via endpoint. Event example: { \"id\": \"f24e3b11-d292-48f0-a74b-e984575a1a0a\", \"code\": \"DDCR\", \"fullCode\": \"DELIVERY_DROP_CODE_REQUESTED\", \"orderId ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "{ \"events\": [ { \"id\": \"evt_123\", \"code\": \"CONFIRMED\", \"fullCode\": \"ORDER_CONFIRMED\", \"orderId\": \"ord_456\", \"createdAt\": \"2024-04-25T18:00:00Z\", \"metadata\": { \" ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/order/errors-and-troubleshooting",
+    "name": "Errors and troubleshooting - iFood Developer",
+    "snippet": "If errors persist: Gather logs from past 24 hours; Include affected orderId values; Document steps already taken; Contact support with: error code + frequency ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

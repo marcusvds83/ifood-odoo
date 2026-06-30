@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Your system sends regular requests, every 30 seconds, to the GET /events:polling endpoint and checks if there are new events. The API returns new information ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/events/intro",
+    "name": "Introduction - iFood Developer",
+    "snippet": "Introduction. The Events module allows your integration to receive real-time notifications about changes in order status. When an order is confirmed, ...\nThe Events module allows your integration to receive real-time notifications about changes in order status. When an order is confirmed, prepared, or delivered, ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Understand all events that iFood sends during the order lifecycle. This reference shows structure, meaning, and required actions for each event. How to receive ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Consume events (Polling). Check for new events. Recommended every 30 seconds. GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling Query parameters ...\nGet order details. Retrieve complete information for a specific order. GET https://merchant-api.ifood.com.br/order/v1.0/orders/{id} Path parameters. Parameter ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "The Merchant API provides means to interact with merchants on the platform. It is separated into four core parts. Merchant, Status, Interruption and Opening ...\nEvents. v1.0 ... The Order API provides means to interact with orders on the platform. It is separated into three core parts: Events, Details and Actions, which ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "Orders on iFood platform. Use this documentation to request iFood delivery drivers for orders that already exist on the platform.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Response (202 Accepted)Important: Acknowledge only events you've successfully processed. Unacknowledged events will return in next polling. 3. Get order details.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Xfkgl-2czYM",
+    "name": "Live - iFood Marketplace Integration - Merchant/API - YouTube",
+    "snippet": "Reveja nosso encontro online com a presença de parceiros e integradores para falar mais detalhes do projeto, sanar todas as dúvidas sobre o ...",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/getting-started/first-steps/generate-test-order",
+    "name": "Generate test order - iFood Developer",
+    "snippet": "Steps (Portal). Go to developer.ifood.com.br and sign in. Open the Tests menu (click your name or the side menu). Click Generate test order (top-right).",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/merchant/workflow",
+    "name": "How it works - iFood Developer",
+    "snippet": "Orders (Order) — Receive, confirm, and manage orders; Logistics — Track order delivery; Catalog — Manage menus and prices; Events — Receive real-time ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

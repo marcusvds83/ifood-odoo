@@ -1,0 +1,220 @@
+From 6fc626d8b2ec8ecd12defdc1dfd1cc27e4358866 Mon Sep 17 00:00:00 2001
+From: Marcus <marcusvds83@gmail.com>
+Date: Mon, 15 Jun 2026 16:36:22 +0000
+Subject: [PATCH] fix: aceitar cancelamento via API iFood para homologacao
+
+- Adicionado accept_cancellation() e reject_cancellation() no IFoodAPIClient
+- Webhook CAN/CANCELLATION_REQUESTED agora envia confirmacao ao iFood
+- Evento CAR tratado separadamente
+- Logs detalhados com prefixo [CANCELLATION] para rastreabilidade
+- Rotas manuais /accept-cancellation e /reject-cancellation para testes
+
+Cenario Pedido Cancelado reprovado (0/10) na homologacao anterior.
+Causa: middleware so atualizava Odoo sem responder ao iFood.
+---
+ app/routes/ifood_webhooks.py | 44 +++++++++++++++++++++---
+ app/routes/orders.py         | 66 ++++++++++++++++++++++++++++++++++++
+ app/services/ifood_api.py    | 49 ++++++++++++++++++++++++++
+ 3 files changed, 154 insertions(+), 5 deletions(-)
+
+diff --git a/app/routes/ifood_webhooks.py b/app/routes/ifood_webhooks.py
+index 96821a9..09dcd20 100644
+--- a/app/routes/ifood_webhooks.py
++++ b/app/routes/ifood_webhooks.py
+@@ -106,20 +106,54 @@ async def handle_order_webhook(request: Request, response: Response):
+ 
+         try:
+             if event_type in ("PLC", "NEW", "orderCreated", "placed"):
++                logger.info("[PLC] Novo pedido recebido: %s", order_id)
+                 async with ifood_client:
+                     order_data = await ifood_client.get_order(order_id)
+                 sale_order_id = sync_service.sync_order(order_data)
+-                logger.info("Pedido %s sincronizado -> Odoo sale.order %s", order_id, sale_order_id)
++                logger.info("[PLC] Pedido %s sincronizado -> Odoo sale.order %s", order_id, sale_order_id)
+ 
+             elif event_type == "orderStatusChanged":
+                 status = payload.get("newStatus", payload.get("status", ""))
++                logger.info("[STATUS_CHANGE] Pedido %s - novo status: %s", order_id, status)
+                 if status:
+                     sync_service.update_order_status(order_id, status)
+-                    logger.info("Pedido %s status atualizado: %s", order_id, status)
+-
+-            elif event_type in ("CAN", "CANCELLATION_REQUESTED", "CAR", "orderCancelled", "cancelled"):
++                    logger.info("[STATUS_CHANGE] Pedido %s status atualizado no Odoo: %s", order_id, status)
++
++            elif event_type in ("CAN", "CANCELLATION_REQUESTED", "cancellationRequested"):
++                # ── CANCELAMENTO: fluxo critico para homologacao ──
++                logger.info("[CANCELLATION] === INICIO FLUXO DE CANCELAMENTO ===")
++                logger.info("[CANCELLATION] Evento: %s | Pedido: %s | Merchant: %s",
++                            event_type, order_id, merchant_id)
++                logger.info("[CANCELLATION] Payload completo: %s",
++                            body.decode("utf-8", errors="replace")[:3000])
++
++                cancellation_reason = payload.get("reason", payload.get("cancellationReason", "nao informado"))
++                logger.info("[CANCELLATION] Motivo do cancelamento: %s", cancellation_reason)
++
++                # 1. Atualizar status no Odoo
++                odoo_updated = sync_service.update_order_status(order_id, "cancelled")
++                logger.info("[CANCELLATION] Odoo atualizado para 'cancelled': %s (pedido %s)",
++                            odoo_updated, order_id)
++
++                # 2. ENVIAR CONFIRMACAO DE CANCELAMENTO PARA O IFOOD
++                #    Este eh o passo que faltava - sem isso o iFood reprovava a homologacao
++                try:
++                    async with ifood_client:
++                        accept_result = await ifood_client.accept_cancellation(order_id)
++                    logger.info("[CANCELLATION] Confirmacao de cancelamento ENVIADA ao iFood com sucesso")
++                    logger.info("[CANCELLATION] Resposta do iFood: %s", accept_result)
++                except Exception as cancel_err:
++                    logger.error("[CANCELLATION] FALHA ao enviar confirmacao de cancelamento ao iFood: %s",
++                                 cancel_err, exc_info=True)
++                    # Nao propaga o erro - webhook sempre retorna 200
++
++                logger.info("[CANCELLATION] === FIM FLUXO DE CANCELAMENTO ===")
++
++            elif event_type in ("CAR", "CANCELLATION_ACCEPTED"):
++                # Evento de confirmacao do iFood de que o cancelamento foi processado
++                logger.info("[CANCELLATION] Cancelamento confirmado pelo iFood para pedido %s", order_id)
+                 sync_service.update_order_status(order_id, "cancelled")
+-                logger.info("Pedido %s marcado como cancelado", order_id)
++                logger.info("[CANCELLATION] Status 'cancelled' reconfirmado no Odoo para pedido %s", order_id)
+ 
+             else:
+                 logger.info("Evento nao tratado: %s - ack", event_type)
+diff --git a/app/routes/orders.py b/app/routes/orders.py
+index 42b3eb0..d6842ed 100644
+--- a/app/routes/orders.py
++++ b/app/routes/orders.py
+@@ -187,3 +187,69 @@ async def dispatch_order(ifood_order_id: str):
+     except Exception as e:
+         logger.error("Failed to dispatch order %s: %s", ifood_order_id, e)
+         raise HTTPException(status_code=500, detail=f"Failed to dispatch order: {str(e)}")
++
++
++@router.post("/{ifood_order_id}/accept-cancellation")
++async def accept_cancellation(ifood_order_id: str):
++    """Aceita solicitacao de cancelamento no iFood e atualiza Odoo.
++
++    Endpoint manual para testes de homologacao. Em producao,
++    o fluxo e automatico via webhook (evento CAN/CANCELLATION_REQUESTED).
++    """
++    logger.info("[CANCELLATION] Aceitacao manual de cancelamento para pedido %s", ifood_order_id)
++
++    try:
++        # 1. Enviar aceitacao ao iFood
++        async with IFoodAPIClient(settings) as ifood_client:
++            result = await ifood_client.accept_cancellation(ifood_order_id)
++
++        logger.info("[CANCELLATION] iFood aceitou o cancelamento: %s", result)
++
++        # 2. Atualizar Odoo
++        odoo_client = OdooClient(settings)
++        sync_service = OdooSyncService(odoo_client, ifood_client)
++        sync_service.update_order_status(ifood_order_id, "cancelled")
++
++        return {
++            "status": "ok",
++            "message": f"Cancellation accepted for order {ifood_order_id}",
++            "ifood_response": result,
++        }
++
++    except Exception as e:
++        logger.error("[CANCELLATION] Falha ao aceitar cancelamento do pedido %s: %s",
++                     ifood_order_id, e, exc_info=True)
++        raise HTTPException(
++            status_code=500,
++            detail=f"Failed to accept cancellation: {str(e)}",
++        )
++
++
++@router.post("/{ifood_order_id}/reject-cancellation")
++async def reject_cancellation(ifood_order_id: str, reason: str = ""):
++    """Rejeita solicitacao de cancelamento no iFood.
++
++    Endpoint manual para testes de homologacao.
++    """
++    logger.info("[CANCELLATION] Rejeicao manual de cancelamento para pedido %s - Motivo: %s",
++                ifood_order_id, reason)
++
++    try:
++        async with IFoodAPIClient(settings) as ifood_client:
++            result = await ifood_client.reject_cancellation(ifood_order_id, reason)
++
++        logger.info("[CANCELLATION] iFood rejeitou o cancelamento: %s", result)
++
++        return {
++            "status": "ok",
++            "message": f"Cancellation rejected for order {ifood_order_id}",
++            "ifood_response": result,
++        }
++
++    except Exception as e:
++        logger.error("[CANCELLATION] Falha ao rejeitar cancelamento do pedido %s: %s",
++                     ifood_order_id, e, exc_info=True)
++        raise HTTPException(
++            status_code=500,
++            detail=f"Failed to reject cancellation: {str(e)}",
++        )
+diff --git a/app/services/ifood_api.py b/app/services/ifood_api.py
+index 880b831..08e81f4 100644
+--- a/app/services/ifood_api.py
++++ b/app/services/ifood_api.py
+@@ -181,6 +181,55 @@ class IFoodAPIClient:
+             json_body={"reason": reason},
+         )
+ 
++    async def accept_cancellation(self, order_id: str) -> dict:
++        """Aceita uma solicitacao de cancelamento de pedido no iFood.
++
++        Quando o iFood envia o evento cancellationRequested (codigo CAN/CAR),
++        a integracao DEVE chamar este endpoint para confirmar o cancelamento.
++        Sem isso, o iFood considera que a integracao nao processou o cancelamento.
++
++        Args:
++            order_id: O ID do pedido no iFood.
++
++        Returns:
++            Resposta do iFood.
++        """
++        logger.info("[CANCELLATION] Aceitando cancelamento do pedido %s no iFood", order_id)
++        logger.info("[CANCELLATION] Chamando POST /order/v1.0/orders/%s/cancellation/accept", order_id)
++        try:
++            result = await self._request(
++                "POST",
++                f"/order/v1.0/orders/{order_id}/cancellation/accept",
++            )
++            logger.info("[CANCELLATION] Cancelamento ACEITO com sucesso para pedido %s - Resposta: %s",
++                        order_id, result)
++            return result
++        except Exception as e:
++            logger.error("[CANCELLATION] FALHA ao aceitar cancelamento do pedido %s: %s", order_id, e,
++                         exc_info=True)
++            raise
++
++    async def reject_cancellation(self, order_id: str, reason: str = "") -> dict:
++        """Rejeita uma solicitacao de cancelamento de pedido no iFood.
++
++        Args:
++            order_id: O ID do pedido no iFood.
++            reason: Motivo da rejeicao (opcional).
++
++        Returns:
++            Resposta do iFood.
++        """
++        logger.info("[CANCELLATION] Rejeitando cancelamento do pedido %s no iFood - Motivo: %s",
++                    order_id, reason)
++        body = {}
++        if reason:
++            body["reason"] = reason
++        return await self._request(
++            "POST",
++            f"/order/v1.0/orders/{order_id}/cancellation/reject",
++            json_body=body if body else None,
++        )
++
+     # ── Catalog ────────────────────────────────────────────────
+ 
+     async def get_catalog(self, merchant_id: str) -> dict:
+-- 
+2.47.3
+

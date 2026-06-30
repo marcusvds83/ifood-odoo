@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Retorna 404 para IDs inválidos, pedidos indisponíveis ou antigos. ... POST /events/acknowledgment GET /orders/{id} order details POST /orders/{id ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://abrasel-nacional.github.io/opendelivery",
+    "name": "Open Delivery API (v1.7.0)",
+    "snippet": "POST /events/acknowledgment, X. POST /orderUpdate (WEBHOOK) ... An id is a unique identifier of the entity of that type, but across entities, IDs can overlap.",
+    "host_name": "abrasel-nacional.github.io",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "In the request body, send an array with event IDs or the complete content received in polling. The API only uses the ID to process acknowledgment. Each request ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gist.github.com/subfuzion/08c5d85437d5d4f00e58",
+    "name": "curl POST examples - Gist - GitHub",
+    "snippet": "This gist provides examples for using both formats, including how to use sample data files in either format with your curl requests.",
+    "host_name": "gist.github.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-request",
+    "name": "Webhook request - iFood Developer",
+    "snippet": "Request body: a JSON that can follow two formats: -Order events -Presence events. Examples. Curl · Curl example assuming SECRET: \"dummysecret\" : curl --location ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.coralogix.com/api-reference/v5/incidents-service/acknowledge-incident-by-event-id",
+    "name": "Acknowledge incident by event id - Coralogix Developer Docs",
+    "snippet": "Mark incident as acknowledged by event id. Requires the following permissions: incidents:acknowledge. Acknowledge incident by event id. cURL. curl --request ...",
+    "host_name": "docs.coralogix.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.customer.io/journeys/people/events",
+    "name": "Events - Customer.io Docs",
+    "snippet": "curl --request POST \\ --url https://cdp.customer.io/v1/track \\ -u ... Here's an example of how to send this data using curl to the REST API.",
+    "host_name": "docs.customer.io",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.firehydrant.com/reference/create_change_event",
+    "name": "Create a change event - FireHydrant Documentation",
+    "snippet": "1. curl --request POST \\ ; 2. --url https://api.firehydrant.io/v1/changes/events \\ ; 3. --header 'accept: application/json' \\ ; 4. --header 'content-type: ...",
+    "host_name": "docs.firehydrant.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://clickwrap-developer.ironcladapp.com/docs/webhook-events",
+    "name": "Webhook Events + Payload Examples",
+    "snippet": "There are 7 types of events you can configure for when setting up webhooks. Each event has some common properties and some properties unique to the Webhook.",
+    "host_name": "clickwrap-developer.ironcladapp.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.api.letsdothis.com",
+    "name": "Let's Do This API",
+    "snippet": "These docs will help you interact with the REST API to manage your events, communicate with your particpants, export your start list data, and much more!",
+    "host_name": "docs.api.letsdothis.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Send acknowledgment for each polling with events. Send acknowledgment for all events, even those not used by your system. Send acknowledgment only once per ...\nUnfiltered events receive automatic acknowledgment (auto-acknowlegment). If you change the filter, already confirmed events will not be returned. Consume all ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-overview",
+    "name": "Webhook overview - iFood Developer",
+    "snippet": "The webhook does not have an acknowledgment mechanism. Even with retry attempts, the system may discard events after several delivery failures. It is not ...\niFood sends at least one HTTP request for each event to each application registered in the webhook. The request includes the message body, signature header, and ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Acknowledge event consumption. Confirm that you successfully processed events. POST https://merchant-api.ifood.com.br/order/v1.0/orders:acknowledgment Body.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Next step: After receiving event, acknowledge reading with /acknowledgment . 2. Acknowledge event consumption. After processing events, confirm they were ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "Events. State changes and other kinds of notifications related to orders on the platform. GET​/events:polling. Get New Events. POST​/events​/acknowledgment.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://forum.qt.io/topic/89905/qtcurl-how-to-add-data-option",
+    "name": "qtCUrl How to add (--data) option? | Qt - Qt Forum",
+    "snippet": "Hi, I need to make this command: curl --request POST --url https://pos-api.ifood.com.br/v1.0/events/acknowledgment --header 'Authorization:",
+    "host_name": "forum.qt.io",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.prosus.com/~/media/Files/P/prosus-corp-v2/documents/our-impact/ifood-impact-and-sustainability-report.pdf",
+    "name": "[PDF] iFood Impact and Sustainability report - Prosus",
+    "snippet": "tance/acknowledgment of the Third Par- ty Code of Ethics and Conduct is required, reinforcing our commitment to the prin- ciples that govern our operations ...",
+    "host_name": "www.prosus.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://neworleanscitypark.org/wp-content/uploads/2025/07/Taste-Testing-the-Gumbo-Summary.pdf",
+    "name": "[PDF] City Park Plan Meeting Summary:",
+    "snippet": "Suggestions for Indigenous land acknowledgment ceremonies, flagpole installations to mark monthly observances, and partnerships with cultural organizations all ...",
+    "host_name": "neworleanscitypark.org",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/best-practices-troubleshooting/boas-praticas-e-troubleshooting",
+    "name": "iFood Developer | Best practices and troubleshooting",
+    "snippet": "Event acknowledgment. Always send acknowledge ... // Monitor event to get code function handleEvent(event) { if (event. ... Check iFood coverage in customer's ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "The immediate response is just an acknowledgment (202 Accepted); A driver will be allocated automatically in the background; Monitor events to know the final ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

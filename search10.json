@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Quick reference — All events ; CANCELLATION_REQUESTED, Cancellation requested, Customer/you requested ; CANCELLATION_REQUEST_FAILED, Cancellation rejected, System ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/webhook-request",
+    "name": "iFood Developer | Webhook request",
+    "snippet": "that can follow two formats: -Order events. Validate the payload signature as soon as you receive it, before any processing or data reading. Send a response ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Polling is a simple method to receive updates from an API. The API maintains orders and events for up to 8 hours after delivery. Codes: 202: Accepted 400: Bad ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api-docs.deliveroo.com/reference/cancel-order-event-webhook-1",
+    "name": "POS Webhook - Cancel Order - Deliveroo",
+    "snippet": "This webhook is deprecated, please see Order Events webhook. Here you'll find the keys and values you can expect in payloads for cancelled orders.",
+    "host_name": "api-docs.deliveroo.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "Orders on iFood platform. Use this documentation to request iFood delivery drivers for orders that already exist on the platform.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer-guides.tryotter.com/docs/orders-integrations-cancellation-flow",
+    "name": "Orders Cancellation Event Flow - Developer Documentation - Otter",
+    "snippet": "After an order is created, it can be canceled at any point before it is fulfilled. This integration flow describes the possible scenarios of order cancelation,",
+    "host_name": "developer-guides.tryotter.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.sibipro.com/graphql/ordering/ordering-order-cancellation-request",
+    "name": "OrderingOrderCancellationRequ",
+    "snippet": "When cancellation requests are created or updated, webhook events are triggered. See Order Cancellation Requests for more information about these events.",
+    "host_name": "docs.sibipro.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.parcelperform.com/docs/api-guides-reference/e8adbc8a2da19-outgoing-webhooks-version-5-format",
+    "name": "Outgoing Webhooks (Version 5.0.0 Format) | API Guides & References",
+    "snippet": "The webhook message will list details of the parcel, the latest event and all events that the parcel has. payload will list the triggers that were satisfied",
+    "host_name": "developers.parcelperform.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform",
+    "name": "Order negotiation platform - iFood Developer",
+    "snippet": "Order negotiation platform. Negotiate post-delivery issues with customers — cancellations, returns, refunds through mediated proposals. Quickstart. Consume ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.radial.com/Content/api/events/order-cancellation.htm",
+    "name": "Order Cancellation Event - Radial Integration Documentation",
+    "snippet": "The Order Cancellation event contains items that have been cancelled from an order. Radial supports two different ways to receive event messages ...",
+    "host_name": "docs.radial.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

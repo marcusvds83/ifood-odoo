@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Quick reference — All events ; CANCELLATION_REQUESTED, Cancellation requested, Customer/you requested ; CANCELLATION_REQUEST_FAILED, Cancellation rejected, System ...\nUnderstand all events that iFood sends during the order lifecycle. Cancellation rejected System rejected. Dispute was resolved (by acceptance, rejection, or ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/handshake-platform",
+    "name": "Order negotiation platform - iFood Developer",
+    "snippet": "Valid values for timeoutAction : ACCEPT_CANCELLATION — Auto-accept cancellation; REJECT_CANCELLATION — Auto-reject cancellation; VOID — No automatic action.\nNegotiate post-delivery issues with customers — cancellations, returns, refunds through mediated proposals. _CANCELLATION — Auto-accept cancellation REJECT_ ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Detalhes do pedido. Obtenha os detalhes do pedido antes de confirmar ou cancelar ... Accepted (202) Validate cancellation Approved/Rejected GET /polling CANCELLED ...\nImplement the Order API step by step, Detalhes do pedido requestCancellation Accepted (202) Validate cancellation Approved/Rejected GET /polling CANCELLED or ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer-guides.tryotter.com/docs/delivery-integrations-cancellation-flow",
+    "name": "Delivery Cancellation Flow - Developer Documentation - Otter",
+    "snippet": "After a delivery is created, it can be canceled by Public API at any point before it is fulfilled. This integration flow describes the possible scenarios of ...",
+    "host_name": "developer-guides.tryotter.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Filter by category. Use the categories parameter in the query to filter orders by category. By default, the API returns events for FOOD and GROCERY categories.\nPolling is a simple method to receive updates from an API. The API may return the events, Accepted (event will be processed asynchronously)",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/fundamentals",
+    "name": "Fundamentals - iFood Developer",
+    "snippet": "You can accept, reject, or make a counteroffer (refund or additional time); You have until expiresAt to respond; No response = automatic action (usually refund).\nReceive orders in real time; Confirm or reject orders automatically; Track preparation and delivery; Resolve post-delivery issues (cancellations, refunds).\nConfirm or reject orders automatically. Resolve post-delivery issues (cancellations, refunds) cancellation and account penalties.How. You can accept, reject, ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=aWgwtfJfb9c",
+    "name": "iFood Developer - API de Pedidos - Primeiros Passos com o Postman",
+    "snippet": "Importando collections no Postman e testando a API de Pedidos do iFood. Neste vídeo você irá aprender como começar a utilizar a API de ...",
+    "host_name": "www.youtube.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "Delivery was cancelled, no fee. DELIVERY_CANCELLATION_REQUEST_REJECTED, Cancellation rejected by system, Driver already accepted; follow standard workflow. For ...\nCancel the request before driver acceptance. Accepted Cancellation request registered successfully. _REJECTED Cancellation rejected by system",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://forum.alpaca.markets/t/python-use-api-list-orders-to-cancel-stop-loss-before-selling-profit/1168",
+    "name": "Python - use api.list_orders() to cancel stop loss before selling profit",
+    "snippet": "I am submitting OTO bracket orders that uses a limit buy with a stop loss. I use another strategy indicator to trigger when to sell ...",
+    "host_name": "forum.alpaca.markets",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.shippit.com/api_guide/order/cancel-order/orders-examples-cancel.html",
+    "name": "Cancel order code examples | Developer Centre - Shippit APIs",
+    "snippet": "Cancel order code examples. Cancel an order code examples. Bash: # You can also use wget curl -X DELETE https://app.staging.shippit.com/api/3/orders/{ ...",
+    "host_name": "developer.shippit.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

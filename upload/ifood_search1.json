@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "Confirms event receipt, preventing them from being returned in future polling requests.URL: https://merchant-api.ifood.com.br/events/v1.0/events/acknowledgment ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/events/intro",
+    "name": "Introduction - iFood Developer",
+    "snippet": "Main endpoints. Polling. GET /events:polling - Retrieves new events; POST /events/acknowledgment - Confirms receipt of events. Webhook.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Consume events (Polling). Check for new events. Recommended every 30 seconds. GET https://merchant-api.ifood.com.br/order/v1.0/orders:polling Query parameters ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "This reference shows structure, meaning, and required actions for each event. How to receive events. Choose a method:Polling (checking periodically):.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "v1.0. The Merchant API provides means to interact with merchants on the platform. It is separated into four core parts.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "Response (202 Accepted)Important: Acknowledge only events you've successfully processed. Unacknowledged events will return in next polling. 3. Get order details.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/pt-BR/docs/guides/modules/events/polling-overview",
+    "name": "Polling de eventos - iFood Developer",
+    "snippet": "Polling é um método simples para receber atualizações de uma API. Seu sistema envia requisições regulares ao endpoint GET /events:polling e verifica se há novos ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/es-CO/docs/guides/modules/events/intro",
+    "name": "Desarrollador de iFood | Introducción",
+    "snippet": "El módulo de Events permite que su integración reciba notificaciones en tiempo real sobre cambios en el estado de los pedidos. Cuando un pedido se confirma, ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=0dgiGavzu8Y",
+    "name": "Meet the new Merchant API - YouTube",
+    "snippet": "O iFood está sempre evoluindo, e estamos prontos para um passo importante que vai aprimorar os nossos serviços de integração.",
+    "host_name": "www.youtube.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "The immediate response is just an acknowledgment (202 Accepted); A driver will be allocated automatically in the background; Monitor events to know the final ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

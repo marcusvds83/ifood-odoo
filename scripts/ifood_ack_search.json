@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/polling-overview",
+    "name": "Event polling - iFood Developer",
+    "snippet": "POST /events/acknowledgment Confirms event receipt, preventing them from being returned in future polling requests.URL:",
+    "host_name": "developer.ifood.com.br",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/events/intro",
+    "name": "Introduction - iFood Developer",
+    "snippet": "The Events module allows your integration to receive real-time notifications. POST /events/acknowledgment - Confirms receipt of events Webhook Receives POST ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/references",
+    "name": "References - iFood Developer",
+    "snippet": "The Merchant API provides means to interact with merchants on the platform. POST /events /acknowledgment Acknowledge Events. It is separated into three main ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://guicommits.com/challenges-on-integrating-ifood",
+    "name": "Architectural challenges on integrating ifood - Gui Commits",
+    "snippet": "ifood provides us the acknowledgment endpoint with a batch operation, so we can POST to their API only once per batch. Easy, right?",
+    "host_name": "guicommits.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/endpoints",
+    "name": "Endpoints - iFood Developer",
+    "snippet": "Acknowledge event consumption. Confirm that you successfully processed events. POST https://merchant-api.ifood.com.br/order/v1.0/orders:acknowledgment Body.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/events",
+    "name": "Order events - iFood Developer",
+    "snippet": "Understand all events that iFood sends during the order lifecycle. This reference shows structure, meaning, and required actions for each event.",
+    "host_name": "developer.ifood.com.br",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/logistics/endpoints",
+    "name": "Endpoints Reference - iFood Developer",
+    "snippet": "Acknowledgment - Confirm Events Received. POST /events/v1.0/events:acknowledgement. POST /events/v1.0/events:acknowledgement HTTP/1.1 Authorization: Bearer ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/en-US/docs/guides/modules/order/workflow",
+    "name": "Implementation guide — Order API - iFood Developer",
+    "snippet": "After receiving event, acknowledge reading with /acknowledgment . 2. Acknowledge event consumption After processing events, confirm they were consumed: Confirm ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Xfkgl-2czYM",
+    "name": "Live - iFood Marketplace Integration - Merchant/API - YouTube",
+    "snippet": "Reveja nosso encontro online com a presença de parceiros e integradores para falar mais detalhes do projeto, sanar todas as dúvidas sobre o ...",
+    "host_name": "www.youtube.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.ifood.com.br/docs/guides/modules/shipping/inside",
+    "name": "Orders on iFood platform",
+    "snippet": "The immediate response is just an acknowledgment (202 Accepted); A driver will be allocated automatically in the background; Monitor events to know the final ...",
+    "host_name": "developer.ifood.com.br",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
